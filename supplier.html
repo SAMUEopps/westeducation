@@ -1,0 +1,1396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduProcure - Supplier Marketplace</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-green: #2e7d32;
+            --light-green: #4caf50;
+            --dark-green: #1b5e20;
+            --accent-green: #81c784;
+            --accent-red: #f44336;
+            --light-red: #ffcdd2;
+            --white: #ffffff;
+            --light-gray: #f5f5f5;
+            --medium-gray: #e0e0e0;
+            --dark-gray: #424242;
+            --text-dark: #212121;
+            --text-light: #757575;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light-gray);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 260px;
+            background-color: var(--white);
+            box-shadow: var(--shadow);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            transition: var(--transition);
+        }
+
+        .logo {
+            padding: 24px 20px;
+            border-bottom: 1px solid var(--medium-gray);
+            color: var(--primary-green);
+            display: flex;
+            align-items: center;
+        }
+
+        .logo h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .logo i {
+            font-size: 1.8rem;
+        }
+
+        .nav-menu {
+            flex: 1;
+            padding: 20px 0;
+        }
+
+        .nav-menu ul {
+            list-style: none;
+        }
+
+        .nav-menu li {
+            margin-bottom: 5px;
+        }
+
+        .nav-menu a {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: var(--text-dark);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .nav-menu a:hover {
+            background-color: var(--light-gray);
+            color: var(--primary-green);
+        }
+
+        .nav-menu a.active {
+            background-color: var(--accent-green);
+            color: var(--dark-green);
+            font-weight: 500;
+            border-left: 4px solid var(--primary-green);
+        }
+
+        .nav-menu i {
+            margin-right: 12px;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            background-color: var(--white);
+            box-shadow: var(--shadow);
+        }
+
+        .header-left h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--dark-green);
+        }
+
+        .header-left p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .search-bar {
+            position: relative;
+        }
+
+        .search-bar input {
+            padding: 10px 15px 10px 40px;
+            border: 1px solid var(--medium-gray);
+            border-radius: 30px;
+            width: 250px;
+            font-size: 0.9rem;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .search-bar input:focus {
+            border-color: var(--primary-green);
+        }
+
+        .search-bar i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-profile img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .user-profile span {
+            font-weight: 500;
+        }
+
+        /* Marketplace Content */
+        .marketplace-content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .page-header h2 {
+            font-size: 1.8rem;
+            color: var(--dark-green);
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-green);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--dark-green);
+        }
+
+        .btn-secondary {
+            background-color: var(--medium-gray);
+            color: var(--text-dark);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--dark-gray);
+            color: var(--white);
+        }
+
+        /* Filter Section */
+        .filter-section {
+            background-color: var(--white);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+        }
+
+        .filter-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .filter-header h3 {
+            font-size: 1.3rem;
+            color: var(--dark-green);
+        }
+
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .filter-group {
+            margin-bottom: 15px;
+        }
+
+        .filter-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        .filter-control {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid var(--medium-gray);
+            border-radius: 5px;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .filter-control:focus {
+            border-color: var(--primary-green);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(46, 125, 50, 0.2);
+        }
+
+        .price-range {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .price-input {
+            flex: 1;
+        }
+
+        .filter-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        /* Search Results */
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .results-header h3 {
+            font-size: 1.3rem;
+            color: var(--text-dark);
+        }
+
+        .results-count {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .sort-options {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sort-options select {
+            padding: 8px 12px;
+            border: 1px solid var(--medium-gray);
+            border-radius: 5px;
+            background-color: var(--white);
+            color: var(--text-dark);
+        }
+
+        /* Supplier Grid */
+        .supplier-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .supplier-card {
+            background-color: var(--white);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .supplier-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .supplier-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--medium-gray);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .supplier-logo {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            background-color: var(--light-gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--primary-green);
+            flex-shrink: 0;
+        }
+
+        .supplier-info h3 {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+            color: var(--text-dark);
+        }
+
+        .supplier-category {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 5px;
+        }
+
+        .supplier-rating {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .stars {
+            color: #ffc107;
+        }
+
+        .rating-value {
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        .review-count {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .supplier-body {
+            padding: 20px;
+        }
+
+        .supplier-details {
+            margin-bottom: 15px;
+        }
+
+        .detail-item {
+            display: flex;
+            margin-bottom: 8px;
+        }
+
+        .detail-label {
+            width: 100px;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        .detail-value {
+            flex: 1;
+            color: var(--text-light);
+        }
+
+        .specialties {
+            margin-top: 15px;
+        }
+
+        .specialty-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 5px;
+        }
+
+        .tag {
+            background-color: var(--accent-green);
+            color: var(--dark-green);
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+
+        .supplier-footer {
+            padding: 15px 20px;
+            background-color: var(--light-gray);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .supplier-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+        }
+
+        /* Quick View Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: var(--white);
+            border-radius: 8px;
+            width: 800px;
+            max-width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            animation: modalFadeIn 0.3s;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--medium-gray);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            font-size: 1.5rem;
+            color: var(--dark-green);
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-light);
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .supplier-profile {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .supplier-profile-logo {
+            width: 100px;
+            height: 100px;
+            border-radius: 8px;
+            background-color: var(--light-gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: var(--primary-green);
+            flex-shrink: 0;
+        }
+
+        .supplier-profile-info h3 {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+            color: var(--text-dark);
+        }
+
+        .supplier-profile-category {
+            font-size: 1rem;
+            color: var(--text-light);
+            margin-bottom: 10px;
+        }
+
+        .supplier-profile-rating {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .profile-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .profile-detail-item {
+            margin-bottom: 10px;
+        }
+
+        .profile-detail-label {
+            font-weight: 500;
+            color: var(--text-dark);
+            margin-bottom: 5px;
+        }
+
+        .profile-detail-value {
+            color: var(--text-light);
+        }
+
+        .products-section {
+            margin-top: 20px;
+        }
+
+        .products-section h4 {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: var(--dark-green);
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--medium-gray);
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .product-card {
+            background-color: var(--light-gray);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .product-card h5 {
+            font-size: 1rem;
+            margin-bottom: 5px;
+            color: var(--text-dark);
+        }
+
+        .product-card p {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 10px;
+        }
+
+        .product-price {
+            font-weight: 600;
+            color: var(--primary-green);
+        }
+
+        .modal-footer {
+            padding: 15px 20px;
+            border-top: 1px solid var(--medium-gray);
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .filter-grid {
+                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            }
+            
+            .supplier-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+            }
+            
+            .nav-menu ul {
+                display: flex;
+                overflow-x: auto;
+            }
+            
+            .nav-menu li {
+                flex-shrink: 0;
+                margin-bottom: 0;
+            }
+            
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .header-right {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .search-bar input {
+                width: 200px;
+            }
+            
+            .supplier-profile {
+                flex-direction: column;
+            }
+            
+            .profile-details {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .marketplace-content {
+                padding: 15px;
+            }
+            
+            .header-right {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .search-bar {
+                width: 100%;
+            }
+            
+            .search-bar input {
+                width: 100%;
+            }
+            
+            .filter-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .supplier-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .results-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .supplier-actions {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .supplier-actions button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fas fa-school"></i>
+                <h2>EduProcure</h2>
+            </div>
+            <nav class="nav-menu">
+                <ul>
+                    <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li><a href="profile.html"><i class="fas fa-building"></i> School Profile</a></li>
+                    <li><a href="supplier.html" class="active"><i class="fas fa-store"></i> Supplier Marketplace</a></li>
+                    <li><a href="products.html"><i class="fas fa-boxes"></i> Products & Services</a></li>
+                    <li><a href="quotation.html"><i class="fas fa-file-invoice-dollar"></i> RFQ Module</a></li>
+                    <li><a href="purchase-order.html"><i class="fas fa-shopping-cart"></i> Orders</a></li>
+                    <li><a href="inventory.html"><i class="fas fa-warehouse"></i> Inventory</a></li>
+                    <li><a href="budget.html"><i class="fas fa-chart-pie"></i> Budget & Expenses</a></li>
+                    <li><a href="approval.html"><i class="fas fa-check-double"></i> Approvals</a></li>
+                    <li><a href="reports.html"><i class="fas fa-chart-bar"></i> Reports & Analytics</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <h1>Supplier Marketplace</h1>
+                    <p>Find and connect with trusted suppliers for your school needs</p>
+                </div>
+                <div class="header-right">
+                    <div class="search-bar">
+                        <input type="text" id="globalSearch" placeholder="Search suppliers, products...">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <div class="user-profile">
+                        <img src="https://i.pravatar.cc/40" alt="User Avatar">
+                        <span>Procurement Officer</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Marketplace Content -->
+            <div class="marketplace-content">
+                <div class="page-header">
+                    <h2>Browse Suppliers</h2>
+                    <button class="btn btn-primary" id="saveSupplierList">
+                        <i class="fas fa-save"></i> Save Supplier List
+                    </button>
+                </div>
+
+                <!-- Filter Section -->
+                <div class="filter-section">
+                    <div class="filter-header">
+                        <h3>Filter Suppliers</h3>
+                        <button class="btn btn-secondary" id="resetFilters">
+                            <i class="fas fa-redo"></i> Reset Filters
+                        </button>
+                    </div>
+                    <div class="filter-grid">
+                        <div class="filter-group">
+                            <label for="categoryFilter">Category</label>
+                            <select id="categoryFilter" class="filter-control">
+                                <option value="">All Categories</option>
+                                <option value="books">Books & Stationery</option>
+                                <option value="furniture">Furniture</option>
+                                <option value="ict">ICT Equipment</option>
+                                <option value="food">Food & Catering</option>
+                                <option value="uniforms">Uniforms</option>
+                                <option value="lab">Lab Equipment</option>
+                                <option value="sports">Sports Equipment</option>
+                                <option value="construction">Construction</option>
+                                <option value="services">Services</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="locationFilter">Location</label>
+                            <select id="locationFilter" class="filter-control">
+                                <option value="">All Locations</option>
+                                <option value="local">Within State</option>
+                                <option value="regional">Regional</option>
+                                <option value="national">National</option>
+                                <option value="international">International</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="ratingFilter">Minimum Rating</label>
+                            <select id="ratingFilter" class="filter-control">
+                                <option value="0">Any Rating</option>
+                                <option value="4">4 Stars & Up</option>
+                                <option value="3">3 Stars & Up</option>
+                                <option value="2">2 Stars & Up</option>
+                                <option value="1">1 Star & Up</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="priceRange">Price Range</label>
+                            <div class="price-range">
+                                <input type="number" id="minPrice" class="filter-control price-input" placeholder="Min">
+                                <span>-</span>
+                                <input type="number" id="maxPrice" class="filter-control price-input" placeholder="Max">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="filter-actions">
+                        <button class="btn btn-primary" id="applyFilters">
+                            <i class="fas fa-filter"></i> Apply Filters
+                        </button>
+                        <button class="btn btn-secondary" id="advancedFilters">
+                            <i class="fas fa-cog"></i> Advanced Filters
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Search Results -->
+                <div class="results-header">
+                    <div>
+                        <h3>Suppliers for "Library Shelves"</h3>
+                        <div class="results-count">Showing 8 of 24 suppliers</div>
+                    </div>
+                    <div class="sort-options">
+                        <label for="sortBy">Sort by:</label>
+                        <select id="sortBy" class="filter-control">
+                            <option value="relevance">Relevance</option>
+                            <option value="rating">Highest Rated</option>
+                            <option value="name">Supplier Name</option>
+                            <option value="price">Price (Low to High)</option>
+                            <option value="price-desc">Price (High to Low)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Supplier Grid -->
+                <div class="supplier-grid">
+                    <!-- Supplier Card 1 -->
+                    <div class="supplier-card">
+                        <div class="supplier-header">
+                            <div class="supplier-logo">
+                                <i class="fas fa-book"></i>
+                            </div>
+                            <div class="supplier-info">
+                                <h3>EduBooks Ltd.</h3>
+                                <div class="supplier-category">Books & Stationery</div>
+                                <div class="supplier-rating">
+                                    <div class="stars">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star-half-alt"></i>
+                                    </div>
+                                    <span class="rating-value">4.5</span>
+                                    <span class="review-count">(128)</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="supplier-body">
+                            <div class="supplier-details">
+                                <div class="detail-item">
+                                    <span class="detail-label">Location:</span>
+                                    <span class="detail-value">Springfield</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Delivery:</span>
+                                    <span class="detail-value">3-5 days</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Min. Order:</span>
+                                    <span class="detail-value">$200</span>
+                                </div>
+                            </div>
+                            <div class="specialties">
+                                <div class="detail-label">Specialties:</div>
+                                <div class="specialty-tags">
+                                    <span class="tag">Library Shelves</span>
+                                    <span class="tag">Textbooks</span>
+                                    <span class="tag">Reading Tables</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="supplier-footer">
+                            <div class="supplier-actions">
+                                <button class="btn btn-primary btn-sm view-supplier" data-id="1">
+                                    <i class="fas fa-eye"></i> View
+                                </button>
+                                <button class="btn btn-secondary btn-sm request-quote" data-id="1">
+                                    <i class="fas fa-file-invoice"></i> Request Quote
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Supplier Card 2 -->
+                    <div class="supplier-card">
+                        <div class="supplier-header">
+                            <div class="supplier-logo">
+                                <i class="fas fa-chair"></i>
+                            </div>
+                            <div class="supplier-info">
+                                <h3>School Furniture Co.</h3>
+                                <div class="supplier-category">Furniture</div>
+                                <div class="supplier-rating">
+                                    <div class="stars">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="far fa-star"></i>
+                                    </div>
+                                    <span class="rating-value">4.0</span>
+                                    <span class="review-count">(94)</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="supplier-body">
+                            <div class="supplier-details">
+                                <div class="detail-item">
+                                    <span class="detail-label">Location:</span>
+                                    <span class="detail-value">Riverside</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Delivery:</span>
+                                    <span class="detail-value">5-7 days</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Min. Order:</span>
+                                    <span class="detail-value">$500</span>
+                                </div>
+                            </div>
+                            <div class="specialties">
+                                <div class="detail-label">Specialties:</div>
+                                <div class="specialty-tags">
+                                    <span class="tag">Library Shelves</span>
+                                    <span class="tag">Classroom Desks</span>
+                                    <span class="tag">Bookshelves</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="supplier-footer">
+                            <div class="supplier-actions">
+                                <button class="btn btn-primary btn-sm view-supplier" data-id="2">
+                                    <i class="fas fa-eye"></i> View
+                                </button>
+                                <button class="btn btn-secondary btn-sm request-quote" data-id="2">
+                                    <i class="fas fa-file-invoice"></i> Request Quote
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Supplier Card 3 -->
+                    <div class="supplier-card">
+                        <div class="supplier-header">
+                            <div class="supplier-logo">
+                                <i class="fas fa-tools"></i>
+                            </div>
+                            <div class="supplier-info">
+                                <h3>WoodCraft Solutions</h3>
+                                <div class="supplier-category">Furniture & Construction</div>
+                                <div class="supplier-rating">
+                                    <div class="stars">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                    <span class="rating-value">5.0</span>
+                                    <span class="review-count">(67)</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="supplier-body">
+                            <div class="supplier-details">
+                                <div class="detail-item">
+                                    <span class="detail-label">Location:</span>
+                                    <span class="detail-value">Local</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Delivery:</span>
+                                    <span class="detail-value">7-10 days</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Min. Order:</span>
+                                    <span class="detail-value">$300</span>
+                                </div>
+                            </div>
+                            <div class="specialties">
+                                <div class="detail-label">Specialties:</div>
+                                <div class="specialty-tags">
+                                    <span class="tag">Custom Shelves</span>
+                                    <span class="tag">Library Furniture</span>
+                                    <span class="tag">Woodwork</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="supplier-footer">
+                            <div class="supplier-actions">
+                                <button class="btn btn-primary btn-sm view-supplier" data-id="3">
+                                    <i class="fas fa-eye"></i> View
+                                </button>
+                                <button class="btn btn-secondary btn-sm request-quote" data-id="3">
+                                    <i class="fas fa-file-invoice"></i> Request Quote
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Supplier Card 4 -->
+                    <div class="supplier-card">
+                        <div class="supplier-header">
+                            <div class="supplier-logo">
+                                <i class="fas fa-warehouse"></i>
+                            </div>
+                            <div class="supplier-info">
+                                <h3>Global School Supplies</h3>
+                                <div class="supplier-category">Multi-Category</div>
+                                <div class="supplier-rating">
+                                    <div class="stars">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="far fa-star"></i>
+                                    </div>
+                                    <span class="rating-value">4.0</span>
+                                    <span class="review-count">(203)</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="supplier-body">
+                            <div class="supplier-details">
+                                <div class="detail-item">
+                                    <span class="detail-label">Location:</span>
+                                    <span class="detail-value">National</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Delivery:</span>
+                                    <span class="detail-value">5-14 days</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Min. Order:</span>
+                                    <span class="detail-value">$150</span>
+                                </div>
+                            </div>
+                            <div class="specialties">
+                                <div class="detail-label">Specialties:</div>
+                                <div class="specialty-tags">
+                                    <span class="tag">Library Shelves</span>
+                                    <span class="tag">Stationery</span>
+                                    <span class="tag">Furniture</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="supplier-footer">
+                            <div class="supplier-actions">
+                                <button class="btn btn-primary btn-sm view-supplier" data-id="4">
+                                    <i class="fas fa-eye"></i> View
+                                </button>
+                                <button class="btn btn-secondary btn-sm request-quote" data-id="4">
+                                    <i class="fas fa-file-invoice"></i> Request Quote
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pagination -->
+                <div style="display: flex; justify-content: center; margin-top: 30px;">
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn btn-secondary"><i class="fas fa-chevron-left"></i> Previous</button>
+                        <button class="btn btn-secondary" style="background-color: var(--primary-green); color: white;">1</button>
+                        <button class="btn btn-secondary">2</button>
+                        <button class="btn btn-secondary">3</button>
+                        <button class="btn btn-secondary">Next <i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Supplier Detail Modal -->
+    <div class="modal" id="supplierModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalSupplierName">Supplier Details</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="supplier-profile">
+                    <div class="supplier-profile-logo">
+                        <i class="fas fa-book" id="modalSupplierIcon"></i>
+                    </div>
+                    <div class="supplier-profile-info">
+                        <h3 id="modalSupplierTitle">EduBooks Ltd.</h3>
+                        <div class="supplier-profile-category" id="modalSupplierCategory">Books & Stationery</div>
+                        <div class="supplier-profile-rating">
+                            <div class="stars" id="modalSupplierStars">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            </div>
+                            <span class="rating-value">4.5</span>
+                            <span class="review-count">(128 reviews)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-details">
+                    <div class="profile-detail-item">
+                        <div class="profile-detail-label">Location</div>
+                        <div class="profile-detail-value" id="modalSupplierLocation">Springfield</div>
+                    </div>
+                    <div class="profile-detail-item">
+                        <div class="profile-detail-label">Delivery Time</div>
+                        <div class="profile-detail-value" id="modalSupplierDelivery">3-5 days</div>
+                    </div>
+                    <div class="profile-detail-item">
+                        <div class="profile-detail-label">Minimum Order</div>
+                        <div class="profile-detail-value" id="modalSupplierMinOrder">$200</div>
+                    </div>
+                    <div class="profile-detail-item">
+                        <div class="profile-detail-label">Contact Email</div>
+                        <div class="profile-detail-value" id="modalSupplierEmail">contact@edubooks.com</div>
+                    </div>
+                    <div class="profile-detail-item">
+                        <div class="profile-detail-label">Phone</div>
+                        <div class="profile-detail-value" id="modalSupplierPhone">+1 (555) 123-4567</div>
+                    </div>
+                    <div class="profile-detail-item">
+                        <div class="profile-detail-label">Years in Business</div>
+                        <div class="profile-detail-value" id="modalSupplierYears">12 years</div>
+                    </div>
+                </div>
+
+                <div class="profile-detail-item">
+                    <div class="profile-detail-label">About</div>
+                    <div class="profile-detail-value" id="modalSupplierAbout">
+                        EduBooks Ltd. has been serving educational institutions for over a decade. 
+                        We specialize in providing high-quality library furniture, textbooks, and 
+                        educational resources. Our products are designed to withstand the rigors 
+                        of daily use in school environments.
+                    </div>
+                </div>
+
+                <div class="products-section">
+                    <h4>Popular Products</h4>
+                    <div class="products-grid">
+                        <div class="product-card">
+                            <h5>Library Shelf Unit</h5>
+                            <p>5-tier wooden shelf</p>
+                            <div class="product-price">$189.99</div>
+                        </div>
+                        <div class="product-card">
+                            <h5>Study Carrel</h5>
+                            <p>Individual study space</p>
+                            <div class="product-price">$249.99</div>
+                        </div>
+                        <div class="product-card">
+                            <h5>Book Display Stand</h5>
+                            <p>Rotating display stand</p>
+                            <div class="product-price">$129.99</div>
+                        </div>
+                        <div class="product-card">
+                            <h5>Reading Table</h5>
+                            <p>6-person reading table</p>
+                            <div class="product-price">$399.99</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary close-modal">Close</button>
+                <button class="btn btn-primary" id="modalRequestQuote">
+                    <i class="fas fa-file-invoice"></i> Request Quote
+                </button>
+                <button class="btn btn-secondary">
+                    <i class="fas fa-heart"></i> Save to Favorites
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Modal functionality
+            const modal = document.getElementById('supplierModal');
+            const viewSupplierBtns = document.querySelectorAll('.view-supplier');
+            const closeModalBtns = document.querySelectorAll('.close-modal');
+            
+            // Supplier data for modal
+            const suppliers = {
+                1: {
+                    name: "EduBooks Ltd.",
+                    category: "Books & Stationery",
+                    icon: "fa-book",
+                    rating: 4.5,
+                    reviews: 128,
+                    location: "Springfield",
+                    delivery: "3-5 days",
+                    minOrder: "$200",
+                    email: "contact@edubooks.com",
+                    phone: "+1 (555) 123-4567",
+                    years: "12 years",
+                    about: "EduBooks Ltd. has been serving educational institutions for over a decade. We specialize in providing high-quality library furniture, textbooks, and educational resources. Our products are designed to withstand the rigors of daily use in school environments."
+                },
+                2: {
+                    name: "School Furniture Co.",
+                    category: "Furniture",
+                    icon: "fa-chair",
+                    rating: 4.0,
+                    reviews: 94,
+                    location: "Riverside",
+                    delivery: "5-7 days",
+                    minOrder: "$500",
+                    email: "info@schoolfurnitureco.com",
+                    phone: "+1 (555) 234-5678",
+                    years: "8 years",
+                    about: "School Furniture Co. specializes in durable, ergonomic furniture designed specifically for educational environments. Our products are tested for safety and durability to ensure they meet the demands of daily classroom use."
+                },
+                3: {
+                    name: "WoodCraft Solutions",
+                    category: "Furniture & Construction",
+                    icon: "fa-tools",
+                    rating: 5.0,
+                    reviews: 67,
+                    location: "Local",
+                    delivery: "7-10 days",
+                    minOrder: "$300",
+                    email: "sales@woodcraftsolutions.com",
+                    phone: "+1 (555) 345-6789",
+                    years: "15 years",
+                    about: "WoodCraft Solutions combines traditional craftsmanship with modern design to create beautiful, functional furniture for educational spaces. We offer custom solutions tailored to your specific needs and space requirements."
+                },
+                4: {
+                    name: "Global School Supplies",
+                    category: "Multi-Category",
+                    icon: "fa-warehouse",
+                    rating: 4.0,
+                    reviews: 203,
+                    location: "National",
+                    delivery: "5-14 days",
+                    minOrder: "$150",
+                    email: "orders@globalschoolsupplies.com",
+                    phone: "+1 (555) 456-7890",
+                    years: "20 years",
+                    about: "As one of the largest suppliers to the education sector, Global School Supplies offers a comprehensive range of products from furniture to stationery. We pride ourselves on competitive pricing and reliable delivery nationwide."
+                }
+            };
+            
+            // Open modal with supplier details
+            viewSupplierBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const supplierId = btn.getAttribute('data-id');
+                    const supplier = suppliers[supplierId];
+                    
+                    if (supplier) {
+                        document.getElementById('modalSupplierName').textContent = supplier.name;
+                        document.getElementById('modalSupplierTitle').textContent = supplier.name;
+                        document.getElementById('modalSupplierCategory').textContent = supplier.category;
+                        document.getElementById('modalSupplierIcon').className = `fas ${supplier.icon}`;
+                        document.getElementById('modalSupplierLocation').textContent = supplier.location;
+                        document.getElementById('modalSupplierDelivery').textContent = supplier.delivery;
+                        document.getElementById('modalSupplierMinOrder').textContent = supplier.minOrder;
+                        document.getElementById('modalSupplierEmail').textContent = supplier.email;
+                        document.getElementById('modalSupplierPhone').textContent = supplier.phone;
+                        document.getElementById('modalSupplierYears').textContent = supplier.years;
+                        document.getElementById('modalSupplierAbout').textContent = supplier.about;
+                        
+                        // Update stars
+                        const starsContainer = document.getElementById('modalSupplierStars');
+                        starsContainer.innerHTML = '';
+                        const fullStars = Math.floor(supplier.rating);
+                        const hasHalfStar = supplier.rating % 1 !== 0;
+                        
+                        for (let i = 0; i < fullStars; i++) {
+                            starsContainer.innerHTML += '<i class="fas fa-star"></i>';
+                        }
+                        
+                        if (hasHalfStar) {
+                            starsContainer.innerHTML += '<i class="fas fa-star-half-alt"></i>';
+                        }
+                        
+                        const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+                        for (let i = 0; i < emptyStars; i++) {
+                            starsContainer.innerHTML += '<i class="far fa-star"></i>';
+                        }
+                        
+                        // Update rating text
+                        document.querySelector('.supplier-profile-rating .rating-value').textContent = supplier.rating;
+                        document.querySelector('.supplier-profile-rating .review-count').textContent = `(${supplier.reviews} reviews)`;
+                        
+                        modal.style.display = 'flex';
+                    }
+                });
+            });
+            
+            // Close modal
+            closeModalBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    modal.style.display = 'none';
+                });
+            });
+            
+            // Close modal when clicking outside
+            window.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+            
+            // Request quote buttons
+            const requestQuoteBtns = document.querySelectorAll('.request-quote');
+            requestQuoteBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const supplierId = btn.getAttribute('data-id');
+                    const supplier = suppliers[supplierId];
+                    alert(`Quote request sent to ${supplier.name}! You will receive a response within 24 hours.`);
+                });
+            });
+            
+            // Modal request quote button
+            document.getElementById('modalRequestQuote').addEventListener('click', () => {
+                const supplierName = document.getElementById('modalSupplierTitle').textContent;
+                alert(`Quote request sent to ${supplierName}! You will receive a response within 24 hours.`);
+                modal.style.display = 'none';
+            });
+            
+            // Filter functionality
+            document.getElementById('applyFilters').addEventListener('click', () => {
+                alert('Filters applied! In a real application, this would update the supplier list.');
+            });
+            
+            document.getElementById('resetFilters').addEventListener('click', () => {
+                document.getElementById('categoryFilter').value = '';
+                document.getElementById('locationFilter').value = '';
+                document.getElementById('ratingFilter').value = '0';
+                document.getElementById('minPrice').value = '';
+                document.getElementById('maxPrice').value = '';
+                alert('Filters reset!');
+            });
+            
+            // Global search
+            document.getElementById('globalSearch').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    const searchTerm = e.target.value;
+                    if (searchTerm) {
+                        alert(`Searching for: ${searchTerm}`);
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

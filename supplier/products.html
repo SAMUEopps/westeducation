@@ -1,0 +1,1377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduProcure - Product Catalog</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #1976d2;
+            --light-blue: #42a5f5;
+            --dark-blue: #0d47a1;
+            --accent-blue: #90caf9;
+            --accent-orange: #ff9800;
+            --light-orange: #ffb74d;
+            --white: #ffffff;
+            --light-gray: #f5f5f5;
+            --medium-gray: #e0e0e0;
+            --dark-gray: #424242;
+            --text-dark: #212121;
+            --text-light: #757575;
+            --success-green: #4caf50;
+            --warning-orange: #ff9800;
+            --error-red: #f44336;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+            --border-radius: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light-gray);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 260px;
+            background-color: var(--white);
+            box-shadow: var(--shadow);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            transition: var(--transition);
+        }
+
+        .logo {
+            padding: 24px 20px;
+            border-bottom: 1px solid var(--medium-gray);
+            color: var(--primary-blue);
+            display: flex;
+            align-items: center;
+        }
+
+        .logo h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .logo i {
+            font-size: 1.8rem;
+        }
+
+        .nav-menu {
+            flex: 1;
+            padding: 20px 0;
+        }
+
+        .nav-menu ul {
+            list-style: none;
+        }
+
+        .nav-menu li {
+            margin-bottom: 5px;
+        }
+
+        .nav-menu a {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: var(--text-dark);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .nav-menu a:hover {
+            background-color: var(--light-gray);
+            color: var(--primary-blue);
+        }
+
+        .nav-menu a.active {
+            background-color: var(--accent-blue);
+            color: var(--dark-blue);
+            font-weight: 500;
+            border-left: 4px solid var(--primary-blue);
+        }
+
+        .nav-menu i {
+            margin-right: 12px;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            background-color: var(--white);
+            box-shadow: var(--shadow);
+        }
+
+        .header-left h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--dark-blue);
+        }
+
+        .header-left p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .search-bar {
+            position: relative;
+        }
+
+        .search-bar input {
+            padding: 10px 15px 10px 40px;
+            border: 1px solid var(--medium-gray);
+            border-radius: 30px;
+            width: 250px;
+            font-size: 0.9rem;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .search-bar input:focus {
+            border-color: var(--primary-blue);
+        }
+
+        .search-bar i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-profile img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .user-profile span {
+            font-weight: 500;
+        }
+
+        /* Catalog Content */
+        .catalog-content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .page-header h2 {
+            font-size: 1.8rem;
+            color: var(--dark-blue);
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: var(--border-radius);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-blue);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--dark-blue);
+        }
+
+        .btn-secondary {
+            background-color: var(--medium-gray);
+            color: var(--text-dark);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--dark-gray);
+            color: var(--white);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary-blue);
+            color: var(--primary-blue);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary-blue);
+            color: var(--white);
+        }
+
+        .btn-success {
+            background-color: var(--success-green);
+            color: var(--white);
+        }
+
+        .btn-success:hover {
+            background-color: #388e3c;
+        }
+
+        .btn-warning {
+            background-color: var(--warning-orange);
+            color: var(--white);
+        }
+
+        .btn-warning:hover {
+            background-color: #f57c00;
+        }
+
+        .btn-danger {
+            background-color: var(--error-red);
+            color: var(--white);
+        }
+
+        .btn-danger:hover {
+            background-color: #d32f2f;
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+        }
+
+        /* Catalog Header */
+        .catalog-header {
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .catalog-stats {
+            display: flex;
+            gap: 30px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary-blue);
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .catalog-filters {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .filter-select {
+            padding: 8px 15px;
+            border: 1px solid var(--medium-gray);
+            border-radius: var(--border-radius);
+            background-color: var(--white);
+            font-size: 0.9rem;
+            outline: none;
+        }
+
+        /* Catalog Layout */
+        .catalog-layout {
+            display: flex;
+            gap: 30px;
+        }
+
+        .categories-sidebar {
+            width: 250px;
+            flex-shrink: 0;
+        }
+
+        .categories-card {
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+        }
+
+        .categories-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: var(--dark-blue);
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--medium-gray);
+        }
+
+        .categories-list {
+            list-style: none;
+        }
+
+        .categories-list li {
+            margin-bottom: 10px;
+        }
+
+        .categories-list a {
+            display: flex;
+            align-items: center;
+            padding: 8px 10px;
+            color: var(--text-dark);
+            text-decoration: none;
+            border-radius: 4px;
+            transition: var(--transition);
+        }
+
+        .categories-list a:hover, .categories-list a.active {
+            background-color: var(--accent-blue);
+            color: var(--dark-blue);
+        }
+
+        .categories-list i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .category-count {
+            margin-left: auto;
+            background-color: var(--light-gray);
+            color: var(--text-light);
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.7rem;
+        }
+
+        .products-grid {
+            flex: 1;
+        }
+
+        /* Products Grid */
+        .products-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .view-options {
+            display: flex;
+            gap: 10px;
+        }
+
+        .view-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--white);
+            color: var(--text-light);
+            border: 1px solid var(--medium-gray);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .view-btn.active {
+            background-color: var(--primary-blue);
+            color: var(--white);
+            border-color: var(--primary-blue);
+        }
+
+        .products-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .product-card {
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .product-image {
+            height: 180px;
+            background-color: var(--light-gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .badge-new {
+            background-color: var(--success-green);
+            color: var(--white);
+        }
+
+        .badge-sale {
+            background-color: var(--warning-orange);
+            color: var(--white);
+        }
+
+        .badge-bundle {
+            background-color: var(--primary-blue);
+            color: var(--white);
+        }
+
+        .product-actions {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .product-card:hover .product-actions {
+            opacity: 1;
+        }
+
+        .action-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-dark);
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .action-btn:hover {
+            background-color: var(--primary-blue);
+            color: var(--white);
+        }
+
+        .product-info {
+            padding: 15px;
+        }
+
+        .product-category {
+            font-size: 0.7rem;
+            color: var(--text-light);
+            margin-bottom: 5px;
+        }
+
+        .product-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-dark);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .product-description {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-bottom: 10px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .product-price {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .current-price {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary-blue);
+        }
+
+        .original-price {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            text-decoration: line-through;
+        }
+
+        .product-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .stock-status {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .stock-in {
+            color: var(--success-green);
+        }
+
+        .stock-low {
+            color: var(--warning-orange);
+        }
+
+        .stock-out {
+            color: var(--error-red);
+        }
+
+        /* Bundle Section */
+        .bundles-section {
+            margin-top: 40px;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            color: var(--dark-blue);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--medium-gray);
+        }
+
+        .bundles-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .bundle-card {
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .bundle-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .bundle-header {
+            padding: 15px;
+            background: linear-gradient(135deg, var(--primary-blue), var(--light-blue));
+            color: var(--white);
+        }
+
+        .bundle-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .bundle-savings {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .bundle-content {
+            padding: 15px;
+        }
+
+        .bundle-products {
+            margin-bottom: 15px;
+        }
+
+        .bundle-product {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .bundle-product:last-child {
+            border-bottom: none;
+        }
+
+        .bundle-product img {
+            width: 40px;
+            height: 40px;
+            border-radius: 4px;
+            object-fit: cover;
+        }
+
+        .bundle-product-name {
+            flex: 1;
+            font-size: 0.9rem;
+        }
+
+        .bundle-price {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+
+        .bundle-original-price {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            text-decoration: line-through;
+        }
+
+        .bundle-current-price {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-blue);
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .action-card {
+            flex: 1;
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: var(--transition);
+        }
+
+        .action-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .action-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--accent-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--dark-blue);
+            font-size: 1.2rem;
+        }
+
+        .action-info h3 {
+            font-size: 1rem;
+            margin-bottom: 5px;
+            color: var(--text-dark);
+        }
+
+        .action-info p {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .catalog-layout {
+                flex-direction: column;
+            }
+            
+            .categories-sidebar {
+                width: 100%;
+            }
+            
+            .categories-list {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+            
+            .categories-list li {
+                margin-bottom: 0;
+            }
+            
+            .categories-list a {
+                padding: 8px 15px;
+                border: 1px solid var(--medium-gray);
+                border-radius: 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+            }
+            
+            .nav-menu ul {
+                display: flex;
+                overflow-x: auto;
+            }
+            
+            .nav-menu li {
+                flex-shrink: 0;
+                margin-bottom: 0;
+            }
+            
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .header-right {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .search-bar input {
+                width: 200px;
+            }
+            
+            .catalog-header {
+                flex-direction: column;
+                gap: 20px;
+                align-items: flex-start;
+            }
+            
+            .catalog-filters {
+                width: 100%;
+                flex-wrap: wrap;
+            }
+            
+            .products-container {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+            
+            .quick-actions {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .catalog-content {
+                padding: 15px;
+            }
+            
+            .header-right {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .search-bar {
+                width: 100%;
+            }
+            
+            .search-bar input {
+                width: 100%;
+            }
+            
+            .products-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .bundles-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fas fa-industry"></i>
+                <h2>EduProcure</h2>
+            </div>
+            <nav class="nav-menu">
+                <ul>
+                    <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li><a href="profile.html" ><i class="fas fa-building"></i> Profile</a></li>
+                    <li><a href="products.html" class="active"><i class="fas fa-boxes"></i> Product Catalog</a></li>
+                    <li><a href="schools.html"><i class="fas fa-school"></i> Schools Directory</a></li>
+                    <li><a href="#"><i class="fas fa-file-invoice-dollar"></i> RFQ Management</a></li>
+                    <li><a href="#"><i class="fas fa-shipping-fast"></i> Order Fulfillment</a></li>
+                    <li><a href="#"><i class="fas fa-file-invoice"></i> Invoices & Payments</a></li>
+                    <li><a href="#"><i class="fas fa-truck"></i> Delivery & Logistics</a></li>
+                    <li><a href="#"><i class="fas fa-chart-bar"></i> Reports & Analytics</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <h1>Product Catalog</h1>
+                    <p>Manage your products, services, and bundles</p>
+                </div>
+                <div class="header-right">
+                    <div class="search-bar">
+                        <input type="text" id="globalSearch" placeholder="Search products...">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <div class="user-profile">
+                        <img src="https://i.pravatar.cc/40" alt="User Avatar">
+                        <span>Supplier Manager</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Catalog Content -->
+            <div class="catalog-content">
+                <div class="page-header">
+                    <h2>Product Management</h2>
+                    <button class="btn btn-primary" id="addProductBtn">
+                        <i class="fas fa-plus"></i> Add Product
+                    </button>
+                </div>
+
+                <!-- Catalog Header -->
+                <div class="catalog-header">
+                    <div class="catalog-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">42</div>
+                            <div class="stat-label">Active Products</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">8</div>
+                            <div class="stat-label">Categories</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">5</div>
+                            <div class="stat-label">Bundles</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">12</div>
+                            <div class="stat-label">Low Stock</div>
+                        </div>
+                    </div>
+                    <div class="catalog-filters">
+                        <select class="filter-select">
+                            <option>All Categories</option>
+                            <option>Laboratory Equipment</option>
+                            <option>Chemicals & Reagents</option>
+                            <option>Safety Equipment</option>
+                            <option>Teaching Aids</option>
+                        </select>
+                        <select class="filter-select">
+                            <option>Sort by: Newest</option>
+                            <option>Sort by: Price (Low to High)</option>
+                            <option>Sort by: Price (High to Low)</option>
+                            <option>Sort by: Name</option>
+                        </select>
+                        <select class="filter-select">
+                            <option>Stock Status: All</option>
+                            <option>In Stock</option>
+                            <option>Low Stock</option>
+                            <option>Out of Stock</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Catalog Layout -->
+                <div class="catalog-layout">
+                    <!-- Categories Sidebar -->
+                    <div class="categories-sidebar">
+                        <div class="categories-card">
+                            <h3>Categories</h3>
+                            <ul class="categories-list">
+                                <li><a href="#" class="active"><i class="fas fa-flask"></i> All Products <span class="category-count">42</span></a></li>
+                                <li><a href="#"><i class="fas fa-microscope"></i> Laboratory Equipment <span class="category-count">15</span></a></li>
+                                <li><a href="#"><i class="fas fa-vial"></i> Chemicals & Reagents <span class="category-count">12</span></a></li>
+                                <li><a href="#"><i class="fas fa-shield-alt"></i> Safety Equipment <span class="category-count">8</span></a></li>
+                                <li><a href="#"><i class="fas fa-chalkboard-teacher"></i> Teaching Aids <span class="category-count">5</span></a></li>
+                                <li><a href="#"><i class="fas fa-tools"></i> Lab Consumables <span class="category-count">10</span></a></li>
+                                <li><a href="#"><i class="fas fa-laptop"></i> Digital Resources <span class="category-count">3</span></a></li>
+                                <li><a href="#"><i class="fas fa-cube"></i> Models & Kits <span class="category-count">7</span></a></li>
+                            </ul>
+                        </div>
+                        <div class="categories-card">
+                            <h3>Quick Actions</h3>
+                            <button class="btn btn-outline btn-sm" style="width: 100%; margin-bottom: 10px;">
+                                <i class="fas fa-file-export"></i> Export Catalog
+                            </button>
+                            <button class="btn btn-outline btn-sm" style="width: 100%; margin-bottom: 10px;">
+                                <i class="fas fa-sync"></i> Update Stock
+                            </button>
+                            <button class="btn btn-outline btn-sm" style="width: 100%;">
+                                <i class="fas fa-tags"></i> Manage Pricing
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Products Grid -->
+                    <div class="products-grid">
+                        <div class="products-header">
+                            <h3>Products (42)</h3>
+                            <div class="view-options">
+                                <div class="view-btn active" title="Grid View">
+                                    <i class="fas fa-th"></i>
+                                </div>
+                                <div class="view-btn" title="List View">
+                                    <i class="fas fa-list"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="products-container">
+                            <!-- Product 1 -->
+                            <div class="product-card">
+                                <div class="product-image">
+                                    <img src="https://images.unsplash.com/photo-1581093458791-9d67b3d5d5e8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" alt="Microscope">
+                                    <span class="product-badge badge-new">NEW</span>
+                                    <div class="product-actions">
+                                        <div class="action-btn" title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </div>
+                                        <div class="action-btn" title="Delete">
+                                            <i class="fas fa-trash"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="product-info">
+                                    <div class="product-category">Laboratory Equipment</div>
+                                    <h3 class="product-title">Advanced Student Microscope</h3>
+                                    <p class="product-description">High-quality microscope with 40x-1000x magnification, perfect for biology classes.</p>
+                                    <div class="product-price">
+                                        <span class="current-price">$299.99</span>
+                                        <span class="original-price">$349.99</span>
+                                    </div>
+                                    <div class="product-meta">
+                                        <div class="stock-status">
+                                            <i class="fas fa-box"></i>
+                                            <span class="stock-in">In Stock (24)</span>
+                                        </div>
+                                        <div>SKU: MIC-001</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Product 2 -->
+                            <div class="product-card">
+                                <div class="product-image">
+                                    <img src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" alt="Chemistry Set">
+                                    <span class="product-badge badge-sale">SALE</span>
+                                    <div class="product-actions">
+                                        <div class="action-btn" title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </div>
+                                        <div class="action-btn" title="Delete">
+                                            <i class="fas fa-trash"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="product-info">
+                                    <div class="product-category">Chemicals & Reagents</div>
+                                    <h3 class="product-title">Basic Chemistry Set</h3>
+                                    <p class="product-description">Complete set of safe chemicals for high school chemistry experiments.</p>
+                                    <div class="product-price">
+                                        <span class="current-price">$89.99</span>
+                                        <span class="original-price">$119.99</span>
+                                    </div>
+                                    <div class="product-meta">
+                                        <div class="stock-status">
+                                            <i class="fas fa-box"></i>
+                                            <span class="stock-low">Low Stock (3)</span>
+                                        </div>
+                                        <div>SKU: CHEM-005</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Product 3 -->
+                            <div class="product-card">
+                                <div class="product-image">
+                                    <img src="https://images.unsplash.com/photo-1582719471384-894fbb16e074?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" alt="Safety Goggles">
+                                    <div class="product-actions">
+                                        <div class="action-btn" title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </div>
+                                        <div class="action-btn" title="Delete">
+                                            <i class="fas fa-trash"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="product-info">
+                                    <div class="product-category">Safety Equipment</div>
+                                    <h3 class="product-title">Anti-Fog Safety Goggles</h3>
+                                    <p class="product-description">Comfortable, durable goggles with anti-fog coating for lab safety.</p>
+                                    <div class="product-price">
+                                        <span class="current-price">$4.99</span>
+                                    </div>
+                                    <div class="product-meta">
+                                        <div class="stock-status">
+                                            <i class="fas fa-box"></i>
+                                            <span class="stock-in">In Stock (150)</span>
+                                        </div>
+                                        <div>SKU: SAF-012</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Product 4 -->
+                            <div class="product-card">
+                                <div class="product-image">
+                                    <img src="https://images.unsplash.com/photo-1532094349884-543bc11b234d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" alt="Digital Scale">
+                                    <div class="product-actions">
+                                        <div class="action-btn" title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </div>
+                                        <div class="action-btn" title="Delete">
+                                            <i class="fas fa-trash"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="product-info">
+                                    <div class="product-category">Laboratory Equipment</div>
+                                    <h3 class="product-title">Precision Digital Scale</h3>
+                                    <p class="product-description">High-precision scale with 0.001g accuracy for chemistry labs.</p>
+                                    <div class="product-price">
+                                        <span class="current-price">$129.99</span>
+                                    </div>
+                                    <div class="product-meta">
+                                        <div class="stock-status">
+                                            <i class="fas fa-box"></i>
+                                            <span class="stock-out">Out of Stock</span>
+                                        </div>
+                                        <div>SKU: EQU-023</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Product 5 -->
+                            <div class="product-card">
+                                <div class="product-image">
+                                    <img src="https://images.unsplash.com/photo-1581093458791-9d67b3d5d5e8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" alt="Human Anatomy Model">
+                                    <span class="product-badge badge-bundle">BUNDLE</span>
+                                    <div class="product-actions">
+                                        <div class="action-btn" title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </div>
+                                        <div class="action-btn" title="Delete">
+                                            <i class="fas fa-trash"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="product-info">
+                                    <div class="product-category">Teaching Aids</div>
+                                    <h3 class="product-title">Human Anatomy Model Set</h3>
+                                    <p class="product-description">Detailed 3D models of human body systems for biology education.</p>
+                                    <div class="product-price">
+                                        <span class="current-price">$199.99</span>
+                                    </div>
+                                    <div class="product-meta">
+                                        <div class="stock-status">
+                                            <i class="fas fa-box"></i>
+                                            <span class="stock-in">In Stock (18)</span>
+                                        </div>
+                                        <div>SKU: TEACH-007</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Product 6 -->
+                            <div class="product-card">
+                                <div class="product-image">
+                                    <img src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" alt="Lab Glassware Set">
+                                    <div class="product-actions">
+                                        <div class="action-btn" title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </div>
+                                        <div class="action-btn" title="Delete">
+                                            <i class="fas fa-trash"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="product-info">
+                                    <div class="product-category">Lab Consumables</div>
+                                    <h3 class="product-title">Essential Glassware Set</h3>
+                                    <p class="product-description">Set of 24 essential glassware pieces for chemistry laboratories.</p>
+                                    <div class="product-price">
+                                        <span class="current-price">$149.99</span>
+                                        <span class="original-price">$179.99</span>
+                                    </div>
+                                    <div class="product-meta">
+                                        <div class="stock-status">
+                                            <i class="fas fa-box"></i>
+                                            <span class="stock-in">In Stock (32)</span>
+                                        </div>
+                                        <div>SKU: GLASS-014</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Bundles Section -->
+                        <div class="bundles-section">
+                            <h3 class="section-title">Product Bundles & Packages</h3>
+                            <div class="bundles-container">
+                                <!-- Bundle 1 -->
+                                <div class="bundle-card">
+                                    <div class="bundle-header">
+                                        <div class="bundle-title">Biology Starter Pack</div>
+                                        <div class="bundle-savings">Save 15% compared to individual purchase</div>
+                                    </div>
+                                    <div class="bundle-content">
+                                        <div class="bundle-products">
+                                            <div class="bundle-product">
+                                                <img src="https://images.unsplash.com/photo-1581093458791-9d67b3d5d5e8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80" alt="Microscope">
+                                                <div class="bundle-product-name">Student Microscope</div>
+                                            </div>
+                                            <div class="bundle-product">
+                                                <img src="https://images.unsplash.com/photo-1582719471384-894fbb16e074?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80" alt="Safety Goggles">
+                                                <div class="bundle-product-name">Safety Goggles (10pk)</div>
+                                            </div>
+                                            <div class="bundle-product">
+                                                <img src="https://images.unsplash.com/photo-1532094349884-543bc11b234d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80" alt="Slide Set">
+                                                <div class="bundle-product-name">Prepared Slide Set (25)</div>
+                                            </div>
+                                        </div>
+                                        <div class="bundle-price">
+                                            <div class="bundle-original-price">$459.97</div>
+                                            <div class="bundle-current-price">$390.99</div>
+                                        </div>
+                                        <button class="btn btn-primary btn-sm" style="width: 100%; margin-top: 10px;">
+                                            <i class="fas fa-shopping-cart"></i> Add Bundle
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Bundle 2 -->
+                                <div class="bundle-card">
+                                    <div class="bundle-header">
+                                        <div class="bundle-title">Chemistry Lab Essentials</div>
+                                        <div class="bundle-savings">Save 20% compared to individual purchase</div>
+                                    </div>
+                                    <div class="bundle-content">
+                                        <div class="bundle-products">
+                                            <div class="bundle-product">
+                                                <img src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80" alt="Chemistry Set">
+                                                <div class="bundle-product-name">Basic Chemistry Set</div>
+                                            </div>
+                                            <div class="bundle-product">
+                                                <img src="https://images.unsplash.com/photo-1582719471384-894fbb16e074?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80" alt="Safety Goggles">
+                                                <div class="bundle-product-name">Safety Goggles (10pk)</div>
+                                            </div>
+                                            <div class="bundle-product">
+                                                <img src="https://images.unsplash.com/photo-1532094349884-543bc11b234d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80" alt="Lab Coat">
+                                                <div class="bundle-product-name">Lab Coats (5pk)</div>
+                                            </div>
+                                        </div>
+                                        <div class="bundle-price">
+                                            <div class="bundle-original-price">$289.97</div>
+                                            <div class="bundle-current-price">$231.99</div>
+                                        </div>
+                                        <button class="btn btn-primary btn-sm" style="width: 100%; margin-top: 10px;">
+                                            <i class="fas fa-shopping-cart"></i> Add Bundle
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Quick Actions -->
+                        <div class="quick-actions">
+                            <div class="action-card">
+                                <div class="action-icon">
+                                    <i class="fas fa-plus"></i>
+                                </div>
+                                <div class="action-info">
+                                    <h3>Add New Product</h3>
+                                    <p>Create a new product listing with images and details</p>
+                                </div>
+                            </div>
+                            <div class="action-card">
+                                <div class="action-icon">
+                                    <i class="fas fa-tags"></i>
+                                </div>
+                                <div class="action-info">
+                                    <h3>Manage Categories</h3>
+                                    <p>Organize products into categories and subcategories</p>
+                                </div>
+                            </div>
+                            <div class="action-card">
+                                <div class="action-icon">
+                                    <i class="fas fa-boxes"></i>
+                                </div>
+                                <div class="action-info">
+                                    <h3>Create Bundle</h3>
+                                    <p>Combine products into special package deals</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // JavaScript for interactive elements
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add Product Button
+            const addProductBtn = document.getElementById('addProductBtn');
+            if (addProductBtn) {
+                addProductBtn.addEventListener('click', function() {
+                    alert('Add Product form would open here');
+                    // In a real application, you would open a modal or navigate to a form
+                });
+            }
+
+            // View Options
+            const viewBtns = document.querySelectorAll('.view-btn');
+            viewBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    viewBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const productsContainer = document.querySelector('.products-container');
+                    if (this.querySelector('.fa-list')) {
+                        productsContainer.style.gridTemplateColumns = '1fr';
+                        document.querySelectorAll('.product-card').forEach(card => {
+                            card.style.display = 'flex';
+                            card.querySelector('.product-image').style.width = '150px';
+                            card.querySelector('.product-image').style.height = '150px';
+                        });
+                    } else {
+                        productsContainer.style.gridTemplateColumns = 'repeat(auto-fill, minmax(280px, 1fr))';
+                        document.querySelectorAll('.product-card').forEach(card => {
+                            card.style.display = 'block';
+                            card.querySelector('.product-image').style.width = '100%';
+                            card.querySelector('.product-image').style.height = '180px';
+                        });
+                    }
+                });
+            });
+
+            // Global Search
+            const globalSearch = document.getElementById('globalSearch');
+            if (globalSearch) {
+                globalSearch.addEventListener('input', function(e) {
+                    const searchTerm = e.target.value.toLowerCase();
+                    const productCards = document.querySelectorAll('.product-card');
+                    
+                    productCards.forEach(card => {
+                        const title = card.querySelector('.product-title').textContent.toLowerCase();
+                        const description = card.querySelector('.product-description').textContent.toLowerCase();
+                        
+                        if (title.includes(searchTerm) || description.includes(searchTerm)) {
+                            card.style.display = 'block';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                });
+            }
+
+            // Category Filter
+            const categoryLinks = document.querySelectorAll('.categories-list a');
+            categoryLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    categoryLinks.forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const category = this.textContent.trim();
+                    alert(`Filtering by: ${category}`);
+                    // In a real application, you would filter products by category
+                });
+            });
+
+            // Action Buttons
+            const actionCards = document.querySelectorAll('.action-card');
+            actionCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    const title = this.querySelector('h3').textContent;
+                    alert(`${title} feature would open here`);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

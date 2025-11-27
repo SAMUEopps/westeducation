@@ -1,0 +1,1411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduProcure - Supplier Profile</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #1976d2;
+            --light-blue: #42a5f5;
+            --dark-blue: #0d47a1;
+            --accent-blue: #90caf9;
+            --accent-orange: #ff9800;
+            --light-orange: #ffb74d;
+            --white: #ffffff;
+            --light-gray: #f5f5f5;
+            --medium-gray: #e0e0e0;
+            --dark-gray: #424242;
+            --text-dark: #212121;
+            --text-light: #757575;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light-gray);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 260px;
+            background-color: var(--white);
+            box-shadow: var(--shadow);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            transition: var(--transition);
+        }
+
+        .logo {
+            padding: 24px 20px;
+            border-bottom: 1px solid var(--medium-gray);
+            color: var(--primary-blue);
+            display: flex;
+            align-items: center;
+        }
+
+        .logo h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .logo i {
+            font-size: 1.8rem;
+        }
+
+        .nav-menu {
+            flex: 1;
+            padding: 20px 0;
+        }
+
+        .nav-menu ul {
+            list-style: none;
+        }
+
+        .nav-menu li {
+            margin-bottom: 5px;
+        }
+
+        .nav-menu a {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: var(--text-dark);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .nav-menu a:hover {
+            background-color: var(--light-gray);
+            color: var(--primary-blue);
+        }
+
+        .nav-menu a.active {
+            background-color: var(--accent-blue);
+            color: var(--dark-blue);
+            font-weight: 500;
+            border-left: 4px solid var(--primary-blue);
+        }
+
+        .nav-menu i {
+            margin-right: 12px;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            background-color: var(--white);
+            box-shadow: var(--shadow);
+        }
+
+        .header-left h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--dark-blue);
+        }
+
+        .header-left p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .search-bar {
+            position: relative;
+        }
+
+        .search-bar input {
+            padding: 10px 15px 10px 40px;
+            border: 1px solid var(--medium-gray);
+            border-radius: 30px;
+            width: 250px;
+            font-size: 0.9rem;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .search-bar input:focus {
+            border-color: var(--primary-blue);
+        }
+
+        .search-bar i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-profile img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .user-profile span {
+            font-weight: 500;
+        }
+
+        /* Profile Content */
+        .profile-content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .page-header h2 {
+            font-size: 1.8rem;
+            color: var(--dark-blue);
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-blue);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--dark-blue);
+        }
+
+        .btn-secondary {
+            background-color: var(--medium-gray);
+            color: var(--text-dark);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--dark-gray);
+            color: var(--white);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary-blue);
+            color: var(--primary-blue);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary-blue);
+            color: var(--white);
+        }
+
+        .btn-success {
+            background-color: #4caf50;
+            color: var(--white);
+        }
+
+        .btn-success:hover {
+            background-color: #388e3c;
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+        }
+
+        /* Profile Header */
+        .profile-header {
+            background-color: var(--white);
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .profile-avatar {
+            position: relative;
+        }
+
+        .profile-logo {
+            width: 120px;
+            height: 120px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--primary-blue), var(--light-blue));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 2.5rem;
+            font-weight: 600;
+        }
+
+        .logo-upload {
+            position: absolute;
+            bottom: -10px;
+            right: -10px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: var(--primary-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .logo-upload:hover {
+            background-color: var(--dark-blue);
+            transform: scale(1.1);
+        }
+
+        .profile-info h1 {
+            font-size: 2rem;
+            margin-bottom: 5px;
+            color: var(--text-dark);
+        }
+
+        .profile-info p {
+            color: var(--text-light);
+            margin-bottom: 15px;
+        }
+
+        .profile-stats {
+            display: flex;
+            gap: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary-blue);
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        /* Profile Sections */
+        .profile-sections {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .profile-section {
+            background-color: var(--white);
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--medium-gray);
+        }
+
+        .section-header h3 {
+            font-size: 1.4rem;
+            color: var(--dark-blue);
+        }
+
+        .section-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Form Styles */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--medium-gray);
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-blue);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.2);
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        /* Licenses & Certifications */
+        .licenses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .license-card {
+            background-color: var(--light-gray);
+            border-radius: 8px;
+            padding: 20px;
+            transition: var(--transition);
+            border: 1px solid var(--medium-gray);
+        }
+
+        .license-card:hover {
+            border-color: var(--primary-blue);
+            transform: translateY(-2px);
+        }
+
+        .license-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .license-info h4 {
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+            color: var(--text-dark);
+        }
+
+        .license-info p {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .license-status {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 500;
+        }
+
+        .status-valid {
+            background-color: #c8e6c9;
+            color: #2e7d32;
+        }
+
+        .status-expired {
+            background-color: #ffcdd2;
+            color: #c62828;
+        }
+
+        .status-pending {
+            background-color: #fff9c4;
+            color: #f57f17;
+        }
+
+        .license-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        /* Delivery Regions */
+        .regions-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .region-card {
+            background-color: var(--light-gray);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .region-card:hover {
+            background-color: var(--accent-blue);
+        }
+
+        .region-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            color: var(--white);
+        }
+
+        .region-info h4 {
+            font-size: 1rem;
+            margin-bottom: 5px;
+            color: var(--text-dark);
+        }
+
+        .region-info p {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        /* Teams & Roles */
+        .teams-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .teams-table th, .teams-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--medium-gray);
+        }
+
+        .teams-table th {
+            background-color: var(--light-gray);
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .teams-table tr:hover {
+            background-color: rgba(25, 118, 210, 0.03);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-weight: 600;
+            margin-right: 10px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .role-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .role-admin {
+            background-color: var(--accent-blue);
+            color: var(--dark-blue);
+        }
+
+        .role-manager {
+            background-color: #c8e6c9;
+            color: #2e7d32;
+        }
+
+        .role-staff {
+            background-color: #fff9c4;
+            color: #f57f17;
+        }
+
+        /* Payment Terms */
+        .payment-terms {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .payment-card {
+            background-color: var(--light-gray);
+            border-radius: 8px;
+            padding: 20px;
+            transition: var(--transition);
+        }
+
+        .payment-card:hover {
+            border: 1px solid var(--primary-blue);
+        }
+
+        .payment-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .payment-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            background-color: var(--primary-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 1.5rem;
+        }
+
+        .payment-info h4 {
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+            color: var(--text-dark);
+        }
+
+        .payment-info p {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .licenses-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .regions-container {
+                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+            }
+            
+            .nav-menu ul {
+                display: flex;
+                overflow-x: auto;
+            }
+            
+            .nav-menu li {
+                flex-shrink: 0;
+                margin-bottom: 0;
+            }
+            
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .header-right {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .search-bar input {
+                width: 200px;
+            }
+            
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .profile-stats {
+                justify-content: center;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .section-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .profile-content {
+                padding: 15px;
+            }
+            
+            .header-right {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .search-bar {
+                width: 100%;
+            }
+            
+            .search-bar input {
+                width: 100%;
+            }
+            
+            .regions-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .teams-table {
+                font-size: 0.8rem;
+            }
+            
+            .teams-table th, .teams-table td {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fas fa-industry"></i>
+                <h2>EduProcure</h2>
+            </div>
+            <nav class="nav-menu">
+                <ul>
+                    <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li><a href="profile.html" class="active"><i class="fas fa-building"></i> Profile</a></li>
+                    <li><a href="products.html"><i class="fas fa-boxes"></i> Product Catalog</a></li>
+                    <li><a href="schools.html"><i class="fas fa-school"></i> Schools Directory</a></li>
+                    <li><a href="#"><i class="fas fa-file-invoice-dollar"></i> RFQ Management</a></li>
+                    <li><a href="#"><i class="fas fa-shipping-fast"></i> Order Fulfillment</a></li>
+                    <li><a href="#"><i class="fas fa-file-invoice"></i> Invoices & Payments</a></li>
+                    <li><a href="#"><i class="fas fa-truck"></i> Delivery & Logistics</a></li>
+                    <li><a href="#"><i class="fas fa-chart-bar"></i> Reports & Analytics</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <h1>Supplier Profile</h1>
+                    <p>Manage your business information, team, and settings</p>
+                </div>
+                <div class="header-right">
+                    <div class="search-bar">
+                        <input type="text" id="globalSearch" placeholder="Search profile...">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <div class="user-profile">
+                        <img src="https://i.pravatar.cc/40" alt="User Avatar">
+                        <span>Supplier Manager</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Profile Content -->
+            <div class="profile-content">
+                <div class="page-header">
+                    <h2>Company Profile</h2>
+                    <button class="btn btn-primary" id="saveProfileBtn">
+                        <i class="fas fa-save"></i> Save Changes
+                    </button>
+                </div>
+
+                <!-- Profile Header -->
+                <div class="profile-header">
+                    <div class="profile-avatar">
+                        <div class="profile-logo">
+                            LSC
+                        </div>
+                        <div class="logo-upload" title="Upload Logo">
+                            <i class="fas fa-camera"></i>
+                        </div>
+                    </div>
+                    <div class="profile-info">
+                        <h1>Lab Supplies Co.</h1>
+                        <p>Premium supplier of laboratory equipment and chemicals for educational institutions</p>
+                        <div class="profile-stats">
+                            <div class="stat-item">
+                                <div class="stat-value">4.8</div>
+                                <div class="stat-label">Rating</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">156</div>
+                                <div class="stat-label">Schools Served</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">98%</div>
+                                <div class="stat-label">On-Time Delivery</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">5</div>
+                                <div class="stat-label">Years Experience</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Profile Sections -->
+                <div class="profile-sections">
+                    <!-- Business Details -->
+                    <div class="profile-section">
+                        <div class="section-header">
+                            <h3>Business Details</h3>
+                            <div class="section-actions">
+                                <button class="btn btn-outline btn-sm">
+                                    <i class="fas fa-edit"></i> Edit
+                                </button>
+                            </div>
+                        </div>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="companyName">Company Name</label>
+                                <input type="text" id="companyName" class="form-control" value="Lab Supplies Co.">
+                            </div>
+                            <div class="form-group">
+                                <label for="businessType">Business Type</label>
+                                <select id="businessType" class="form-control">
+                                    <option>Manufacturer</option>
+                                    <option selected>Distributor</option>
+                                    <option>Wholesaler</option>
+                                    <option>Service Provider</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="registrationNumber">Registration Number</label>
+                                <input type="text" id="registrationNumber" class="form-control" value="REG-2020-LSC-0452">
+                            </div>
+                            <div class="form-group">
+                                <label for="taxId">Tax ID/VAT Number</label>
+                                <input type="text" id="taxId" class="form-control" value="VAT-789456123">
+                            </div>
+                            <div class="form-group">
+                                <label for="yearEstablished">Year Established</label>
+                                <input type="number" id="yearEstablished" class="form-control" value="2018">
+                            </div>
+                            <div class="form-group">
+                                <label for="employeeCount">Number of Employees</label>
+                                <input type="number" id="employeeCount" class="form-control" value="45">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="companyDescription">Company Description</label>
+                            <textarea id="companyDescription" class="form-control">Lab Supplies Co. is a leading provider of high-quality laboratory equipment, chemicals, and scientific supplies to educational institutions across the region. We specialize in serving schools, colleges, and universities with reliable, safe, and curriculum-aligned laboratory materials.</textarea>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="phoneNumber">Phone Number</label>
+                                <input type="tel" id="phoneNumber" class="form-control" value="+1 (555) 123-4567">
+                            </div>
+                            <div class="form-group">
+                                <label for="emailAddress">Email Address</label>
+                                <input type="email" id="emailAddress" class="form-control" value="contact@labsuppliesco.com">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="website">Website</label>
+                            <input type="url" id="website" class="form-control" value="https://www.labsuppliesco.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="address">Business Address</label>
+                            <textarea id="address" class="form-control">123 Science Park Avenue, Innovation District, Springfield, SP 12345</textarea>
+                        </div>
+                    </div>
+
+                    <!-- Licenses & Certifications -->
+                    <div class="profile-section">
+                        <div class="section-header">
+                            <h3>Licenses & Certifications</h3>
+                            <div class="section-actions">
+                                <button class="btn btn-outline btn-sm">
+                                    <i class="fas fa-plus"></i> Add License
+                                </button>
+                            </div>
+                        </div>
+                        <div class="licenses-grid">
+                            <div class="license-card">
+                                <div class="license-header">
+                                    <div class="license-info">
+                                        <h4>Business License</h4>
+                                        <p>State Business Operations</p>
+                                    </div>
+                                    <span class="license-status status-valid">Valid</span>
+                                </div>
+                                <p><strong>License No:</strong> BL-2020-78945</p>
+                                <p><strong>Issued:</strong> Jan 15, 2020</p>
+                                <p><strong>Expires:</strong> Jan 14, 2025</p>
+                                <div class="license-actions">
+                                    <button class="btn btn-outline btn-sm">
+                                        <i class="fas fa-eye"></i> View
+                                    </button>
+                                    <button class="btn btn-outline btn-sm">
+                                        <i class="fas fa-download"></i> Download
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="license-card">
+                                <div class="license-header">
+                                    <div class="license-info">
+                                        <h4>Chemical Handling</h4>
+                                        <p>Hazardous Materials Certification</p>
+                                    </div>
+                                    <span class="license-status status-valid">Valid</span>
+                                </div>
+                                <p><strong>License No:</strong> CHC-2021-12345</p>
+                                <p><strong>Issued:</strong> Mar 22, 2021</p>
+                                <p><strong>Expires:</strong> Mar 21, 2024</p>
+                                <div class="license-actions">
+                                    <button class="btn btn-outline btn-sm">
+                                        <i class="fas fa-eye"></i> View
+                                    </button>
+                                    <button class="btn btn-outline btn-sm">
+                                        <i class="fas fa-download"></i> Download
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="license-card">
+                                <div class="license-header">
+                                    <div class="license-info">
+                                        <h4>ISO 9001:2015</h4>
+                                        <p>Quality Management System</p>
+                                    </div>
+                                    <span class="license-status status-pending">Renewal</span>
+                                </div>
+                                <p><strong>Cert No:</strong> ISO-9001-789456</p>
+                                <p><strong>Issued:</strong> Jun 10, 2019</p>
+                                <p><strong>Expires:</strong> Jun 9, 2024</p>
+                                <div class="license-actions">
+                                    <button class="btn btn-outline btn-sm">
+                                        <i class="fas fa-eye"></i> View
+                                    </button>
+                                    <button class="btn btn-warning btn-sm">
+                                        <i class="fas fa-sync"></i> Renew
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Delivery Regions -->
+                    <div class="profile-section">
+                        <div class="section-header">
+                            <h3>Delivery Regions</h3>
+                            <div class="section-actions">
+                                <button class="btn btn-outline btn-sm">
+                                    <i class="fas fa-plus"></i> Add Region
+                                </button>
+                            </div>
+                        </div>
+                        <div class="regions-container">
+                            <div class="region-card">
+                                <div class="region-icon">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </div>
+                                <div class="region-info">
+                                    <h4>Metro Area</h4>
+                                    <p>Same-day delivery</p>
+                                </div>
+                            </div>
+                            <div class="region-card">
+                                <div class="region-icon">
+                                    <i class="fas fa-truck"></i>
+                                </div>
+                                <div class="region-info">
+                                    <h4>Statewide</h4>
+                                    <p>1-2 business days</p>
+                                </div>
+                            </div>
+                            <div class="region-card">
+                                <div class="region-icon">
+                                    <i class="fas fa-shipping-fast"></i>
+                                </div>
+                                <div class="region-info">
+                                    <h4>Regional</h4>
+                                    <p>3-5 business days</p>
+                                </div>
+                            </div>
+                            <div class="region-card">
+                                <div class="region-icon">
+                                    <i class="fas fa-globe"></i>
+                                </div>
+                                <div class="region-info">
+                                    <h4>National</h4>
+                                    <p>5-10 business days</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group" style="margin-top: 20px;">
+                            <label for="deliveryNotes">Delivery Notes & Restrictions</label>
+                            <textarea id="deliveryNotes" class="form-control">• Hazardous materials require special handling
+• Large equipment deliveries require scheduling
+• Weekend deliveries available at extra cost
+• Free delivery for orders over $500 in metro areas</textarea>
+                        </div>
+                    </div>
+
+                    <!-- Payment Terms -->
+                    <div class="profile-section">
+                        <div class="section-header">
+                            <h3>Payment Terms</h3>
+                            <div class="section-actions">
+                                <button class="btn btn-outline btn-sm">
+                                    <i class="fas fa-edit"></i> Edit Terms
+                                </button>
+                            </div>
+                        </div>
+                        <div class="payment-terms">
+                            <div class="payment-card">
+                                <div class="payment-header">
+                                    <div class="payment-icon">
+                                        <i class="fas fa-money-bill-wave"></i>
+                                    </div>
+                                    <div class="payment-info">
+                                        <h4>Net 30 Days</h4>
+                                        <p>Standard Terms</p>
+                                    </div>
+                                </div>
+                                <p>Payment due within 30 days of invoice date</p>
+                                <p><strong>Applied to:</strong> All schools</p>
+                            </div>
+                            <div class="payment-card">
+                                <div class="payment-header">
+                                    <div class="payment-icon">
+                                        <i class="fas fa-calendar-check"></i>
+                                    </div>
+                                    <div class="payment-info">
+                                        <h4>Net 45 Days</h4>
+                                        <p>Preferred Partners</p>
+                                    </div>
+                                </div>
+                                <p>Extended terms for established partners</p>
+                                <p><strong>Applied to:</strong> 25+ order history</p>
+                            </div>
+                            <div class="payment-card">
+                                <div class="payment-header">
+                                    <div class="payment-icon">
+                                        <i class="fas fa-credit-card"></i>
+                                    </div>
+                                    <div class="payment-info">
+                                        <h4>Advance Payment</h4>
+                                        <p>Custom Orders</p>
+                                    </div>
+                                </div>
+                                <p>50% advance for custom/special orders</p>
+                                <p><strong>Applied to:</strong> Custom equipment</p>
+                            </div>
+                        </div>
+                        <div class="form-group" style="margin-top: 20px;">
+                            <label for="paymentInstructions">Payment Instructions</label>
+                            <textarea id="paymentInstructions" class="form-control">• Payments can be made via bank transfer, credit card, or school procurement portal
+• Please include invoice number as reference
+• Late payments may incur 1.5% monthly interest
+• Contact accounts@labsuppliesco.com for payment queries</textarea>
+                        </div>
+                    </div>
+
+                    <!-- Teams & Roles -->
+                    <div class="profile-section">
+                        <div class="section-header">
+                            <h3>Team Members & Roles</h3>
+                            <div class="section-actions">
+                                <button class="btn btn-outline btn-sm">
+                                    <i class="fas fa-user-plus"></i> Add Member
+                                </button>
+                            </div>
+                        </div>
+                        <table class="teams-table">
+                            <thead>
+                                <tr>
+                                    <th>Team Member</th>
+                                    <th>Role</th>
+                                    <th>Department</th>
+                                    <th>Contact</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="user-info">
+                                            <div class="user-avatar">JD</div>
+                                            <div>
+                                                <div>John Davidson</div>
+                                                <div style="font-size: 0.8rem; color: var(--text-light);">Owner</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="role-badge role-admin">Administrator</span></td>
+                                    <td>Management</td>
+                                    <td>john.d@labsuppliesco.com</td>
+                                    <td><span style="color: #4caf50;">Active</span></td>
+                                    <td>
+                                        <button class="btn btn-outline btn-sm">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="user-info">
+                                            <div class="user-avatar">SM</div>
+                                            <div>
+                                                <div>Sarah Mitchell</div>
+                                                <div style="font-size: 0.8rem; color: var(--text-light);">Sales Manager</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="role-badge role-manager">Manager</span></td>
+                                    <td>Sales</td>
+                                    <td>sarah.m@labsuppliesco.com</td>
+                                    <td><span style="color: #4caf50;">Active</span></td>
+                                    <td>
+                                        <button class="btn btn-outline btn-sm">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="user-info">
+                                            <div class="user-avatar">RJ</div>
+                                            <div>
+                                                <div>Robert Johnson</div>
+                                                <div style="font-size: 0.8rem; color: var(--text-light);">Logistics Head</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="role-badge role-manager">Manager</span></td>
+                                    <td>Logistics</td>
+                                    <td>robert.j@labsuppliesco.com</td>
+                                    <td><span style="color: #4caf50;">Active</span></td>
+                                    <td>
+                                        <button class="btn btn-outline btn-sm">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="user-info">
+                                            <div class="user-avatar">ED</div>
+                                            <div>
+                                                                                            <div>
+                                                <div>Emily Davis</div>
+                                                <div style="font-size: 0.8rem; color: var(--text-light);">Account Specialist</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="role-badge role-staff">Staff</span></td>
+                                    <td>Customer Service</td>
+                                    <td>emily.d@labsuppliesco.com</td>
+                                    <td><span style="color: #4caf50;">Active</span></td>
+                                    <td>
+                                        <button class="btn btn-outline btn-sm">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="user-info">
+                                            <div class="user-avatar">MW</div>
+                                            <div>
+                                                <div>Michael Wilson</div>
+                                                <div style="font-size: 0.8rem; color: var(--text-light);">Inventory Analyst</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="role-badge role-staff">Staff</span></td>
+                                    <td>Operations</td>
+                                    <td>michael.w@labsuppliesco.com</td>
+                                    <td><span style="color: #ff9800;">Pending</span></td>
+                                    <td>
+                                        <button class="btn btn-outline btn-sm">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Bank Details -->
+                    <div class="profile-section">
+                        <div class="section-header">
+                            <h3>Bank Account Details</h3>
+                            <div class="section-actions">
+                                <button class="btn btn-outline btn-sm">
+                                    <i class="fas fa-edit"></i> Edit
+                                </button>
+                            </div>
+                        </div>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="bankName">Bank Name</label>
+                                <input type="text" id="bankName" class="form-control" value="First National Bank">
+                            </div>
+                            <div class="form-group">
+                                <label for="accountName">Account Name</label>
+                                <input type="text" id="accountName" class="form-control" value="Lab Supplies Co.">
+                            </div>
+                            <div class="form-group">
+                                <label for="accountNumber">Account Number</label>
+                                <input type="text" id="accountNumber" class="form-control" value="XXXX-XXXX-7894">
+                            </div>
+                            <div class="form-group">
+                                <label for="routingNumber">Routing Number</label>
+                                <input type="text" id="routingNumber" class="form-control" value="XXXXX-7894">
+                            </div>
+                            <div class="form-group">
+                                <label for="swiftCode">SWIFT/BIC Code</label>
+                                <input type="text" id="swiftCode" class="form-control" value="FNBOUS-XX">
+                            </div>
+                            <div class="form-group">
+                                <label for="iban">IBAN (if applicable)</label>
+                                <input type="text" id="iban" class="form-control" placeholder="Not provided">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="bankAddress">Bank Address</label>
+                            <textarea id="bankAddress" class="form-control">456 Financial District, Downtown, Springfield, SP 12345</textarea>
+                        </div>
+                    </div>
+
+                    <!-- Preferences -->
+                    <div class="profile-section">
+                        <div class="section-header">
+                            <h3>System Preferences</h3>
+                            <div class="section-actions">
+                                <button class="btn btn-outline btn-sm">
+                                    <i class="fas fa-save"></i> Save Preferences
+                                </button>
+                            </div>
+                        </div>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="notificationEmail">Notification Email</label>
+                                <input type="email" id="notificationEmail" class="form-control" value="orders@labsuppliesco.com">
+                            </div>
+                            <div class="form-group">
+                                <label for="timezone">Timezone</label>
+                                <select id="timezone" class="form-control">
+                                    <option selected>Eastern Time (ET)</option>
+                                    <option>Central Time (CT)</option>
+                                    <option>Mountain Time (MT)</option>
+                                    <option>Pacific Time (PT)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="dateFormat">Date Format</label>
+                                <select id="dateFormat" class="form-control">
+                                    <option selected>MM/DD/YYYY</option>
+                                    <option>DD/MM/YYYY</option>
+                                    <option>YYYY-MM-DD</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="currency">Default Currency</label>
+                                <select id="currency" class="form-control">
+                                    <option selected>USD ($)</option>
+                                    <option>EUR (€)</option>
+                                    <option>GBP (£)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label style="display: flex; align-items: center; gap: 10px;">
+                                <input type="checkbox" checked>
+                                <span>Receive email notifications for new RFQs</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label style="display: flex; align-items: center; gap: 10px;">
+                                <input type="checkbox" checked>
+                                <span>Notify me when orders are pending approval</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label style="display: flex; align-items: center; gap: 10px;">
+                                <input type="checkbox">
+                                <span>Send weekly performance reports</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label style="display: flex; align-items: center; gap: 10px;">
+                                <input type="checkbox" checked>
+                                <span>Alert me for license expirations (30 days prior)</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Simple JavaScript for interactive elements
+        document.addEventListener('DOMContentLoaded', function() {
+            // Save Profile Button
+            const saveProfileBtn = document.getElementById('saveProfileBtn');
+            if (saveProfileBtn) {
+                saveProfileBtn.addEventListener('click', function() {
+                    alert('Profile changes saved successfully!');
+                    // In a real application, you would send the form data to a server here
+                });
+            }
+
+            // Logo Upload
+            const logoUpload = document.querySelector('.logo-upload');
+            if (logoUpload) {
+                logoUpload.addEventListener('click', function() {
+                    alert('Logo upload feature would open here');
+                    // In a real application, you would open a file picker dialog
+                });
+            }
+
+            // Global Search
+            const globalSearch = document.getElementById('globalSearch');
+            if (globalSearch) {
+                globalSearch.addEventListener('input', function(e) {
+                    const searchTerm = e.target.value.toLowerCase();
+                    // In a real application, you would filter profile content based on search term
+                    console.log('Searching for:', searchTerm);
+                });
+            }
+
+            // Edit Buttons
+            const editButtons = document.querySelectorAll('.btn-outline');
+            editButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const section = this.closest('.profile-section');
+                    const sectionTitle = section.querySelector('h3').textContent;
+                    alert(`Edit mode for: ${sectionTitle}`);
+                    // In a real application, you would enable form editing for that section
+                });
+            });
+
+            // Form Control Focus Effects
+            const formControls = document.querySelectorAll('.form-control');
+            formControls.forEach(control => {
+                control.addEventListener('focus', function() {
+                    this.parentElement.classList.add('focused');
+                });
+                control.addEventListener('blur', function() {
+                    this.parentElement.classList.remove('focused');
+                });
+            });
+        });
+
+        // Add some CSS for focused state
+        const style = document.createElement('style');
+        style.textContent = `
+            .form-group.focused label {
+                color: var(--primary-blue);
+                font-weight: 600;
+            }
+            
+            .license-card, .region-card, .payment-card {
+                cursor: pointer;
+            }
+            
+            .btn:active {
+                transform: scale(0.98);
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

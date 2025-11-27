@@ -1,0 +1,1611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduProcure - Products & Services Marketplace</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-green: #2e7d32;
+            --light-green: #4caf50;
+            --dark-green: #1b5e20;
+            --accent-green: #81c784;
+            --accent-red: #f44336;
+            --light-red: #ffcdd2;
+            --white: #ffffff;
+            --light-gray: #f5f5f5;
+            --medium-gray: #e0e0e0;
+            --dark-gray: #424242;
+            --text-dark: #212121;
+            --text-light: #757575;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light-gray);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 260px;
+            background-color: var(--white);
+            box-shadow: var(--shadow);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            transition: var(--transition);
+        }
+
+        .logo {
+            padding: 24px 20px;
+            border-bottom: 1px solid var(--medium-gray);
+            color: var(--primary-green);
+            display: flex;
+            align-items: center;
+        }
+
+        .logo h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .logo i {
+            font-size: 1.8rem;
+        }
+
+        .nav-menu {
+            flex: 1;
+            padding: 20px 0;
+        }
+
+        .nav-menu ul {
+            list-style: none;
+        }
+
+        .nav-menu li {
+            margin-bottom: 5px;
+        }
+
+        .nav-menu a {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: var(--text-dark);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .nav-menu a:hover {
+            background-color: var(--light-gray);
+            color: var(--primary-green);
+        }
+
+        .nav-menu a.active {
+            background-color: var(--accent-green);
+            color: var(--dark-green);
+            font-weight: 500;
+            border-left: 4px solid var(--primary-green);
+        }
+
+        .nav-menu i {
+            margin-right: 12px;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            background-color: var(--white);
+            box-shadow: var(--shadow);
+        }
+
+        .header-left h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--dark-green);
+        }
+
+        .header-left p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .search-bar {
+            position: relative;
+        }
+
+        .search-bar input {
+            padding: 10px 15px 10px 40px;
+            border: 1px solid var(--medium-gray);
+            border-radius: 30px;
+            width: 250px;
+            font-size: 0.9rem;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .search-bar input:focus {
+            border-color: var(--primary-green);
+        }
+
+        .search-bar i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-profile img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .user-profile span {
+            font-weight: 500;
+        }
+
+        /* Marketplace Content */
+        .marketplace-content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .page-header h2 {
+            font-size: 1.8rem;
+            color: var(--dark-green);
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-green);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--dark-green);
+        }
+
+        .btn-secondary {
+            background-color: var(--medium-gray);
+            color: var(--text-dark);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--dark-gray);
+            color: var(--white);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary-green);
+            color: var(--primary-green);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary-green);
+            color: var(--white);
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            background-color: var(--white);
+            border-radius: 8px 8px 0 0;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .tab {
+            padding: 15px 25px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab.active {
+            border-bottom: 3px solid var(--primary-green);
+            color: var(--primary-green);
+            background-color: rgba(46, 125, 50, 0.05);
+        }
+
+        .tab:hover:not(.active) {
+            background-color: var(--light-gray);
+        }
+
+        .tab-content {
+            display: none;
+            background-color: var(--white);
+            padding: 30px;
+            border-radius: 0 0 8px 8px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Filter Section */
+        .filter-section {
+            background-color: var(--white);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+        }
+
+        .filter-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .filter-header h3 {
+            font-size: 1.3rem;
+            color: var(--dark-green);
+        }
+
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .filter-group {
+            margin-bottom: 15px;
+        }
+
+        .filter-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        .filter-control {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid var(--medium-gray);
+            border-radius: 5px;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .filter-control:focus {
+            border-color: var(--primary-green);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(46, 125, 50, 0.2);
+        }
+
+        .filter-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        /* Products Grid */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .product-card {
+            background-color: var(--white);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: var(--accent-red);
+            color: var(--white);
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            z-index: 2;
+        }
+
+        .product-image {
+            height: 180px;
+            background-color: var(--light-gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: var(--primary-green);
+        }
+
+        .product-body {
+            padding: 20px;
+        }
+
+        .product-category {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-bottom: 5px;
+        }
+
+        .product-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--text-dark);
+        }
+
+        .product-description {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 15px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .product-supplier {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .product-supplier i {
+            margin-right: 5px;
+        }
+
+        .product-price {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .current-price {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-green);
+        }
+
+        .original-price {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            text-decoration: line-through;
+        }
+
+        .discount {
+            font-size: 0.8rem;
+            background-color: var(--accent-green);
+            color: var(--dark-green);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        .bulk-offer {
+            font-size: 0.8rem;
+            color: var(--primary-green);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .product-footer {
+            padding: 15px 20px;
+            background-color: var(--light-gray);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .quantity-btn {
+            width: 30px;
+            height: 30px;
+            border: 1px solid var(--medium-gray);
+            background-color: var(--white);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .quantity-input {
+            width: 40px;
+            text-align: center;
+            border: 1px solid var(--medium-gray);
+            border-radius: 4px;
+            padding: 5px;
+        }
+
+        .product-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+        }
+
+        /* Services Grid */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .service-card {
+            background-color: var(--white);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .service-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--medium-gray);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .service-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            background-color: var(--light-gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--primary-green);
+            flex-shrink: 0;
+        }
+
+        .service-info h3 {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+            color: var(--text-dark);
+        }
+
+        .service-category {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .service-body {
+            padding: 20px;
+        }
+
+        .service-description {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 15px;
+        }
+
+        .service-details {
+            margin-bottom: 15px;
+        }
+
+        .detail-item {
+            display: flex;
+            margin-bottom: 8px;
+        }
+
+        .detail-label {
+            width: 100px;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        .detail-value {
+            flex: 1;
+            color: var(--text-light);
+        }
+
+        .service-pricing {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .service-price {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-green);
+        }
+
+        .price-unit {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .service-footer {
+            padding: 15px 20px;
+            background-color: var(--light-gray);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* RFQ Cart */
+        .rfq-cart {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--primary-green);
+            color: var(--white);
+            border-radius: 50px;
+            padding: 15px 25px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            z-index: 100;
+            transition: var(--transition);
+        }
+
+        .rfq-cart:hover {
+            background-color: var(--dark-green);
+            transform: translateY(-2px);
+        }
+
+        .rfq-count {
+            background-color: var(--accent-red);
+            color: var(--white);
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: var(--white);
+            border-radius: 8px;
+            width: 600px;
+            max-width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            animation: modalFadeIn 0.3s;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--medium-gray);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            font-size: 1.5rem;
+            color: var(--dark-green);
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-light);
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .rfq-items {
+            margin-bottom: 20px;
+        }
+
+        .rfq-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid var(--medium-gray);
+        }
+
+        .rfq-item:last-child {
+            border-bottom: none;
+        }
+
+        .rfq-item-info h4 {
+            font-size: 1rem;
+            margin-bottom: 5px;
+            color: var(--text-dark);
+        }
+
+        .rfq-item-info p {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .rfq-item-quantity {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .rfq-item-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .modal-footer {
+            padding: 15px 20px;
+            border-top: 1px solid var(--medium-gray);
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .filter-grid {
+                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            }
+            
+            .products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+            
+            .services-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+            }
+            
+            .nav-menu ul {
+                display: flex;
+                overflow-x: auto;
+            }
+            
+            .nav-menu li {
+                flex-shrink: 0;
+                margin-bottom: 0;
+            }
+            
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .header-right {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .search-bar input {
+                width: 200px;
+            }
+            
+            .tabs {
+                flex-wrap: wrap;
+            }
+            
+            .tab {
+                flex: 1;
+                min-width: 120px;
+                text-align: center;
+            }
+            
+            .product-footer {
+                flex-direction: column;
+                gap: 10px;
+                align-items: flex-start;
+            }
+            
+            .product-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .marketplace-content {
+                padding: 15px;
+            }
+            
+            .header-right {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .search-bar {
+                width: 100%;
+            }
+            
+            .search-bar input {
+                width: 100%;
+            }
+            
+            .filter-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .rfq-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .rfq-item-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fas fa-school"></i>
+                <h2>EduProcure</h2>
+            </div>
+            <nav class="nav-menu">
+                <ul>
+                    <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li><a href="profile.html"><i class="fas fa-building"></i> School Profile</a></li>
+                    <li><a href="supplier.html"><i class="fas fa-store"></i> Supplier Marketplace</a></li>
+                    <li><a href="products.html" class="active"><i class="fas fa-boxes"></i> Products & Services</a></li>
+                    <li><a href="quotation.html"><i class="fas fa-file-invoice-dollar"></i> RFQ Module</a></li>
+                    <li><a href="purchase-order.html"><i class="fas fa-shopping-cart"></i> Orders</a></li>
+                    <li><a href="inventory.html"><i class="fas fa-warehouse"></i> Inventory</a></li>
+                    <li><a href="budget.html"><i class="fas fa-chart-pie"></i> Budget & Expenses</a></li>
+                    <li><a href="approval.html"><i class="fas fa-check-double"></i> Approvals</a></li>
+                    <li><a href="reports.html"><i class="fas fa-chart-bar"></i> Reports & Analytics</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <h1>Products & Services Marketplace</h1>
+                    <p>Browse products and services for your school needs</p>
+                </div>
+                <div class="header-right">
+                    <div class="search-bar">
+                        <input type="text" id="globalSearch" placeholder="Search products, services...">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <div class="user-profile">
+                        <img src="https://i.pravatar.cc/40" alt="User Avatar">
+                        <span>Procurement Officer</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Marketplace Content -->
+            <div class="marketplace-content">
+                <div class="page-header">
+                    <h2>Browse Products & Services</h2>
+                    <button class="btn btn-primary" id="viewSavedItems">
+                        <i class="fas fa-heart"></i> Saved Items (3)
+                    </button>
+                </div>
+
+                <!-- Tabs -->
+                <div class="tabs">
+                    <div class="tab active" data-tab="products">Products</div>
+                    <div class="tab" data-tab="services">Services</div>
+                </div>
+
+                <!-- Products Tab -->
+                <div class="tab-content active" id="products">
+                    <!-- Filter Section -->
+                    <div class="filter-section">
+                        <div class="filter-header">
+                            <h3>Filter Products</h3>
+                            <button class="btn btn-secondary" id="resetFilters">
+                                <i class="fas fa-redo"></i> Reset Filters
+                            </button>
+                        </div>
+                        <div class="filter-grid">
+                            <div class="filter-group">
+                                <label for="categoryFilter">Category</label>
+                                <select id="categoryFilter" class="filter-control">
+                                    <option value="">All Categories</option>
+                                    <option value="books">Books & Stationery</option>
+                                    <option value="furniture">Furniture</option>
+                                    <option value="ict">ICT Equipment</option>
+                                    <option value="lab">Lab Equipment</option>
+                                    <option value="sports">Sports Equipment</option>
+                                    <option value="uniforms">Uniforms</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label for="supplierFilter">Supplier</label>
+                                <select id="supplierFilter" class="filter-control">
+                                    <option value="">All Suppliers</option>
+                                    <option value="edubooks">EduBooks Ltd.</option>
+                                    <option value="schoolfurniture">School Furniture Co.</option>
+                                    <option value="techsolutions">Tech Solutions Inc.</option>
+                                    <option value="labsupplies">Lab Supplies Co.</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label for="priceFilter">Price Range</label>
+                                <select id="priceFilter" class="filter-control">
+                                    <option value="">Any Price</option>
+                                    <option value="0-50">Under $50</option>
+                                    <option value="50-100">$50 - $100</option>
+                                    <option value="100-500">$100 - $500</option>
+                                    <option value="500-1000">$500 - $1,000</option>
+                                    <option value="1000+">Over $1,000</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label for="availabilityFilter">Availability</label>
+                                <select id="availabilityFilter" class="filter-control">
+                                    <option value="">All Items</option>
+                                    <option value="in-stock">In Stock</option>
+                                    <option value="low-stock">Low Stock</option>
+                                    <option value="pre-order">Pre-Order</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="filter-actions">
+                            <button class="btn btn-primary" id="applyFilters">
+                                <i class="fas fa-filter"></i> Apply Filters
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Products Grid -->
+                    <div class="products-grid">
+                        <!-- Product 1 -->
+                        <div class="product-card">
+                            <div class="product-badge">Bulk Discount</div>
+                            <div class="product-image">
+                                <i class="fas fa-book"></i>
+                            </div>
+                            <div class="product-body">
+                                <div class="product-category">Books & Stationery</div>
+                                <h3 class="product-title">Library Bookshelf - 5-Tier</h3>
+                                <p class="product-description">Durable wooden bookshelf with 5 adjustable shelves, perfect for school libraries.</p>
+                                <div class="product-supplier">
+                                    <i class="fas fa-store"></i> EduBooks Ltd.
+                                </div>
+                                <div class="product-price">
+                                    <span class="current-price">$189.99</span>
+                                    <span class="original-price">$219.99</span>
+                                    <span class="discount">14% OFF</span>
+                                </div>
+                                <div class="bulk-offer">
+                                    <i class="fas fa-tag"></i> Buy 5+ and save 10% extra
+                                </div>
+                            </div>
+                            <div class="product-footer">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus" data-id="1">-</button>
+                                    <input type="text" class="quantity-input" value="1" data-id="1">
+                                    <button class="quantity-btn plus" data-id="1">+</button>
+                                </div>
+                                <div class="product-actions">
+                                    <button class="btn btn-outline btn-sm save-item" data-id="1">
+                                        <i class="far fa-heart"></i> Save
+                                    </button>
+                                    <button class="btn btn-primary btn-sm add-to-rfq" data-id="1">
+                                        <i class="fas fa-cart-plus"></i> Add to RFQ
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Product 2 -->
+                        <div class="product-card">
+                            <div class="product-badge">Best Seller</div>
+                            <div class="product-image">
+                                <i class="fas fa-laptop"></i>
+                            </div>
+                            <div class="product-body">
+                                <div class="product-category">ICT Equipment</div>
+                                <h3 class="product-title">Student Laptop - EduTech Pro</h3>
+                                <p class="product-description">Durable laptops designed for classroom use with educational software pre-installed.</p>
+                                <div class="product-supplier">
+                                    <i class="fas fa-store"></i> Tech Solutions Inc.
+                                </div>
+                                <div class="product-price">
+                                    <span class="current-price">$429.99</span>
+                                </div>
+                                <div class="bulk-offer">
+                                    <i class="fas fa-tag"></i> Buy 10+ for $399.99 each
+                                </div>
+                            </div>
+                            <div class="product-footer">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus" data-id="2">-</button>
+                                    <input type="text" class="quantity-input" value="1" data-id="2">
+                                    <button class="quantity-btn plus" data-id="2">+</button>
+                                </div>
+                                <div class="product-actions">
+                                    <button class="btn btn-outline btn-sm save-item" data-id="2">
+                                        <i class="far fa-heart"></i> Save
+                                    </button>
+                                    <button class="btn btn-primary btn-sm add-to-rfq" data-id="2">
+                                        <i class="fas fa-cart-plus"></i> Add to RFQ
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Product 3 -->
+                        <div class="product-card">
+                            <div class="product-image">
+                                <i class="fas fa-flask"></i>
+                            </div>
+                            <div class="product-body">
+                                <div class="product-category">Lab Equipment</div>
+                                <h3 class="product-title">Chemistry Lab Set - Basic</h3>
+                                <p class="product-description">Complete chemistry set for high school laboratories with safety equipment.</p>
+                                <div class="product-supplier">
+                                    <i class="fas fa-store"></i> Lab Supplies Co.
+                                </div>
+                                <div class="product-price">
+                                    <span class="current-price">$1,249.99</span>
+                                    <span class="original-price">$1,399.99</span>
+                                    <span class="discount">11% OFF</span>
+                                </div>
+                                <div class="bulk-offer">
+                                    <i class="fas fa-tag"></i> Free delivery on orders over $1,000
+                                </div>
+                            </div>
+                            <div class="product-footer">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus" data-id="3">-</button>
+                                    <input type="text" class="quantity-input" value="1" data-id="3">
+                                    <button class="quantity-btn plus" data-id="3">+</button>
+                                </div>
+                                <div class="product-actions">
+                                    <button class="btn btn-outline btn-sm save-item" data-id="3">
+                                        <i class="far fa-heart"></i> Save
+                                    </button>
+                                    <button class="btn btn-primary btn-sm add-to-rfq" data-id="3">
+                                        <i class="fas fa-cart-plus"></i> Add to RFQ
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Product 4 -->
+                        <div class="product-card">
+                            <div class="product-badge">New</div>
+                            <div class="product-image">
+                                <i class="fas fa-basketball-ball"></i>
+                            </div>
+                            <div class="product-body">
+                                <div class="product-category">Sports Equipment</div>
+                                <h3 class="product-title">Basketball Hoop System</h3>
+                                <p class="product-description">Professional-grade basketball hoop with adjustable height for school gyms.</p>
+                                <div class="product-supplier">
+                                    <i class="fas fa-store"></i> School Furniture Co.
+                                </div>
+                                <div class="product-price">
+                                    <span class="current-price">$599.99</span>
+                                </div>
+                                <div class="bulk-offer">
+                                    <i class="fas fa-tag"></i> Installation included
+                                </div>
+                            </div>
+                            <div class="product-footer">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus" data-id="4">-</button>
+                                    <input type="text" class="quantity-input" value="1" data-id="4">
+                                    <button class="quantity-btn plus" data-id="4">+</button>
+                                </div>
+                                <div class="product-actions">
+                                    <button class="btn btn-outline btn-sm save-item" data-id="4">
+                                        <i class="far fa-heart"></i> Save
+                                    </button>
+                                    <button class="btn btn-primary btn-sm add-to-rfq" data-id="4">
+                                        <i class="fas fa-cart-plus"></i> Add to RFQ
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Services Tab -->
+                <div class="tab-content" id="services">
+                    <!-- Services Grid -->
+                    <div class="services-grid">
+                        <!-- Service 1 -->
+                        <div class="service-card">
+                            <div class="service-header">
+                                <div class="service-icon">
+                                    <i class="fas fa-tools"></i>
+                                </div>
+                                <div class="service-info">
+                                    <h3>ICT Equipment Repair</h3>
+                                    <div class="service-category">Repairs & Maintenance</div>
+                                </div>
+                            </div>
+                            <div class="service-body">
+                                <p class="service-description">Professional repair and maintenance services for computers, laptops, and other ICT equipment in educational settings.</p>
+                                <div class="service-details">
+                                    <div class="detail-item">
+                                        <span class="detail-label">Response Time:</span>
+                                        <span class="detail-value">24-48 hours</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label">Warranty:</span>
+                                        <span class="detail-value">90 days on repairs</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label">Coverage:</span>
+                                        <span class="detail-value">On-site service available</span>
+                                    </div>
+                                </div>
+                                <div class="service-pricing">
+                                    <span class="service-price">$89</span>
+                                    <span class="price-unit">per hour</span>
+                                </div>
+                            </div>
+                            <div class="service-footer">
+                                <div class="product-actions">
+                                    <button class="btn btn-outline btn-sm save-item" data-id="5">
+                                        <i class="far fa-heart"></i> Save
+                                    </button>
+                                    <button class="btn btn-primary btn-sm add-to-rfq" data-id="5">
+                                        <i class="fas fa-cart-plus"></i> Add to RFQ
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Service 2 -->
+                        <div class="service-card">
+                            <div class="service-header">
+                                <div class="service-icon">
+                                    <i class="fas fa-utensils"></i>
+                                </div>
+                                <div class="service-info">
+                                    <h3>School Catering Service</h3>
+                                    <div class="service-category">Catering</div>
+                                </div>
+                            </div>
+                            <div class="service-body">
+                                <p class="service-description">Complete catering solutions for school events, daily lunch programs, and special occasions with nutritional planning.</p>
+                                <div class="service-details">
+                                    <div class="detail-item">
+                                        <span class="detail-label">Service Area:</span>
+                                        <span class="detail-value">Metro area</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label">Dietary Options:</span>
+                                        <span class="detail-value">Vegetarian, Gluten-free</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label">Minimum Order:</span>
+                                        <span class="detail-value">20 meals</span>
+                                    </div>
+                                </div>
+                                <div class="service-pricing">
+                                    <span class="service-price">$8.50</span>
+                                    <span class="price-unit">per meal</span>
+                                </div>
+                            </div>
+                            <div class="service-footer">
+                                <div class="product-actions">
+                                    <button class="btn btn-outline btn-sm save-item" data-id="6">
+                                        <i class="far fa-heart"></i> Save
+                                    </button>
+                                    <button class="btn btn-primary btn-sm add-to-rfq" data-id="6">
+                                        <i class="fas fa-cart-plus"></i> Add to RFQ
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Service 3 -->
+                        <div class="service-card">
+                            <div class="service-header">
+                                <div class="service-icon">
+                                    <i class="fas fa-bus"></i>
+                                </div>
+                                <div class="service-info">
+                                    <h3>Student Transportation</h3>
+                                    <div class="service-category">Transport</div>
+                                </div>
+                            </div>
+                            <div class="service-body">
+                                <p class="service-description">Safe and reliable student transportation services for daily routes, field trips, and extracurricular activities.</p>
+                                <div class="service-details">
+                                    <div class="detail-item">
+                                        <span class="detail-label">Vehicle Types:</span>
+                                        <span class="detail-value">Buses, Vans</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label">Safety Features:</span>
+                                        <span class="detail-value">GPS tracking, Seat belts</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label">Availability:</span>
+                                        <span class="detail-value">5 AM - 10 PM</span>
+                                    </div>
+                                </div>
+                                <div class="service-pricing">
+                                    <span class="service-price">$4.25</span>
+                                    <span class="price-unit">per student/mile</span>
+                                </div>
+                            </div>
+                            <div class="service-footer">
+                                <div class="product-actions">
+                                    <button class="btn btn-outline btn-sm save-item" data-id="7">
+                                        <i class="far fa-heart"></i> Save
+                                    </button>
+                                    <button class="btn btn-primary btn-sm add-to-rfq" data-id="7">
+                                        <i class="fas fa-cart-plus"></i> Add to RFQ
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Service 4 -->
+                        <div class="service-card">
+                            <div class="service-header">
+                                <div class="service-icon">
+                                    <i class="fas fa-paint-roller"></i>
+                                </div>
+                                <div class="service-info">
+                                    <h3>School Facility Maintenance</h3>
+                                    <div class="service-category">Maintenance</div>
+                                </div>
+                            </div>
+                            <div class="service-body">
+                                <p class="service-description">Comprehensive maintenance services including painting, plumbing, electrical, and general repairs for school facilities.</p>
+                                <div class="service-details">
+                                    <div class="detail-item">
+                                        <span class="detail-label">Response Time:</span>
+                                        <span class="detail-value">Emergency: 2 hours</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label">Service Hours:</span>
+                                        <span class="detail-value">24/7 for emergencies</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label">Contract Options:</span>
+                                        <span class="detail-value">Monthly, Quarterly, Annual</span>
+                                    </div>
+                                </div>
+                                <div class="service-pricing">
+                                    <span class="service-price">$75</span>
+                                    <span class="price-unit">per hour</span>
+                                </div>
+                            </div>
+                            <div class="service-footer">
+                                <div class="product-actions">
+                                    <button class="btn btn-outline btn-sm save-item" data-id="8">
+                                        <i class="far fa-heart"></i> Save
+                                    </button>
+                                    <button class="btn btn-primary btn-sm add-to-rfq" data-id="8">
+                                        <i class="fas fa-cart-plus"></i> Add to RFQ
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- RFQ Cart -->
+    <div class="rfq-cart" id="rfqCart">
+        <i class="fas fa-file-invoice-dollar"></i>
+        <span>RFQ Cart</span>
+        <div class="rfq-count" id="rfqCount">0</div>
+    </div>
+
+    <!-- RFQ Modal -->
+    <div class="modal" id="rfqModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Request for Quotation</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="rfq-items" id="rfqItems">
+                    <!-- RFQ items will be added here dynamically -->
+                </div>
+                <div style="text-align: center; padding: 20px; color: var(--text-light);" id="emptyCartMessage">
+                    Your RFQ cart is empty. Add products or services to get started.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary close-modal">Continue Shopping</button>
+                <button class="btn btn-primary" id="submitRfq">Submit RFQ</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tab functionality
+            const tabs = document.querySelectorAll('.tab');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const targetTab = tab.getAttribute('data-tab');
+                    
+                    // Remove active class from all tabs and contents
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tabContents.forEach(c => c.classList.remove('active'));
+                    
+                    // Add active class to current tab and content
+                    tab.classList.add('active');
+                    document.getElementById(targetTab).classList.add('active');
+                });
+            });
+            
+            // RFQ Cart functionality
+            const rfqCart = document.getElementById('rfqCart');
+            const rfqModal = document.getElementById('rfqModal');
+            const rfqCount = document.getElementById('rfqCount');
+            const rfqItems = document.getElementById('rfqItems');
+            const emptyCartMessage = document.getElementById('emptyCartMessage');
+            const closeModalBtns = document.querySelectorAll('.close-modal');
+            const addToRfqBtns = document.querySelectorAll('.add-to-rfq');
+            const quantityInputs = document.querySelectorAll('.quantity-input');
+            const minusBtns = document.querySelectorAll('.quantity-btn.minus');
+            const plusBtns = document.querySelectorAll('.quantity-btn.plus');
+            const saveItemBtns = document.querySelectorAll('.save-item');
+            
+            let rfqItemsData = [];
+            
+            // Open RFQ modal
+            rfqCart.addEventListener('click', () => {
+                updateRfqModal();
+                rfqModal.style.display = 'flex';
+            });
+            
+            // Close modal
+            closeModalBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    rfqModal.style.display = 'none';
+                });
+            });
+            
+            // Close modal when clicking outside
+            window.addEventListener('click', (e) => {
+                if (e.target === rfqModal) {
+                    rfqModal.style.display = 'none';
+                }
+            });
+            
+            // Add to RFQ functionality
+            addToRfqBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const itemId = this.getAttribute('data-id');
+                    const quantityInput = document.querySelector(`.quantity-input[data-id="${itemId}"]`);
+                    const quantity = parseInt(quantityInput.value) || 1;
+                    
+                    addToRfq(itemId, quantity);
+                });
+            });
+            
+            // Quantity controls
+            minusBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const itemId = this.getAttribute('data-id');
+                    const quantityInput = document.querySelector(`.quantity-input[data-id="${itemId}"]`);
+                    let quantity = parseInt(quantityInput.value) || 1;
+                    
+                    if (quantity > 1) {
+                        quantity--;
+                        quantityInput.value = quantity;
+                    }
+                });
+            });
+            
+            plusBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const itemId = this.getAttribute('data-id');
+                    const quantityInput = document.querySelector(`.quantity-input[data-id="${itemId}"]`);
+                    let quantity = parseInt(quantityInput.value) || 1;
+                    
+                    quantity++;
+                    quantityInput.value = quantity;
+                });
+            });
+            
+            // Save item functionality
+            saveItemBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const itemId = this.getAttribute('data-id');
+                    const icon = this.querySelector('i');
+                    
+                    if (icon.classList.contains('far')) {
+                        icon.classList.remove('far');
+                        icon.classList.add('fas');
+                        this.innerHTML = '<i class="fas fa-heart"></i> Saved';
+                        alert('Item saved to your favorites!');
+                    } else {
+                        icon.classList.remove('fas');
+                        icon.classList.add('far');
+                        this.innerHTML = '<i class="far fa-heart"></i> Save';
+                        alert('Item removed from favorites!');
+                    }
+                });
+            });
+            
+            // Submit RFQ
+            document.getElementById('submitRfq').addEventListener('click', () => {
+                if (rfqItemsData.length === 0) {
+                    alert('Your RFQ cart is empty. Add items before submitting.');
+                    return;
+                }
+                
+                alert('RFQ submitted successfully! You will receive quotes from suppliers soon.');
+                rfqItemsData = [];
+                updateRfqCount();
+                updateRfqModal();
+                rfqModal.style.display = 'none';
+            });
+            
+            // Filter functionality
+            document.getElementById('applyFilters').addEventListener('click', () => {
+                alert('Filters applied! In a real application, this would update the product list.');
+            });
+            
+            document.getElementById('resetFilters').addEventListener('click', () => {
+                document.getElementById('categoryFilter').value = '';
+                document.getElementById('supplierFilter').value = '';
+                document.getElementById('priceFilter').value = '';
+                document.getElementById('availabilityFilter').value = '';
+                alert('Filters reset!');
+            });
+            
+            // Global search
+            document.getElementById('globalSearch').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    const searchTerm = e.target.value;
+                    if (searchTerm) {
+                        alert(`Searching for: ${searchTerm}`);
+                    }
+                }
+            });
+            
+            // Functions
+            function addToRfq(itemId, quantity) {
+                // In a real app, this would fetch item details from a database
+                const items = {
+                    1: { name: 'Library Bookshelf - 5-Tier', price: 189.99, supplier: 'EduBooks Ltd.' },
+                    2: { name: 'Student Laptop - EduTech Pro', price: 429.99, supplier: 'Tech Solutions Inc.' },
+                    3: { name: 'Chemistry Lab Set - Basic', price: 1249.99, supplier: 'Lab Supplies Co.' },
+                    4: { name: 'Basketball Hoop System', price: 599.99, supplier: 'School Furniture Co.' },
+                    5: { name: 'ICT Equipment Repair', price: 89, supplier: 'Tech Solutions Inc.', isService: true },
+                    6: { name: 'School Catering Service', price: 8.5, supplier: 'Catering Solutions', isService: true },
+                    7: { name: 'Student Transportation', price: 4.25, supplier: 'SafeRide Transport', isService: true },
+                    8: { name: 'School Facility Maintenance', price: 75, supplier: 'Maintenance Pros', isService: true }
+                };
+                
+                const item = items[itemId];
+                if (!item) return;
+                
+                // Check if item already exists in RFQ
+                const existingItemIndex = rfqItemsData.findIndex(i => i.id === itemId);
+                
+                if (existingItemIndex !== -1) {
+                    // Update quantity if item exists
+                    rfqItemsData[existingItemIndex].quantity += quantity;
+                } else {
+                    // Add new item
+                    rfqItemsData.push({
+                        id: itemId,
+                        name: item.name,
+                        price: item.price,
+                        supplier: item.supplier,
+                        quantity: quantity,
+                        isService: item.isService || false
+                    });
+                }
+                
+                updateRfqCount();
+                alert(`Added ${quantity} ${item.name} to RFQ cart`);
+            }
+            
+            function updateRfqCount() {
+                const totalItems = rfqItemsData.reduce((total, item) => total + item.quantity, 0);
+                rfqCount.textContent = totalItems;
+                
+                // Show/hide cart based on items
+                if (totalItems > 0) {
+                    rfqCart.style.display = 'flex';
+                } else {
+                    rfqCart.style.display = 'flex'; // Always show but with 0 count
+                }
+            }
+            
+            function updateRfqModal() {
+                rfqItems.innerHTML = '';
+                
+                if (rfqItemsData.length === 0) {
+                    emptyCartMessage.style.display = 'block';
+                    return;
+                }
+                
+                emptyCartMessage.style.display = 'none';
+                
+                rfqItemsData.forEach(item => {
+                    const itemElement = document.createElement('div');
+                    itemElement.className = 'rfq-item';
+                    itemElement.innerHTML = `
+                        <div class="rfq-item-info">
+                            <h4>${item.name}</h4>
+                            <p>Supplier: ${item.supplier} | ${item.isService ? 'Service' : 'Product'}</p>
+                        </div>
+                        <div class="rfq-item-quantity">
+                            <span>Qty: ${item.quantity}</span>
+                        </div>
+                        <div class="rfq-item-actions">
+                            <button class="btn btn-secondary btn-sm remove-item" data-id="${item.id}">
+                                <i class="fas fa-trash"></i> Remove
+                            </button>
+                        </div>
+                    `;
+                    rfqItems.appendChild(itemElement);
+                });
+                
+                // Add event listeners to remove buttons
+                document.querySelectorAll('.remove-item').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const itemId = this.getAttribute('data-id');
+                        removeFromRfq(itemId);
+                    });
+                });
+            }
+            
+            function removeFromRfq(itemId) {
+                rfqItemsData = rfqItemsData.filter(item => item.id !== itemId);
+                updateRfqCount();
+                updateRfqModal();
+            }
+        });
+    </script>
+</body>
+</html>

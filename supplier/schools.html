@@ -1,0 +1,1400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduProcure - Schools Directory</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #1976d2;
+            --light-blue: #42a5f5;
+            --dark-blue: #0d47a1;
+            --accent-blue: #90caf9;
+            --accent-orange: #ff9800;
+            --light-orange: #ffb74d;
+            --white: #ffffff;
+            --light-gray: #f5f5f5;
+            --medium-gray: #e0e0e0;
+            --dark-gray: #424242;
+            --text-dark: #212121;
+            --text-light: #757575;
+            --success-green: #4caf50;
+            --warning-orange: #ff9800;
+            --error-red: #f44336;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+            --border-radius: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light-gray);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 260px;
+            background-color: var(--white);
+            box-shadow: var(--shadow);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            transition: var(--transition);
+        }
+
+        .logo {
+            padding: 24px 20px;
+            border-bottom: 1px solid var(--medium-gray);
+            color: var(--primary-blue);
+            display: flex;
+            align-items: center;
+        }
+
+        .logo h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .logo i {
+            font-size: 1.8rem;
+        }
+
+        .nav-menu {
+            flex: 1;
+            padding: 20px 0;
+        }
+
+        .nav-menu ul {
+            list-style: none;
+        }
+
+        .nav-menu li {
+            margin-bottom: 5px;
+        }
+
+        .nav-menu a {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: var(--text-dark);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .nav-menu a:hover {
+            background-color: var(--light-gray);
+            color: var(--primary-blue);
+        }
+
+        .nav-menu a.active {
+            background-color: var(--accent-blue);
+            color: var(--dark-blue);
+            font-weight: 500;
+            border-left: 4px solid var(--primary-blue);
+        }
+
+        .nav-menu i {
+            margin-right: 12px;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            background-color: var(--white);
+            box-shadow: var(--shadow);
+        }
+
+        .header-left h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--dark-blue);
+        }
+
+        .header-left p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .search-bar {
+            position: relative;
+        }
+
+        .search-bar input {
+            padding: 10px 15px 10px 40px;
+            border: 1px solid var(--medium-gray);
+            border-radius: 30px;
+            width: 300px;
+            font-size: 0.9rem;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .search-bar input:focus {
+            border-color: var(--primary-blue);
+        }
+
+        .search-bar i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-profile img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .user-profile span {
+            font-weight: 500;
+        }
+
+        /* Directory Content */
+        .directory-content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .page-header h2 {
+            font-size: 1.8rem;
+            color: var(--dark-blue);
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: var(--border-radius);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-blue);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--dark-blue);
+        }
+
+        .btn-secondary {
+            background-color: var(--medium-gray);
+            color: var(--text-dark);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--dark-gray);
+            color: var(--white);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary-blue);
+            color: var(--primary-blue);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary-blue);
+            color: var(--white);
+        }
+
+        .btn-success {
+            background-color: var(--success-green);
+            color: var(--white);
+        }
+
+        .btn-success:hover {
+            background-color: #388e3c;
+        }
+
+        .btn-warning {
+            background-color: var(--warning-orange);
+            color: var(--white);
+        }
+
+        .btn-warning:hover {
+            background-color: #f57c00;
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+        }
+
+        /* Directory Header */
+        .directory-header {
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+        }
+
+        .directory-stats {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary-blue);
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .filters-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-label {
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-bottom: 5px;
+            color: var(--text-dark);
+        }
+
+        .filter-select {
+            padding: 8px 12px;
+            border: 1px solid var(--medium-gray);
+            border-radius: var(--border-radius);
+            background-color: var(--white);
+            font-size: 0.9rem;
+            outline: none;
+        }
+
+        .filter-select:focus {
+            border-color: var(--primary-blue);
+        }
+
+        /* Schools Grid */
+        .schools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+        }
+
+        .school-card {
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .school-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .school-header {
+            padding: 20px;
+            background: linear-gradient(135deg, var(--primary-blue), var(--light-blue));
+            color: var(--white);
+            position: relative;
+        }
+
+        .school-type {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 500;
+        }
+
+        .school-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .school-location {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .school-body {
+            padding: 20px;
+        }
+
+        .school-details {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .detail-icon {
+            width: 20px;
+            color: var(--primary-blue);
+        }
+
+        .detail-text {
+            font-size: 0.9rem;
+            color: var(--text-dark);
+        }
+
+        .procurement-categories {
+            margin-bottom: 20px;
+        }
+
+        .categories-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-dark);
+        }
+
+        .categories-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .category-tag {
+            background-color: var(--light-gray);
+            color: var(--text-dark);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 500;
+        }
+
+        .school-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            padding: 8px 12px;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .action-btn-primary {
+            background-color: var(--primary-blue);
+            color: var(--white);
+        }
+
+        .action-btn-primary:hover {
+            background-color: var(--dark-blue);
+        }
+
+        .action-btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary-blue);
+            color: var(--primary-blue);
+        }
+
+        .action-btn-outline:hover {
+            background-color: var(--primary-blue);
+            color: var(--white);
+        }
+
+        .action-btn-success {
+            background-color: var(--success-green);
+            color: var(--white);
+        }
+
+        .action-btn-success:hover {
+            background-color: #388e3c;
+        }
+
+        /* Opportunities Section */
+        .opportunities-section {
+            margin-top: 40px;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            color: var(--dark-blue);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--medium-gray);
+        }
+
+        .opportunities-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .opportunity-card {
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .opportunity-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .opportunity-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .opportunity-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .opportunity-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .badge-rfq {
+            background-color: var(--accent-blue);
+            color: var(--dark-blue);
+        }
+
+        .badge-po {
+            background-color: #c8e6c9;
+            color: #2e7d32;
+        }
+
+        .badge-tender {
+            background-color: #fff9c4;
+            color: #f57f17;
+        }
+
+        .opportunity-school {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .school-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: var(--primary-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .school-info h4 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .school-info p {
+            font-size: 0.7rem;
+            color: var(--text-light);
+        }
+
+        .opportunity-details {
+            margin-bottom: 15px;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+
+        .detail-label {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .detail-value {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        .opportunity-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Map View Toggle */
+        .view-toggle {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+        }
+
+        .toggle-btn {
+            padding: 8px 16px;
+            background-color: var(--white);
+            border: 1px solid var(--medium-gray);
+            color: var(--text-light);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .toggle-btn:first-child {
+            border-radius: var(--border-radius) 0 0 var(--border-radius);
+        }
+
+        .toggle-btn:last-child {
+            border-radius: 0 var(--border-radius) var(--border-radius) 0;
+        }
+
+        .toggle-btn.active {
+            background-color: var(--primary-blue);
+            color: var(--white);
+            border-color: var(--primary-blue);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .schools-grid {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            }
+            
+            .filters-container {
+                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+            }
+            
+            .nav-menu ul {
+                display: flex;
+                overflow-x: auto;
+            }
+            
+            .nav-menu li {
+                flex-shrink: 0;
+                margin-bottom: 0;
+            }
+            
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .header-right {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .search-bar input {
+                width: 200px;
+            }
+            
+            .directory-header {
+                padding: 15px;
+            }
+            
+            .directory-stats {
+                gap: 15px;
+                flex-wrap: wrap;
+            }
+            
+            .schools-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .opportunities-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .directory-content {
+                padding: 15px;
+            }
+            
+            .header-right {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .search-bar {
+                width: 100%;
+            }
+            
+            .search-bar input {
+                width: 100%;
+            }
+            
+            .filters-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .school-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fas fa-industry"></i>
+                <h2>EduProcure</h2>
+            </div>
+            <nav class="nav-menu">
+                <ul>
+                    <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li><a href="profile.html"><i class="fas fa-building"></i> Profile</a></li>
+                    <li><a href="products.html"><i class="fas fa-boxes"></i> Product Catalog</a></li>
+                    <li><a href="schools.html" class="active"><i class="fas fa-school"></i> Schools Directory</a></li>
+                    <li><a href="#"><i class="fas fa-file-invoice-dollar"></i> RFQ Management</a></li>
+                    <li><a href="#"><i class="fas fa-shipping-fast"></i> Order Fulfillment</a></li>
+                    <li><a href="#"><i class="fas fa-file-invoice"></i> Invoices & Payments</a></li>
+                    <li><a href="#"><i class="fas fa-chart-bar"></i> Reports & Analytics</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <h1>Schools Directory</h1>
+                    <p>Find educational institutions and procurement opportunities</p>
+                </div>
+                <div class="header-right">
+                    <div class="search-bar">
+                        <input type="text" id="globalSearch" placeholder="Search schools...">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <div class="user-profile">
+                        <img src="https://i.pravatar.cc/40" alt="User Avatar">
+                        <span>Supplier Manager</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Directory Content -->
+            <div class="directory-content">
+                <div class="page-header">
+                    <h2>Find Schools</h2>
+                    <div class="view-toggle">
+                        <button class="toggle-btn active" id="gridViewBtn">
+                            <i class="fas fa-th"></i> Grid View
+                        </button>
+                        <button class="toggle-btn" id="mapViewBtn">
+                            <i class="fas fa-map"></i> Map View
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Directory Header -->
+                <div class="directory-header">
+                    <div class="directory-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">248</div>
+                            <div class="stat-label">Schools</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">42</div>
+                            <div class="stat-label">Active RFQs</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">18</div>
+                            <div class="stat-label">New This Month</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">156</div>
+                            <div class="stat-label">Following</div>
+                        </div>
+                    </div>
+                    <div class="filters-container">
+                        <div class="filter-group">
+                            <label class="filter-label">County</label>
+                            <select class="filter-select" id="countyFilter">
+                                <option>All Counties</option>
+                                <option>Nairobi County</option>
+                                <option>Mombasa County</option>
+                                <option>Kisumu County</option>
+                                <option>Nakuru County</option>
+                                <option>Uasin Gishu County</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">Sub-County</label>
+                            <select class="filter-select" id="subCountyFilter">
+                                <option>All Sub-Counties</option>
+                                <option>Westlands</option>
+                                <option>Lang'ata</option>
+                                <option>Dagoretti</option>
+                                <option>Embakasi</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">School Type</label>
+                            <select class="filter-select" id="typeFilter">
+                                <option>All Types</option>
+                                <option>Primary</option>
+                                <option>Secondary</option>
+                                <option>Tertiary</option>
+                                <option>Vocational</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">School Size</label>
+                            <select class="filter-select" id="sizeFilter">
+                                <option>All Sizes</option>
+                                <option>Small (1-300)</option>
+                                <option>Medium (301-800)</option>
+                                <option>Large (801+)</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">Ownership</label>
+                            <select class="filter-select" id="ownershipFilter">
+                                <option>All</option>
+                                <option>Public</option>
+                                <option>Private</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">Procurement Category</label>
+                            <select class="filter-select" id="categoryFilter">
+                                <option>All Categories</option>
+                                <option>Science Equipment</option>
+                                <option>ICT Resources</option>
+                                <option>Furniture</option>
+                                <option>Food & Catering</option>
+                                <option>Transport</option>
+                                <option>Sports Equipment</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Schools Grid -->
+                <div class="schools-grid" id="schoolsGrid">
+                    <!-- School 1 -->
+                    <div class="school-card">
+                        <div class="school-header">
+                            <div class="school-type">Public</div>
+                            <h3 class="school-name">Nairobi Science High School</h3>
+                            <p class="school-location">Nairobi County, Westlands Sub-County</p>
+                        </div>
+                        <div class="school-body">
+                            <div class="school-details">
+                                <div class="detail-item">
+                                    <i class="fas fa-graduation-cap detail-icon"></i>
+                                    <span class="detail-text">Secondary School</span>
+                                </div>
+                                <div class="detail-item">
+                                    <i class="fas fa-users detail-icon"></i>
+                                    <span class="detail-text">Large (1,200 students)</span>
+                                </div>
+                                <div class="detail-item">
+                                    <i class="fas fa-envelope detail-icon"></i>
+                                    <span class="detail-text">procurement@nairobi-science.sc.ke</span>
+                                </div>
+                                <div class="detail-item">
+                                    <i class="fas fa-phone detail-icon"></i>
+                                    <span class="detail-text">+254 700 123 456</span>
+                                </div>
+                            </div>
+                            <div class="procurement-categories">
+                                <div class="categories-title">Procurement Needs:</div>
+                                <div class="categories-tags">
+                                    <span class="category-tag">Science Equipment</span>
+                                    <span class="category-tag">ICT Resources</span>
+                                    <span class="category-tag">Lab Chemicals</span>
+                                    <span class="category-tag">Sports Equipment</span>
+                                </div>
+                            </div>
+                            <div class="school-actions">
+                                <button class="action-btn action-btn-primary">
+                                    <i class="fas fa-eye"></i> View Profile
+                                </button>
+                                <button class="action-btn action-btn-outline">
+                                    <i class="fas fa-bell"></i> Follow
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- School 2 -->
+                    <div class="school-card">
+                        <div class="school-header">
+                            <div class="school-type">Private</div>
+                            <h3 class="school-name">Mombasa Primary Academy</h3>
+                            <p class="school-location">Mombasa County, Island Sub-County</p>
+                        </div>
+                        <div class="school-body">
+                            <div class="school-details">
+                                <div class="detail-item">
+                                    <i class="fas fa-graduation-cap detail-icon"></i>
+                                    <span class="detail-text">Primary School</span>
+                                </div>
+                                <div class="detail-item">
+                                    <i class="fas fa-users detail-icon"></i>
+                                    <span class="detail-text">Medium (450 students)</span>
+                                </div>
+                                <div class="detail-item">
+                                    <i class="fas fa-envelope detail-icon"></i>
+                                    <span class="detail-text">purchasing@mombasa-primary.ac.ke</span>
+                                </div>
+                                <div class="detail-item">
+                                    <i class="fas fa-phone detail-icon"></i>
+                                    <span class="detail-text">+254 711 987 654</span>
+                                </div>
+                            </div>
+                            <div class="procurement-categories">
+                                <div class="categories-title">Procurement Needs:</div>
+                                <div class="categories-tags">
+                                    <span class="category-tag">Furniture</span>
+                                    <span class="category-tag">Teaching Aids</span>
+                                    <span class="category-tag">Play Equipment</span>
+                                    <span class="category-tag">Food & Catering</span>
+                                </div>
+                            </div>
+                            <div class="school-actions">
+                                <button class="action-btn action-btn-primary">
+                                    <i class="fas fa-eye"></i> View Profile
+                                </button>
+                                <button class="action-btn action-btn-success">
+                                    <i class="fas fa-check"></i> Following
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- School 3 -->
+                    <div class="school-card">
+                        <div class="school-header">
+                            <div class="school-type">Public</div>
+                            <h3 class="school-name">Kisumu Technical College</h3>
+                            <p class="school-location">Kisumu County, Kisumu Central Sub-County</p>
+                        </div>
+                        <div class="school-body">
+                            <div class="school-details">
+                                <div class="detail-item">
+                                    <i class="fas fa-graduation-cap detail-icon"></i>
+                                    <span class="detail-text">Tertiary Institution</span>
+                                </div>
+                                <div class="detail-item">
+                                    <i class="fas fa-users detail-icon"></i>
+                                    <span class="detail-text">Large (2,500 students)</span>
+                                </div>
+                                <div class="detail-item">
+                                    <i class="fas fa-envelope detail-icon"></i>
+                                    <span class="detail-text">procurement@kisumu-tech.ac.ke</span>
+                                </div>
+                                <div class="detail-item">
+                                    <i class="fas fa-phone detail-icon"></i>
+                                    <span class="detail-text">+254 733 456 789</span>
+                                </div>
+                            </div>
+                            <div class="procurement-categories">
+                                <div class="categories-title">Procurement Needs:</div>
+                                <div class="categories-tags">
+                                    <span class="category-tag">Technical Equipment</span>
+                                    <span class="category-tag">ICT Resources</span>
+                                    <span class="category-tag">Workshop Tools</span>
+                                    <span class="category-tag">Transport</span>
+                                </div>
+                            </div>
+                            <div class="school-actions">
+                                <button class="action-btn action-btn-primary">
+                                    <i class="fas fa-eye"></i> View Profile
+                                </button>
+                                <button class="action-btn action-btn-outline">
+                                    <i class="fas fa-bell"></i> Follow
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- School 4 -->
+                    <div class="school-card">
+                        <div class="school-header">
+                            <div class="school-type">Private</div>
+                            <h3 class="school-name">Nakuru Girls High School</h3>
+                            <p class="school-location">Nakuru County, Nakuru Town Sub-County</p>
+                        </div>
+                        <div class="school-body">
+                            <div class="school-details">
+                                <div class="detail-item">
+                                    <i class="fas fa-graduation-cap detail-icon"></i>
+                                    <span class="detail-text">Secondary School</span>
+                                </div>
+                                <div class="detail-item">
+                                    <i class="fas fa-users detail-icon"></i>
+                                    <span class="detail-text">Medium (600 students)</span>
+                                </div>
+                                <div class="detail-item">
+                                    <i class="fas fa-envelope detail-icon"></i>
+                                    <span class="detail-text">supplies@nakuru-girls.sc.ke</span>
+                                </div>
+                                <div class="detail-item">
+                                    <i class="fas fa-phone detail-icon"></i>
+                                    <span class="detail-text">+254 722 111 222</span>
+                                </div>
+                            </div>
+                            <div class="procurement-categories">
+                                <div class="categories-title">Procurement Needs:</div>
+                                <div class="categories-tags">
+                                    <span class="category-tag">Science Equipment</span>
+                                    <span class="category-tag">Laboratory Supplies</span>
+                                    <span class="category-tag">Dormitory Furniture</span>
+                                    <span class="category-tag">Sports Equipment</span>
+                                </div>
+                            </div>
+                            <div class="school-actions">
+                                <button class="action-btn action-btn-primary">
+                                    <i class="fas fa-eye"></i> View Profile
+                                </button>
+                                <button class="action-btn action-btn-outline">
+                                    <i class="fas fa-bell"></i> Follow
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- School 5 -->
+                    <div class="school-card">
+                        <div class="school-header">
+                            <div class="school-type">Public</div>
+                            <h3 class="school-name">Eldoret Vocational Training Center</h3>
+                            <p class="school-location">Uasin Gishu County, Eldoret West Sub-County</p>
+                        </div>
+                        <div class="school-body">
+                            <div class="school-details">
+                                <div class="detail-item">
+                                    <i class="fas fa-graduation-cap detail-icon"></i>
+                                    <span class="detail-text">Vocational School</span>
+                                </div>
+                                <div class="detail-item">
+                                    <i class="fas fa-users detail-icon"></i>
+                                    <span class="detail-text">Small (280 students)</span>
+                                </div>
+                                <div class="detail-item">
+                                    <i class="fas fa-envelope detail-icon"></i>
+                                    <span class="detail-text">procurement@eldoret-vtc.go.ke</span>
+                                </div>
+                                <div class="detail-item">
+                                    <i class="fas fa-phone detail-icon"></i>
+                                    <span class="detail-text">+254 700 555 444</span>
+                                </div>
+                            </div>
+                            <div class="procurement-categories">
+                                <div class="categories-title">Procurement Needs:</div>
+                                <div class="categories-tags">
+                                    <span class="category-tag">Technical Equipment</span>
+                                    <span class="category-tag">Workshop Tools</span>
+                                    <span class="category-tag">Raw Materials</span>
+                                    <span class="category-tag">Safety Gear</span>
+                                </div>
+                            </div>
+                            <div class="school-actions">
+                                <button class="action-btn action-btn-primary">
+                                    <i class="fas fa-eye"></i> View Profile
+                                </button>
+                                <button class="action-btn action-btn-success">
+                                    <i class="fas fa-check"></i> Following
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- School 6 -->
+                    <div class="school-card">
+                        <div class="school-header">
+                            <div class="school-type">Private</div>
+                            <h3 class="school-name">Lang'ata Primary School</h3>
+                            <p class="school-location">Nairobi County, Lang'ata Sub-County</p>
+                        </div>
+                        <div class="school-body">
+                            <div class="school-details">
+                                <div class="detail-item">
+                                    <i class="fas fa-graduation-cap detail-icon"></i>
+                                    <span class="detail-text">Primary School</span>
+                                </div>
+                                <div class="detail-item">
+                                    <i class="fas fa-users detail-icon"></i>
+                                    <span class="detail-text">Medium (520 students)</span>
+                                </div>
+                                <div class="detail-item">
+                                    <i class="fas fa-envelope detail-icon"></i>
+                                    <span class="detail-text">purchasing@langata-primary.sc.ke</span>
+                                </div>
+                                <div class="detail-item">
+                                    <i class="fas fa-phone detail-icon"></i>
+                                    <span class="detail-text">+254 711 333 777</span>
+                                </div>
+                            </div>
+                            <div class="procurement-categories">
+                                <div class="categories-title">Procurement Needs:</div>
+                                <div class="categories-tags">
+                                    <span class="category-tag">Teaching Aids</span>
+                                    <span class="category-tag">Play Equipment</span>
+                                    <span class="category-tag">Stationery</span>
+                                    <span class="category-tag">Food & Catering</span>
+                                </div>
+                            </div>
+                            <div class="school-actions">
+                                <button class="action-btn action-btn-primary">
+                                    <i class="fas fa-eye"></i> View Profile
+                                </button>
+                                <button class="action-btn action-btn-outline">
+                                    <i class="fas fa-bell"></i> Follow
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Opportunities Section -->
+                <div class="opportunities-section">
+                    <h3 class="section-title">Current Procurement Opportunities</h3>
+                    <div class="opportunities-container">
+                        <!-- Opportunity 1 -->
+                        <div class="opportunity-card">
+                            <div class="opportunity-header">
+                                <h4 class="opportunity-title">Science Laboratory Equipment</h4>
+                                <span class="opportunity-badge badge-rfq">RFQ</span>
+                            </div>
+                            <div class="opportunity-school">
+                                <div class="school-avatar">NS</div>
+                                <div class="school-info">
+                                    <h4>Nairobi Science High School</h4>
+                                    <p>Nairobi County • Public</p>
+                                </div>
+                            </div>
+                            <div class="opportunity-details">
+                                <div class="detail-row">
+                                    <span class="detail-label">Category:</span>
+                                    <span class="detail-value">Science Equipment</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Budget:</span>
+                                    <span class="detail-value">KES 1,200,000</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Deadline:</span>
+                                    <span class="detail-value">15 Dec 2023</span>
+                                </div>
+                            </div>
+                            <div class="opportunity-actions">
+                                <button class="btn btn-primary btn-sm" style="flex: 1;">
+                                    <i class="fas fa-file-alt"></i> View RFQ
+                                </button>
+                                <button class="btn btn-outline btn-sm">
+                                    <i class="fas fa-bell"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Opportunity 2 -->
+                        <div class="opportunity-card">
+                            <div class="opportunity-header">
+                                <h4 class="opportunity-title">Student Desks & Chairs</h4>
+                                <span class="opportunity-badge badge-po">PO</span>
+                            </div>
+                            <div class="opportunity-school">
+                                <div class="school-avatar">MP</div>
+                                <div class="school-info">
+                                    <h4>Mombasa Primary Academy</h4>
+                                    <p>Mombasa County • Private</p>
+                                </div>
+                            </div>
+                            <div class="opportunity-details">
+                                <div class="detail-row">
+                                    <span class="detail-label">Category:</span>
+                                    <span class="detail-value">Furniture</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Quantity:</span>
+                                    <span class="detail-value">250 sets</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Deadline:</span>
+                                    <span class="detail-value">10 Jan 2024</span>
+                                </div>
+                            </div>
+                            <div class="opportunity-actions">
+                                <button class="btn btn-primary btn-sm" style="flex: 1;">
+                                    <i class="fas fa-shopping-cart"></i> Submit Quote
+                                </button>
+                                <button class="btn btn-outline btn-sm">
+                                    <i class="fas fa-bell"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Opportunity 3 -->
+                        <div class="opportunity-card">
+                            <div class="opportunity-header">
+                                <h4 class="opportunity-title">Computer Lab Upgrade</h4>
+                                <span class="opportunity-badge badge-tender">Tender</span>
+                            </div>
+                            <div class="opportunity-school">
+                                <div class="school-avatar">KT</div>
+                                <div class="school-info">
+                                    <h4>Kisumu Technical College</h4>
+                                    <p>Kisumu County • Public</p>
+                                </div>
+                            </div>
+                            <div class="opportunity-details">
+                                <div class="detail-row">
+                                    <span class="detail-label">Category:</span>
+                                    <span class="detail-value">ICT Resources</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Budget:</span>
+                                    <span class="detail-value">KES 3,500,000</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Deadline:</span>
+                                    <span class="detail-value">30 Nov 2023</span>
+                                </div>
+                            </div>
+                            <div class="opportunity-actions">
+                                <button class="btn btn-primary btn-sm" style="flex: 1;">
+                                    <i class="fas fa-gavel"></i> Bid Now
+                                </button>
+                                <button class="btn btn-outline btn-sm">
+                                    <i class="fas fa-bell"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // JavaScript for interactive elements
+        document.addEventListener('DOMContentLoaded', function() {
+            // View Toggle
+            const gridViewBtn = document.getElementById('gridViewBtn');
+            const mapViewBtn = document.getElementById('mapViewBtn');
+            
+            if (gridViewBtn && mapViewBtn) {
+                gridViewBtn.addEventListener('click', function() {
+                    gridViewBtn.classList.add('active');
+                    mapViewBtn.classList.remove('active');
+                    document.getElementById('schoolsGrid').style.display = 'grid';
+                    // In a real application, you would hide the map and show the grid
+                });
+                
+                mapViewBtn.addEventListener('click', function() {
+                    mapViewBtn.classList.add('active');
+                    gridViewBtn.classList.remove('active');
+                    document.getElementById('schoolsGrid').style.display = 'none';
+                    alert('Map view would be displayed here');
+                    // In a real application, you would show a map with school locations
+                });
+            }
+
+            // Global Search
+            const globalSearch = document.getElementById('globalSearch');
+            if (globalSearch) {
+                globalSearch.addEventListener('input', function(e) {
+                    const searchTerm = e.target.value.toLowerCase();
+                    const schoolCards = document.querySelectorAll('.school-card');
+                    
+                    schoolCards.forEach(card => {
+                        const name = card.querySelector('.school-name').textContent.toLowerCase();
+                        const location = card.querySelector('.school-location').textContent.toLowerCase();
+                        
+                        if (name.includes(searchTerm) || location.includes(searchTerm)) {
+                            card.style.display = 'block';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                });
+            }
+
+            // Filter Functionality
+            const filters = document.querySelectorAll('.filter-select');
+            filters.forEach(filter => {
+                filter.addEventListener('change', function() {
+                    applyFilters();
+                });
+            });
+
+            function applyFilters() {
+                const county = document.getElementById('countyFilter').value;
+                const type = document.getElementById('typeFilter').value;
+                const size = document.getElementById('sizeFilter').value;
+                
+                const schoolCards = document.querySelectorAll('.school-card');
+                
+                schoolCards.forEach(card => {
+                    let showCard = true;
+                    
+                    // Filter by county
+                    if (county !== 'All Counties') {
+                        const location = card.querySelector('.school-location').textContent;
+                        if (!location.includes(county)) {
+                            showCard = false;
+                        }
+                    }
+                    
+                    // Filter by type
+                    if (type !== 'All Types') {
+                        const schoolType = card.querySelector('.detail-text').textContent;
+                        if (!schoolType.includes(type)) {
+                            showCard = false;
+                        }
+                    }
+                    
+                    // Filter by size
+                    if (size !== 'All Sizes') {
+                        const sizeText = card.querySelectorAll('.detail-text')[1].textContent;
+                        if (size === 'Small (1-300)' && !sizeText.includes('Small')) {
+                            showCard = false;
+                        } else if (size === 'Medium (301-800)' && !sizeText.includes('Medium')) {
+                            showCard = false;
+                        } else if (size === 'Large (801+)' && !sizeText.includes('Large')) {
+                            showCard = false;
+                        }
+                    }
+                    
+                    card.style.display = showCard ? 'block' : 'none';
+                });
+            }
+
+            // Follow/Unfollow buttons
+            const followButtons = document.querySelectorAll('.action-btn-outline, .action-btn-success');
+            followButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    if (this.classList.contains('action-btn-outline')) {
+                        this.classList.remove('action-btn-outline');
+                        this.classList.add('action-btn-success');
+                        this.innerHTML = '<i class="fas fa-check"></i> Following';
+                        alert('You are now following this school. You will receive alerts when they post RFQs.');
+                    } else {
+                        this.classList.remove('action-btn-success');
+                        this.classList.add('action-btn-outline');
+                        this.innerHTML = '<i class="fas fa-bell"></i> Follow';
+                        alert('You have unfollowed this school.');
+                    }
+                });
+            });
+
+            // View Profile buttons
+            const viewProfileButtons = document.querySelectorAll('.action-btn-primary');
+            viewProfileButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const schoolName = this.closest('.school-card').querySelector('.school-name').textContent;
+                    alert(`School profile for ${schoolName} would open here`);
+                    // In a real application, you would navigate to the school profile page
+                });
+            });
+        });
+    </script>
+</body>
+</html>

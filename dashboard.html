@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduProcure - School Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="logo">
+                <h2><i class="fas fa-school"></i> EduProcure</h2>
+            </div>
+            <nav class="nav-menu">
+                <ul>
+                    <li><a href="dashboard.html" class="active"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li><a href="profile.html"><i class="fas fa-building"></i> School Profile</a></li>
+                    <li><a href="supplier.html"><i class="fas fa-store"></i> Supplier Marketplace</a></li>
+                    <li><a href="products.html"><i class="fas fa-boxes"></i> Products & Services</a></li>
+                    <li><a href="quotation.html"><i class="fas fa-file-invoice-dollar"></i> RFQ Module</a></li>
+                    <li><a href="purchase-order.html"><i class="fas fa-shopping-cart"></i> Orders</a></li>
+                    <li><a href="inventory.html"><i class="fas fa-warehouse"></i> Inventory</a></li>
+                    <li><a href="budget.html"><i class="fas fa-chart-pie"></i> Budget & Expenses</a></li>
+                    <li><a href="approval.html"><i class="fas fa-check-double"></i> Approvals</a></li>
+                    <li><a href="reports.html"><i class="fas fa-chart-bar"></i> Reports & Analytics</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <h1>School Dashboard</h1>
+                    <p>Welcome back, Greenfield High School</p>
+                </div>
+                <div class="header-right">
+                    <div class="search-bar">
+                        <input type="text" placeholder="Search...">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <div class="user-profile">
+                        <img src="https://i.pravatar.cc/40" alt="User Avatar">
+                        <span>Procurement Officer</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dashboard Content -->
+            <div class="dashboard-content">
+                <!-- Summary Cards -->
+                <div class="summary-cards">
+                    <div class="card">
+                        <div class="card-icon pending-orders">
+                            <i class="fas fa-clipboard-list"></i>
+                        </div>
+                        <div class="card-info">
+                            <h3>Pending Orders</h3>
+                            <p class="count">12</p>
+                            <span class="card-detail">5 awaiting delivery</span>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon pending-approvals">
+                            <i class="fas fa-user-check"></i>
+                        </div>
+                        <div class="card-info">
+                            <h3>Pending Approvals</h3>
+                            <p class="count">8</p>
+                            <span class="card-detail">3 urgent</span>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon budget-summary">
+                            <i class="fas fa-wallet"></i>
+                        </div>
+                        <div class="card-info">
+                            <h3>Budget Summary</h3>
+                            <p class="count">$45,230</p>
+                            <span class="card-detail">$12,500 remaining</span>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon supplier-messages">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="card-info">
+                            <h3>Supplier Messages</h3>
+                            <p class="count">5</p>
+                            <span class="card-detail">2 unread</span>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon quotation-responses">
+                            <i class="fas fa-file-signature"></i>
+                        </div>
+                        <div class="card-info">
+                            <h3>Quotation Responses</h3>
+                            <p class="count">7</p>
+                            <span class="card-detail">3 new today</span>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon inventory-alerts">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="card-info">
+                            <h3>Inventory Alerts</h3>
+                            <p class="count">4</p>
+                            <span class="card-detail">Lab items low</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts and Activity Section -->
+                <div class="dashboard-main">
+                    <div class="chart-section">
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <h3>Budget vs Spending</h3>
+                                <select>
+                                    <option>This Month</option>
+                                    <option>Last Month</option>
+                                    <option>This Term</option>
+                                </select>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="budgetChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <h3>Procurement by Category</h3>
+                                <select>
+                                    <option>This Year</option>
+                                    <option>Last Year</option>
+                                </select>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="categoryChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="activity-section">
+                        <div class="activity-card">
+                            <div class="activity-header">
+                                <h3>Recent Activity</h3>
+                                <a href="#">View All</a>
+                            </div>
+                            <div class="activity-list">
+                                <div class="activity-item">
+                                    <div class="activity-icon">
+                                        <i class="fas fa-shopping-cart"></i>
+                                    </div>
+                                    <div class="activity-details">
+                                        <p>New order placed for Science Lab Equipment</p>
+                                        <span>2 hours ago</span>
+                                    </div>
+                                </div>
+                                <div class="activity-item">
+                                    <div class="activity-icon">
+                                        <i class="fas fa-file-invoice"></i>
+                                    </div>
+                                    <div class="activity-details">
+                                        <p>Quotation received from ABC Suppliers</p>
+                                        <span>5 hours ago</span>
+                                    </div>
+                                </div>
+                                <div class="activity-item">
+                                    <div class="activity-icon">
+                                        <i class="fas fa-check-circle"></i>
+                                    </div>
+                                    <div class="activity-details">
+                                        <p>Order #PO-2345 delivered successfully</p>
+                                        <span>Yesterday</span>
+                                    </div>
+                                </div>
+                                <div class="activity-item">
+                                    <div class="activity-icon">
+                                        <i class="fas fa-exclamation-triangle"></i>
+                                    </div>
+                                    <div class="activity-details">
+                                        <p>Low stock alert for Library Books</p>
+                                        <span>2 days ago</span>
+                                    </div>
+                                </div>
+                                <div class="activity-item">
+                                    <div class="activity-icon">
+                                        <i class="fas fa-user-check"></i>
+                                    </div>
+                                    <div class="activity-details">
+                                        <p>Principal approved purchase request</p>
+                                        <span>3 days ago</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pending Actions Section -->
+                <div class="pending-section">
+                    <div class="pending-card">
+                        <div class="pending-header">
+                            <h3>Pending Approvals</h3>
+                            <a href="#">View All</a>
+                        </div>
+                        <div class="pending-list">
+                            <div class="pending-item">
+                                <div class="pending-info">
+                                    <h4>Science Lab Equipment</h4>
+                                    <p>Requested by: Dr. Johnson</p>
+                                    <span class="status urgent">Urgent</span>
+                                </div>
+                                <div class="pending-actions">
+                                    <button class="btn-approve">Approve</button>
+                                    <button class="btn-deny">Deny</button>
+                                </div>
+                            </div>
+                            <div class="pending-item">
+                                <div class="pending-info">
+                                    <h4>Library Books Purchase</h4>
+                                    <p>Requested by: Mrs. Peterson</p>
+                                    <span class="status normal">Normal</span>
+                                </div>
+                                <div class="pending-actions">
+                                    <button class="btn-approve">Approve</button>
+                                    <button class="btn-deny">Deny</button>
+                                </div>
+                            </div>
+                            <div class="pending-item">
+                                <div class="pending-info">
+                                    <h4>ICT Equipment Upgrade</h4>
+                                    <p>Requested by: Mr. Davis</p>
+                                    <span class="status urgent">Urgent</span>
+                                </div>
+                                <div class="pending-actions">
+                                    <button class="btn-approve">Approve</button>
+                                    <button class="btn-deny">Deny</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pending-card">
+                        <div class="pending-header">
+                            <h3>Recent Supplier Messages</h3>
+                            <a href="#">View All</a>
+                        </div>
+                        <div class="pending-list">
+                            <div class="pending-item">
+                                <div class="pending-info">
+                                    <h4>Global Books Ltd.</h4>
+                                    <p>Following up on RFQ for textbooks</p>
+                                    <span class="status unread">Unread</span>
+                                </div>
+                                <div class="pending-actions">
+                                    <button class="btn-reply">Reply</button>
+                                </div>
+                            </div>
+                            <div class="pending-item">
+                                <div class="pending-info">
+                                    <h4>Tech Solutions Inc.</h4>
+                                    <p>Quotation for computer lab ready</p>
+                                    <span class="status read">Read</span>
+                                </div>
+                                <div class="pending-actions">
+                                    <button class="btn-reply">Reply</button>
+                                </div>
+                            </div>
+                            <div class="pending-item">
+                                <div class="pending-info">
+                                    <h4>Lab Supplies Co.</h4>
+                                    <p>Delivery schedule for chemicals</p>
+                                    <span class="status unread">Unread</span>
+                                </div>
+                                <div class="pending-actions">
+                                    <button class="btn-reply">Reply</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

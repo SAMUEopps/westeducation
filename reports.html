@@ -1,0 +1,1458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduProcure - Reports & Analytics</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary-green: #2e7d32;
+            --light-green: #4caf50;
+            --dark-green: #1b5e20;
+            --accent-green: #81c784;
+            --accent-red: #f44336;
+            --light-red: #ffcdd2;
+            --white: #ffffff;
+            --light-gray: #f5f5f5;
+            --medium-gray: #e0e0e0;
+            --dark-gray: #424242;
+            --text-dark: #212121;
+            --text-light: #757575;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light-gray);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 260px;
+            background-color: var(--white);
+            box-shadow: var(--shadow);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            transition: var(--transition);
+        }
+
+        .logo {
+            padding: 24px 20px;
+            border-bottom: 1px solid var(--medium-gray);
+            color: var(--primary-green);
+            display: flex;
+            align-items: center;
+        }
+
+        .logo h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .logo i {
+            font-size: 1.8rem;
+        }
+
+        .nav-menu {
+            flex: 1;
+            padding: 20px 0;
+        }
+
+        .nav-menu ul {
+            list-style: none;
+        }
+
+        .nav-menu li {
+            margin-bottom: 5px;
+        }
+
+        .nav-menu a {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: var(--text-dark);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .nav-menu a:hover {
+            background-color: var(--light-gray);
+            color: var(--primary-green);
+        }
+
+        .nav-menu a.active {
+            background-color: var(--accent-green);
+            color: var(--dark-green);
+            font-weight: 500;
+            border-left: 4px solid var(--primary-green);
+        }
+
+        .nav-menu i {
+            margin-right: 12px;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            background-color: var(--white);
+            box-shadow: var(--shadow);
+        }
+
+        .header-left h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--dark-green);
+        }
+
+        .header-left p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .search-bar {
+            position: relative;
+        }
+
+        .search-bar input {
+            padding: 10px 15px 10px 40px;
+            border: 1px solid var(--medium-gray);
+            border-radius: 30px;
+            width: 250px;
+            font-size: 0.9rem;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .search-bar input:focus {
+            border-color: var(--primary-green);
+        }
+
+        .search-bar i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-profile img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .user-profile span {
+            font-weight: 500;
+        }
+
+        /* Reports Content */
+        .reports-content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .page-header h2 {
+            font-size: 1.8rem;
+            color: var(--dark-green);
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-green);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--dark-green);
+        }
+
+        .btn-secondary {
+            background-color: var(--medium-gray);
+            color: var(--text-dark);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--dark-gray);
+            color: var(--white);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary-green);
+            color: var(--primary-green);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary-green);
+            color: var(--white);
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+        }
+
+        /* Report Controls */
+        .report-controls {
+            display: flex;
+            background-color: var(--white);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .control-group label {
+            font-weight: 500;
+            color: var(--text-dark);
+            white-space: nowrap;
+        }
+
+        .form-control {
+            padding: 10px 15px;
+            border: 1px solid var(--medium-gray);
+            border-radius: 5px;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-green);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(46, 125, 50, 0.2);
+        }
+
+        /* KPI Cards */
+        .kpi-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .kpi-card {
+            background-color: var(--white);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .kpi-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .kpi-info h3 {
+            font-size: 1rem;
+            color: var(--text-light);
+            margin-bottom: 5px;
+        }
+
+        .kpi-value {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .kpi-trend {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .trend-up {
+            color: var(--light-green);
+        }
+
+        .trend-down {
+            color: var(--accent-red);
+        }
+
+        .kpi-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background-color: var(--accent-green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 1.2rem;
+        }
+
+        /* Charts Grid */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .chart-card {
+            background-color: var(--white);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .chart-card.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .chart-header h3 {
+            font-size: 1.3rem;
+            color: var(--dark-green);
+        }
+
+        .chart-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .chart-container {
+            height: 300px;
+            position: relative;
+        }
+
+        /* Supplier Performance */
+        .supplier-performance {
+            background-color: var(--white);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .section-header h3 {
+            font-size: 1.3rem;
+            color: var(--dark-green);
+        }
+
+        .performance-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .performance-table th, .performance-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--medium-gray);
+        }
+
+        .performance-table th {
+            background-color: var(--light-gray);
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .performance-table tr:hover {
+            background-color: rgba(46, 125, 50, 0.03);
+        }
+
+        .rating-stars {
+            color: #ffc107;
+        }
+
+        .performance-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .performance-excellent {
+            background-color: var(--accent-green);
+            color: var(--dark-green);
+        }
+
+        .performance-good {
+            background-color: #bbdefb;
+            color: #1976d2;
+        }
+
+        .performance-average {
+            background-color: #fff9c4;
+            color: #f57f17;
+        }
+
+        .performance-poor {
+            background-color: var(--light-red);
+            color: var(--accent-red);
+        }
+
+        /* Report Templates */
+        .report-templates {
+            background-color: var(--white);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .templates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .template-card {
+            background-color: var(--light-gray);
+            border-radius: 8px;
+            padding: 20px;
+            transition: var(--transition);
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .template-card:hover {
+            border-color: var(--primary-green);
+            transform: translateY(-2px);
+        }
+
+        .template-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            background-color: var(--primary-green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .template-info h4 {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            color: var(--text-dark);
+        }
+
+        .template-info p {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 15px;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: var(--white);
+            border-radius: 8px;
+            width: 800px;
+            max-width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            animation: modalFadeIn 0.3s;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--medium-gray);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            font-size: 1.5rem;
+            color: var(--dark-green);
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-light);
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .modal-footer {
+            padding: 15px 20px;
+            border-top: 1px solid var(--medium-gray);
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .chart-card.full-width {
+                grid-column: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+            }
+            
+            .nav-menu ul {
+                display: flex;
+                overflow-x: auto;
+            }
+            
+            .nav-menu li {
+                flex-shrink: 0;
+                margin-bottom: 0;
+            }
+            
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .header-right {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .search-bar input {
+                width: 200px;
+            }
+            
+            .report-controls {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .control-group {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .kpi-cards {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+            
+            .templates-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .reports-content {
+                padding: 15px;
+            }
+            
+            .header-right {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .search-bar {
+                width: 100%;
+            }
+            
+            .search-bar input {
+                width: 100%;
+            }
+            
+            .kpi-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .chart-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .chart-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fas fa-school"></i>
+                <h2>EduProcure</h2>
+            </div>
+            <nav class="nav-menu">
+                <ul>
+                    <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li><a href="profile.html"><i class="fas fa-building"></i> School Profile</a></li>
+                    <li><a href="supplier.html"><i class="fas fa-store"></i> Supplier Marketplace</a></li>
+                    <li><a href="products.html"><i class="fas fa-boxes"></i> Products & Services</a></li>
+                    <li><a href="quotation.html"><i class="fas fa-file-invoice-dollar"></i> RFQ Module</a></li>
+                    <li><a href="purchase-order.html"><i class="fas fa-shopping-cart"></i> Orders</a></li>
+                    <li><a href="inventory.html"><i class="fas fa-warehouse"></i> Inventory</a></li>
+                    <li><a href="budget.html"><i class="fas fa-chart-pie"></i> Budget & Expenses</a></li>
+                    <li><a href="approval.html"><i class="fas fa-check-double"></i> Approvals</a></li>
+                    <li><a href="reports.html" class="active"><i class="fas fa-chart-bar"></i> Reports & Analytics</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <h1>Reports & Analytics</h1>
+                    <p>Comprehensive insights and analytics for school procurement</p>
+                </div>
+                <div class="header-right">
+                    <div class="search-bar">
+                        <input type="text" id="globalSearch" placeholder="Search reports...">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <div class="user-profile">
+                        <img src="https://i.pravatar.cc/40" alt="User Avatar">
+                        <span>Administrator</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Reports Content -->
+            <div class="reports-content">
+                <div class="page-header">
+                    <h2>Analytics Dashboard</h2>
+                    <button class="btn btn-primary" id="generateReportBtn">
+                        <i class="fas fa-file-export"></i> Generate Custom Report
+                    </button>
+                </div>
+
+                <!-- Report Controls -->
+                <div class="report-controls">
+                    <div class="control-group">
+                        <label>Report Period:</label>
+                        <select class="form-control">
+                            <option>Last 30 Days</option>
+                            <option selected>Last 90 Days</option>
+                            <option>This Term</option>
+                            <option>This Academic Year</option>
+                            <option>Custom Range</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>Department:</label>
+                        <select class="form-control">
+                            <option>All Departments</option>
+                            <option>Science</option>
+                            <option>ICT</option>
+                            <option>Library</option>
+                            <option>Sports</option>
+                            <option>Administration</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>Report Type:</label>
+                        <select class="form-control">
+                            <option>Summary Report</option>
+                            <option>Detailed Analysis</option>
+                            <option>Comparative Report</option>
+                            <option>Trend Analysis</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-outline">
+                        <i class="fas fa-sync-alt"></i> Refresh Data
+                    </button>
+                </div>
+
+                <!-- KPI Cards -->
+                <div class="kpi-cards">
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <div class="kpi-info">
+                                <h3>Total Procurement Spend</h3>
+                                <div class="kpi-value">$157,550</div>
+                                <div class="kpi-trend trend-up">
+                                    <i class="fas fa-arrow-up"></i>
+                                    <span>12.5% vs last term</span>
+                                </div>
+                            </div>
+                            <div class="kpi-icon">
+                                <i class="fas fa-dollar-sign"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <div class="kpi-info">
+                                <h3>Average Delivery Time</h3>
+                                <div class="kpi-value">5.2 days</div>
+                                <div class="kpi-trend trend-down">
+                                    <i class="fas fa-arrow-down"></i>
+                                    <span>8% improvement</span>
+                                </div>
+                            </div>
+                            <div class="kpi-icon">
+                                <i class="fas fa-shipping-fast"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <div class="kpi-info">
+                                <h3>Supplier Performance</h3>
+                                <div class="kpi-value">4.3/5</div>
+                                <div class="kpi-trend trend-up">
+                                    <i class="fas fa-arrow-up"></i>
+                                    <span>0.2 improvement</span>
+                                </div>
+                            </div>
+                            <div class="kpi-icon">
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <div class="kpi-info">
+                                <h3>Cost Savings</h3>
+                                <div class="kpi-value">$24,800</div>
+                                <div class="kpi-trend trend-up">
+                                    <i class="fas fa-arrow-up"></i>
+                                    <span>18% vs last year</span>
+                                </div>
+                            </div>
+                            <div class="kpi-icon">
+                                <i class="fas fa-piggy-bank"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Grid -->
+                <div class="charts-grid">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3>Expenditure by Department</h3>
+                            <div class="chart-actions">
+                                <button class="btn btn-outline btn-sm">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="departmentExpenditureChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3>Budget vs Actual Spending</h3>
+                            <div class="chart-actions">
+                                <button class="btn btn-outline btn-sm">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="budgetVsActualChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3>Price Trends - Key Items</h3>
+                            <div class="chart-actions">
+                                <button class="btn btn-outline btn-sm">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="priceTrendsChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3>Delivery Turnaround Times</h3>
+                            <div class="chart-actions">
+                                <button class="btn btn-outline btn-sm">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="deliveryTimesChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-card full-width">
+                        <div class="chart-header">
+                            <h3>Monthly Procurement Trends</h3>
+                            <div class="chart-actions">
+                                <button class="btn btn-outline btn-sm">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="monthlyTrendsChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Supplier Performance -->
+                <div class="supplier-performance">
+                    <div class="section-header">
+                        <h3>Supplier Performance Analysis</h3>
+                        <button class="btn btn-outline btn-sm">
+                            <i class="fas fa-plus"></i> Compare Suppliers
+                        </button>
+                    </div>
+                    <table class="performance-table">
+                        <thead>
+                            <tr>
+                                <th>Supplier</th>
+                                <th>Category</th>
+                                <th>Rating</th>
+                                <th>On-Time Delivery</th>
+                                <th>Cost Efficiency</th>
+                                <th>Overall Score</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <strong>Lab Supplies Co.</strong>
+                                    <div style="font-size: 0.8rem; color: var(--text-light);">Lab equipment & chemicals</div>
+                                </td>
+                                <td>Science</td>
+                                <td>
+                                    <div class="rating-stars">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star-half-alt"></i>
+                                    </div>
+                                    <div style="font-size: 0.8rem; color: var(--text-light);">4.5/5</div>
+                                </td>
+                                <td>94%</td>
+                                <td>8.7/10</td>
+                                <td>
+                                    <span class="performance-badge performance-excellent">Excellent</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>Tech Solutions Inc.</strong>
+                                    <div style="font-size: 0.8rem; color: var(--text-light);">ICT equipment & services</div>
+                                </td>
+                                <td>ICT</td>
+                                <td>
+                                    <div class="rating-stars">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="far fa-star"></i>
+                                    </div>
+                                    <div style="font-size: 0.8rem; color: var(--text-light);">4.0/5</div>
+                                </td>
+                                <td>88%</td>
+                                <td>8.2/10</td>
+                                <td>
+                                    <span class="performance-badge performance-good">Good</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>EduBooks Ltd.</strong>
+                                    <div style="font-size: 0.8rem; color: var(--text-light);">Books & stationery</div>
+                                </td>
+                                <td>Library</td>
+                                <td>
+                                    <div class="rating-stars">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star-half-alt"></i>
+                                        <i class="far fa-star"></i>
+                                    </div>
+                                    <div style="font-size: 0.8rem; color: var(--text-light);">3.5/5</div>
+                                </td>
+                                <td>82%</td>
+                                <td>7.8/10</td>
+                                <td>
+                                    <span class="performance-badge performance-average">Average</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>Sports Gear Co.</strong>
+                                    <div style="font-size: 0.8rem; color: var(--text-light);">Sports equipment</div>
+                                </td>
+                                <td>Sports</td>
+                                <td>
+                                    <div class="rating-stars">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star-half-alt"></i>
+                                        <i class="far fa-star"></i>
+                                        <i class="far fa-star"></i>
+                                    </div>
+                                    <div style="font-size: 0.8rem; color: var(--text-light);">2.5/5</div>
+                                </td>
+                                <td>75%</td>
+                                <td>6.5/10</td>
+                                <td>
+                                    <span class="performance-badge performance-poor">Needs Improvement</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Report Templates -->
+                <div class="report-templates">
+                    <div class="section-header">
+                        <h3>Standard Report Templates</h3>
+                        <button class="btn btn-outline btn-sm">
+                            <i class="fas fa-eye"></i> View All Templates
+                        </button>
+                    </div>
+                    <div class="templates-grid">
+                        <div class="template-card" id="bomReportTemplate">
+                            <div class="template-icon">
+                                <i class="fas fa-landmark"></i>
+                            </div>
+                            <div class="template-info">
+                                <h4>BOM Ministry Report</h4>
+                                <p>Comprehensive report for Board of Management and Ministry of Education with full procurement overview</p>
+                                <button class="btn btn-primary btn-sm">
+                                    <i class="fas fa-download"></i> Generate Report
+                                </button>
+                            </div>
+                        </div>
+                        <div class="template-card">
+                            <div class="template-icon">
+                                <i class="fas fa-chart-pie"></i>
+                            </div>
+                            <div class="template-info">
+                                <h4>Quarterly Financial Summary</h4>
+                                <p>Department-wise spending analysis and budget utilization report</p>
+                                <button class="btn btn-outline btn-sm">
+                                    <i class="fas fa-download"></i> Generate Report
+                                </button>
+                            </div>
+                        </div>
+                        <div class="template-card">
+                            <div class="template-icon">
+                                <i class="fas fa-truck"></i>
+                            </div>
+                            <div class="template-info">
+                                <h4>Supplier Performance Report</h4>
+                                <p>Detailed analysis of supplier delivery times, quality, and pricing</p>
+                                <button class="btn btn-outline btn-sm">
+                                    <i class="fas fa-download"></i> Generate Report
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Generate Report Modal -->
+    <div class="modal" id="generateReportModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Generate Custom Report</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-section">
+                    <h3>Report Parameters</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div class="form-group">
+                            <label for="reportType">Report Type</label>
+                            <select id="reportType" class="form-control">
+                                <option>Financial Summary</option>
+                                <option>Department Analysis</option>
+                                <option>Supplier Performance</option>
+                                <option>Procurement Trends</option>
+                                <option>Custom Analysis</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="reportPeriod">Time Period</label>
+                            <select id="reportPeriod" class="form-control">
+                                <option>Last 30 Days</option>
+                                <option>Last 90 Days</option>
+                                <option>This Term</option>
+                                <option>This Academic Year</option>
+                                <option>Custom Range</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="reportFormat">Output Format</label>
+                            <select id="reportFormat" class="form-control">
+                                <option>PDF Document</option>
+                                <option>Excel Spreadsheet</option>
+                                <option>PowerPoint Presentation</option>
+                                <option>Interactive Dashboard</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="reportDepartment">Department Filter</label>
+                            <select id="reportDepartment" class="form-control">
+                                <option>All Departments</option>
+                                <option>Science</option>
+                                <option>ICT</option>
+                                <option>Library</option>
+                                <option>Sports</option>
+                                <option>Administration</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3>Report Content</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <label style="display: flex; align-items: center; gap: 10px;">
+                            <input type="checkbox" checked>
+                            <span>Expenditure Summary</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 10px;">
+                            <input type="checkbox" checked>
+                            <span>Budget vs Actual</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 10px;">
+                            <input type="checkbox" checked>
+                            <span>Supplier Performance</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 10px;">
+                            <input type="checkbox">
+                            <span>Price Trends</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 10px;">
+                            <input type="checkbox" checked>
+                            <span>Delivery Metrics</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 10px;">
+                            <input type="checkbox">
+                            <span>Inventory Analysis</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3>Additional Options</h3>
+                    <div class="form-group">
+                        <label for="reportNotes">Report Notes (Optional)</label>
+                        <textarea id="reportNotes" class="form-control" rows="3" placeholder="Add any specific requirements or notes for this report"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary close-modal">Cancel</button>
+                <button class="btn btn-primary" id="generateReportConfirmBtn">
+                    <i class="fas fa-cog"></i> Generate Report
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize Charts
+            initCharts();
+            
+            // Modal functionality
+            const generateReportModal = document.getElementById('generateReportModal');
+            const generateReportBtn = document.getElementById('generateReportBtn');
+            const closeModalBtns = document.querySelectorAll('.close-modal');
+            
+            generateReportBtn.addEventListener('click', () => {
+                generateReportModal.style.display = 'flex';
+            });
+            
+            closeModalBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    generateReportModal.style.display = 'none';
+                });
+            });
+            
+            // Close modal when clicking outside
+            window.addEventListener('click', (e) => {
+                if (e.target === generateReportModal) {
+                    generateReportModal.style.display = 'none';
+                }
+            });
+            
+            // Generate report confirmation
+            document.getElementById('generateReportConfirmBtn').addEventListener('click', () => {
+                const reportType = document.getElementById('reportType').value;
+                alert(`Generating ${reportType} report... This may take a few moments.`);
+                generateReportModal.style.display = 'none';
+            });
+            
+            // BOM Report Template
+            document.getElementById('bomReportTemplate').addEventListener('click', function() {
+                alert('Generating BOM Ministry Report... This comprehensive report includes all procurement data, budget analysis, and performance metrics required by the Ministry of Education.');
+            });
+            
+            // Global search
+            document.getElementById('globalSearch').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    const searchTerm = e.target.value;
+                    if (searchTerm) {
+                        alert(`Searching reports for: ${searchTerm}`);
+                    }
+                }
+            });
+            
+            function initCharts() {
+                // Department Expenditure Chart
+                const deptCtx = document.getElementById('departmentExpenditureChart').getContext('2d');
+                const deptChart = new Chart(deptCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Science', 'ICT', 'Library', 'Sports', 'Administration'],
+                        datasets: [{
+                            data: [48750, 32150, 18200, 38500, 19950],
+                            backgroundColor: [
+                                'rgba(46, 125, 50, 0.8)',
+                                'rgba(76, 175, 80, 0.8)',
+                                'rgba(129, 199, 132, 0.8)',
+                                'rgba(255, 152, 0, 0.8)',
+                                'rgba(33, 150, 243, 0.8)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom'
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        const label = context.label || '';
+                                        const value = context.raw || 0;
+                                        const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                        const percentage = Math.round((value / total) * 100);
+                                        return `${label}: $${value.toLocaleString()} (${percentage}%)`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+                
+                // Budget vs Actual Chart
+                const budgetCtx = document.getElementById('budgetVsActualChart').getContext('2d');
+                const budgetChart = new Chart(budgetCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Science', 'ICT', 'Library', 'Sports', 'Admin'],
+                        datasets: [
+                            {
+                                label: 'Budget',
+                                data: [65000, 45000, 28000, 35000, 42000],
+                                backgroundColor: 'rgba(46, 125, 50, 0.7)',
+                                borderColor: 'rgba(46, 125, 50, 1)',
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'Actual',
+                                data: [48750, 32150, 18200, 38500, 19950],
+                                backgroundColor: 'rgba(33, 150, 243, 0.7)',
+                                borderColor: 'rgba(33, 150, 243, 1)',
+                                borderWidth: 1
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    callback: function(value) {
+                                        return '$' + value.toLocaleString();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+                
+                // Price Trends Chart
+                const priceCtx = document.getElementById('priceTrendsChart').getContext('2d');
+                const priceChart = new Chart(priceCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
+                        datasets: [
+                            {
+                                label: 'Lab Equipment',
+                                data: [120, 125, 118, 122, 130, 128, 135, 140, 138, 142],
+                                borderColor: 'rgba(46, 125, 50, 1)',
+                                backgroundColor: 'rgba(46, 125, 50, 0.1)',
+                                tension: 0.3,
+                                fill: true
+                            },
+                            {
+                                label: 'ICT Equipment',
+                                data: [200, 195, 190, 185, 180, 175, 170, 165, 160, 155],
+                                borderColor: 'rgba(33, 150, 243, 1)',
+                                backgroundColor: 'rgba(33, 150, 243, 0.1)',
+                                tension: 0.3,
+                                fill: true
+                            },
+                            {
+                                label: 'Stationery',
+                                data: [45, 46, 44, 45, 47, 48, 46, 45, 44, 43],
+                                borderColor: 'rgba(255, 152, 0, 1)',
+                                backgroundColor: 'rgba(255, 152, 0, 0.1)',
+                                tension: 0.3,
+                                fill: true
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: false,
+                                title: {
+                                    display: true,
+                                    text: 'Price Index (Base=100)'
+                                }
+                            }
+                        }
+                    }
+                });
+                
+                // Delivery Times Chart
+                const deliveryCtx = document.getElementById('deliveryTimesChart').getContext('2d');
+                const deliveryChart = new Chart(deliveryCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Lab Supplies', 'Tech Solutions', 'EduBooks', 'Sports Gear', 'Office World'],
+                        datasets: [{
+                            label: 'Average Delivery Days',
+                            data: [4.2, 5.8, 6.5, 7.2, 3.8],
+                            backgroundColor: [
+                                'rgba(46, 125, 50, 0.8)',
+                                'rgba(76, 175, 80, 0.8)',
+                                'rgba(255, 152, 0, 0.8)',
+                                'rgba(244, 67, 54, 0.8)',
+                                'rgba(33, 150, 243, 0.8)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Days'
+                                }
+                            }
+                        }
+                    }
+                });
+                
+                // Monthly Trends Chart
+                const monthlyCtx = document.getElementById('monthlyTrendsChart').getContext('2d');
+                const monthlyChart = new Chart(monthlyCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
+                        datasets: [
+                            {
+                                label: 'Procurement Value',
+                                data: [18500, 22000, 19800, 24500, 31200, 28500, 19500, 22400, 31800, 27500],
+                                borderColor: 'rgba(46, 125, 50, 1)',
+                                backgroundColor: 'rgba(46, 125, 50, 0.1)',
+                                borderWidth: 2,
+                                tension: 0.3,
+                                fill: true,
+                                yAxisID: 'y'
+                            },
+                            {
+                                label: 'Number of Orders',
+                                data: [24, 28, 22, 31, 38, 35, 26, 29, 41, 33],
+                                borderColor: 'rgba(33, 150, 243, 1)',
+                                borderWidth: 2,
+                                tension: 0.3,
+                                borderDash: [5, 5],
+                                yAxisID: 'y1'
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                type: 'linear',
+                                display: true,
+                                position: 'left',
+                                title: {
+                                    display: true,
+                                    text: 'Procurement Value ($)'
+                                },
+                                ticks: {
+                                    callback: function(value) {
+                                        return '$' + value.toLocaleString();
+                                    }
+                                }
+                            },
+                            y1: {
+                                type: 'linear',
+                                display: true,
+                                position: 'right',
+                                title: {
+                                    display: true,
+                                    text: 'Number of Orders'
+                                },
+                                grid: {
+                                    drawOnChartArea: false
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

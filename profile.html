@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduProcure - School Profile & Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-green: #2e7d32;
+            --light-green: #4caf50;
+            --dark-green: #1b5e20;
+            --accent-green: #81c784;
+            --accent-red: #f44336;
+            --light-red: #ffcdd2;
+            --white: #ffffff;
+            --light-gray: #f5f5f5;
+            --medium-gray: #e0e0e0;
+            --dark-gray: #424242;
+            --text-dark: #212121;
+            --text-light: #757575;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light-gray);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 260px;
+            background-color: var(--white);
+            box-shadow: var(--shadow);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            transition: var(--transition);
+        }
+
+        .logo {
+            padding: 24px 20px;
+            border-bottom: 1px solid var(--medium-gray);
+            color: var(--primary-green);
+            display: flex;
+            align-items: center;
+        }
+
+        .logo h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .logo i {
+            font-size: 1.8rem;
+        }
+
+        .nav-menu {
+            flex: 1;
+            padding: 20px 0;
+        }
+
+        .nav-menu ul {
+            list-style: none;
+        }
+
+        .nav-menu li {
+            margin-bottom: 5px;
+        }
+
+        .nav-menu a {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: var(--text-dark);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .nav-menu a:hover {
+            background-color: var(--light-gray);
+            color: var(--primary-green);
+        }
+
+        .nav-menu a.active {
+            background-color: var(--accent-green);
+            color: var(--dark-green);
+            font-weight: 500;
+            border-left: 4px solid var(--primary-green);
+        }
+
+        .nav-menu i {
+            margin-right: 12px;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            background-color: var(--white);
+            box-shadow: var(--shadow);
+        }
+
+        .header-left h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--dark-green);
+        }
+
+        .header-left p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .search-bar {
+            position: relative;
+        }
+
+        .search-bar input {
+            padding: 10px 15px 10px 40px;
+            border: 1px solid var(--medium-gray);
+            border-radius: 30px;
+            width: 250px;
+            font-size: 0.9rem;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .search-bar input:focus {
+            border-color: var(--primary-green);
+        }
+
+        .search-bar i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-profile img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .user-profile span {
+            font-weight: 500;
+        }
+
+        /* Profile Content */
+        .profile-content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .page-header h2 {
+            font-size: 1.8rem;
+            color: var(--dark-green);
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-green);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--dark-green);
+        }
+
+        .btn-secondary {
+            background-color: var(--medium-gray);
+            color: var(--text-dark);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--dark-gray);
+            color: var(--white);
+        }
+
+        .btn-danger {
+            background-color: var(--accent-red);
+            color: var(--white);
+        }
+
+        .btn-danger:hover {
+            background-color: #d32f2f;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            background-color: var(--white);
+            border-radius: 8px 8px 0 0;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .tab {
+            padding: 15px 25px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab.active {
+            border-bottom: 3px solid var(--primary-green);
+            color: var(--primary-green);
+            background-color: rgba(46, 125, 50, 0.05);
+        }
+
+        .tab:hover:not(.active) {
+            background-color: var(--light-gray);
+        }
+
+        .tab-content {
+            display: none;
+            background-color: var(--white);
+            padding: 30px;
+            border-radius: 0 0 8px 8px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Form Styles */
+        .form-section {
+            margin-bottom: 30px;
+        }
+
+        .form-section h3 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: var(--dark-green);
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--medium-gray);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--medium-gray);
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-green);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(46, 125, 50, 0.2);
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        /* Table Styles */
+        .table-container {
+            overflow-x: auto;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: var(--white);
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--medium-gray);
+        }
+
+        th {
+            background-color: var(--light-gray);
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        tr:hover {
+            background-color: rgba(46, 125, 50, 0.03);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .badge-primary {
+            background-color: var(--accent-green);
+            color: var(--dark-green);
+        }
+
+        .badge-secondary {
+            background-color: var(--medium-gray);
+            color: var(--text-dark);
+        }
+
+        .badge-danger {
+            background-color: var(--light-red);
+            color: var(--accent-red);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.8rem;
+        }
+
+        .edit-btn {
+            background-color: #2196f3;
+            color: white;
+        }
+
+        .delete-btn {
+            background-color: var(--accent-red);
+            color: white;
+        }
+
+        /* Card Styles */
+        .card {
+            background-color: var(--white);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--medium-gray);
+        }
+
+        .card-header h3 {
+            font-size: 1.3rem;
+            color: var(--dark-green);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: var(--white);
+            border-radius: 8px;
+            width: 500px;
+            max-width: 90%;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            animation: modalFadeIn 0.3s;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--medium-gray);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            font-size: 1.3rem;
+            color: var(--dark-green);
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-light);
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .modal-footer {
+            padding: 15px 20px;
+            border-top: 1px solid var(--medium-gray);
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+            }
+            
+            .nav-menu ul {
+                display: flex;
+                overflow-x: auto;
+            }
+            
+            .nav-menu li {
+                flex-shrink: 0;
+                margin-bottom: 0;
+            }
+            
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .header-right {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .search-bar input {
+                width: 200px;
+            }
+            
+            .tabs {
+                flex-wrap: wrap;
+            }
+            
+            .tab {
+                flex: 1;
+                min-width: 120px;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .profile-content {
+                padding: 15px;
+            }
+            
+            .header-right {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .search-bar {
+                width: 100%;
+            }
+            
+            .search-bar input {
+                width: 100%;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fas fa-school"></i>
+                <h2>EduProcure</h2>
+            </div>
+            <nav class="nav-menu">
+                <ul>
+                    <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li><a href="profile.html" class="active"><i class="fas fa-building"></i> School Profile</a></li>
+                    <li><a href="supplier.html"><i class="fas fa-store"></i> Supplier Marketplace</a></li>
+                    <li><a href="products.html"><i class="fas fa-boxes"></i> Products & Services</a></li>
+                    <li><a href="quotation.html"><i class="fas fa-file-invoice-dollar"></i> RFQ Module</a></li>
+                    <li><a href="purchase-order.html"><i class="fas fa-shopping-cart"></i> Orders</a></li>
+                    <li><a href="inventory.html"><i class="fas fa-warehouse"></i> Inventory</a></li>
+                    <li><a href="budget.html"><i class="fas fa-chart-pie"></i> Budget & Expenses</a></li>
+                    <li><a href="approval.html"><i class="fas fa-check-double"></i> Approvals</a></li>
+                    <li><a href="reports.html"><i class="fas fa-chart-bar"></i> Reports & Analytics</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <h1>School Profile & Management</h1>
+                    <p>Manage school details, departments, staff, and permissions</p>
+                </div>
+                <div class="header-right">
+                    <div class="search-bar">
+                        <input type="text" placeholder="Search...">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <div class="user-profile">
+                        <img src="https://i.pravatar.cc/40" alt="User Avatar">
+                        <span>Admin User</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Profile Content -->
+            <div class="profile-content">
+                <div class="page-header">
+                    <h2>Greenfield High School</h2>
+                    <button class="btn btn-primary" id="saveChangesBtn">
+                        <i class="fas fa-save"></i> Save Changes
+                    </button>
+                </div>
+
+                <!-- Tabs -->
+                <div class="tabs">
+                    <div class="tab active" data-tab="school-details">School Details</div>
+                    <div class="tab" data-tab="departments">Departments</div>
+                    <div class="tab" data-tab="staff">Staff Management</div>
+                    <div class="tab" data-tab="permissions">Permissions</div>
+                </div>
+
+                <!-- School Details Tab -->
+                <div class="tab-content active" id="school-details">
+                    <div class="form-section">
+                        <h3>Basic Information</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="school-name">School Name</label>
+                                <input type="text" id="school-name" class="form-control" value="Greenfield High School">
+                            </div>
+                            <div class="form-group">
+                                <label for="school-category">School Category</label>
+                                <select id="school-category" class="form-control">
+                                    <option>Secondary School</option>
+                                    <option>Primary School</option>
+                                    <option>Tertiary Institution</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="registration-number">Registration Number</label>
+                                <input type="text" id="registration-number" class="form-control" value="EDU/SEC/2020/0452">
+                            </div>
+                            <div class="form-group">
+                                <label for="established-year">Year Established</label>
+                                <input type="number" id="established-year" class="form-control" value="1995">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>Contact Information</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="school-address">Address</label>
+                                <input type="text" id="school-address" class="form-control" value="123 Education Avenue">
+                            </div>
+                            <div class="form-group">
+                                <label for="city">City</label>
+                                <input type="text" id="city" class="form-control" value="Springfield">
+                            </div>
+                            <div class="form-group">
+                                <label for="state">State/Region</label>
+                                <input type="text" id="state" class="form-control" value="Education State">
+                            </div>
+                            <div class="form-group">
+                                <label for="zip-code">ZIP/Postal Code</label>
+                                <input type="text" id="zip-code" class="form-control" value="12345">
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Phone Number</label>
+                                <input type="tel" id="phone" class="form-control" value="+1 (555) 123-4567">
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email Address</label>
+                                <input type="email" id="email" class="form-control" value="admin@greenfieldhigh.edu">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>Additional Information</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="student-count">Number of Students</label>
+                                <input type="number" id="student-count" class="form-control" value="1250">
+                            </div>
+                            <div class="form-group">
+                                <label for="staff-count">Number of Staff</label>
+                                <input type="number" id="staff-count" class="form-control" value="85">
+                            </div>
+                            <div class="form-group">
+                                <label for="school-motto">School Motto</label>
+                                <input type="text" id="school-motto" class="form-control" value="Excellence in Education">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Departments Tab -->
+                <div class="tab-content" id="departments">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>School Departments</h3>
+                            <button class="btn btn-primary" id="addDepartmentBtn">
+                                <i class="fas fa-plus"></i> Add Department
+                            </button>
+                        </div>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Department Name</th>
+                                        <th>Head of Department</th>
+                                        <th>Staff Count</th>
+                                        <th>Budget Allocation</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Science</td>
+                                        <td>Dr. James Wilson</td>
+                                        <td>12</td>
+                                        <td>$45,000</td>
+                                        <td><span class="badge badge-primary">Active</span></td>
+                                        <td class="action-buttons">
+                                            <button class="action-btn edit-btn"><i class="fas fa-edit"></i> Edit</button>
+                                            <button class="action-btn delete-btn"><i class="fas fa-trash"></i> Delete</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>ICT</td>
+                                        <td>Ms. Sarah Johnson</td>
+                                        <td>8</td>
+                                        <td>$35,000</td>
+                                        <td><span class="badge badge-primary">Active</span></td>
+                                        <td class="action-buttons">
+                                            <button class="action-btn edit-btn"><i class="fas fa-edit"></i> Edit</button>
+                                            <button class="action-btn delete-btn"><i class="fas fa-trash"></i> Delete</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Administration</td>
+                                        <td>Mr. Robert Brown</td>
+                                        <td>15</td>
+                                        <td>$60,000</td>
+                                        <td><span class="badge badge-primary">Active</span></td>
+                                        <td class="action-buttons">
+                                            <button class="action-btn edit-btn"><i class="fas fa-edit"></i> Edit</button>
+                                            <button class="action-btn delete-btn"><i class="fas fa-trash"></i> Delete</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Boarding</td>
+                                        <td>Mrs. Patricia Davis</td>
+                                        <td>10</td>
+                                        <td>$25,000</td>
+                                        <td><span class="badge badge-primary">Active</span></td>
+                                        <td class="action-buttons">
+                                            <button class="action-btn edit-btn"><i class="fas fa-edit"></i> Edit</button>
+                                            <button class="action-btn delete-btn"><i class="fas fa-trash"></i> Delete</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Procurement</td>
+                                        <td>Mr. Michael Taylor</td>
+                                        <td>5</td>
+                                        <td>$15,000</td>
+                                        <td><span class="badge badge-primary">Active</span></td>
+                                        <td class="action-buttons">
+                                            <button class="action-btn edit-btn"><i class="fas fa-edit"></i> Edit</button>
+                                            <button class="action-btn delete-btn"><i class="fas fa-trash"></i> Delete</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Staff Management Tab -->
+                <div class="tab-content" id="staff">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Staff Members</h3>
+                            <button class="btn btn-primary" id="addStaffBtn">
+                                <i class="fas fa-user-plus"></i> Add Staff Member
+                            </button>
+                        </div>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Role</th>
+                                        <th>Department</th>
+                                        <th>Email</th>
+                                        <th>Phone</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Dr. James Wilson</td>
+                                        <td>Head of Science</td>
+                                        <td>Science</td>
+                                        <td>jwilson@greenfieldhigh.edu</td>
+                                        <td>+1 (555) 234-5678</td>
+                                        <td><span class="badge badge-primary">Active</span></td>
+                                        <td class="action-buttons">
+                                            <button class="action-btn edit-btn"><i class="fas fa-edit"></i> Edit</button>
+                                            <button class="action-btn delete-btn"><i class="fas fa-trash"></i> Delete</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Ms. Sarah Johnson</td>
+                                        <td>ICT Coordinator</td>
+                                        <td>ICT</td>
+                                        <td>sjohnson@greenfieldhigh.edu</td>
+                                        <td>+1 (555) 345-6789</td>
+                                        <td><span class="badge badge-primary">Active</span></td>
+                                        <td class="action-buttons">
+                                            <button class="action-btn edit-btn"><i class="fas fa-edit"></i> Edit</button>
+                                            <button class="action-btn delete-btn"><i class="fas fa-trash"></i> Delete</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Mr. Robert Brown</td>
+                                        <td>Administrative Officer</td>
+                                        <td>Administration</td>
+                                        <td>rbrown@greenfieldhigh.edu</td>
+                                        <td>+1 (555) 456-7890</td>
+                                        <td><span class="badge badge-primary">Active</span></td>
+                                        <td class="action-buttons">
+                                            <button class="action-btn edit-btn"><i class="fas fa-edit"></i> Edit</button>
+                                            <button class="action-btn delete-btn"><i class="fas fa-trash"></i> Delete</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Mrs. Patricia Davis</td>
+                                        <td>Boarding Master</td>
+                                        <td>Boarding</td>
+                                        <td>pdavis@greenfieldhigh.edu</td>
+                                        <td>+1 (555) 567-8901</td>
+                                        <td><span class="badge badge-primary">Active</span></td>
+                                        <td class="action-buttons">
+                                            <button class="action-btn edit-btn"><i class="fas fa-edit"></i> Edit</button>
+                                            <button class="action-btn delete-btn"><i class="fas fa-trash"></i> Delete</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Mr. Michael Taylor</td>
+                                        <td>Procurement Officer</td>
+                                        <td>Procurement</td>
+                                        <td>mtaylor@greenfieldhigh.edu</td>
+                                        <td>+1 (555) 678-9012</td>
+                                        <td><span class="badge badge-primary">Active</span></td>
+                                        <td class="action-buttons">
+                                            <button class="action-btn edit-btn"><i class="fas fa-edit"></i> Edit</button>
+                                            <button class="action-btn delete-btn"><i class="fas fa-trash"></i> Delete</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Permissions Tab -->
+                <div class="tab-content" id="permissions">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>User Roles & Permissions</h3>
+                            <button class="btn btn-primary" id="addRoleBtn">
+                                <i class="fas fa-plus-circle"></i> Add Role
+                            </button>
+                        </div>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Role Name</th>
+                                        <th>Description</th>
+                                        <th>Permissions</th>
+                                        <th>Users</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Administrator</td>
+                                        <td>Full system access and management</td>
+                                        <td>All permissions</td>
+                                        <td>3</td>
+                                        <td class="action-buttons">
+                                            <button class="action-btn edit-btn"><i class="fas fa-edit"></i> Edit</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Procurement Officer</td>
+                                        <td>Manage procurement processes and supplier interactions</td>
+                                        <td>Create RFQs, Place Orders, Manage Inventory</td>
+                                        <td>5</td>
+                                        <td class="action-buttons">
+                                            <button class="action-btn edit-btn"><i class="fas fa-edit"></i> Edit</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Department Head</td>
+                                        <td>Approve departmental purchases and manage budgets</td>
+                                        <td>Approve Requests, View Department Reports</td>
+                                        <td>8</td>
+                                        <td class="action-buttons">
+                                            <button class="action-btn edit-btn"><i class="fas fa-edit"></i> Edit</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Principal</td>
+                                        <td>Final approval for major purchases and budget oversight</td>
+                                        <td>Approve High-Value Orders, View Financial Reports</td>
+                                        <td>1</td>
+                                        <td class="action-buttons">
+                                            <button class="action-btn edit-btn"><i class="fas fa-edit"></i> Edit</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>BOM Member</td>
+                                        <td>Review and approve strategic procurement decisions</td>
+                                        <td>View Reports, Approve Strategic Purchases</td>
+                                        <td>7</td>
+                                        <td class="action-buttons">
+                                            <button class="action-btn edit-btn"><i class="fas fa-edit"></i> Edit</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add Department Modal -->
+    <div class="modal" id="addDepartmentModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add New Department</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="dept-name">Department Name</label>
+                    <input type="text" id="dept-name" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="dept-head">Head of Department</label>
+                    <select id="dept-head" class="form-control">
+                        <option>Select Staff Member</option>
+                        <option>Dr. James Wilson</option>
+                        <option>Ms. Sarah Johnson</option>
+                        <option>Mr. Robert Brown</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="dept-budget">Budget Allocation</label>
+                    <input type="number" id="dept-budget" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="dept-description">Description</label>
+                    <textarea id="dept-description" class="form-control" rows="3"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary close-modal">Cancel</button>
+                <button class="btn btn-primary">Save Department</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Staff Modal -->
+    <div class="modal" id="addStaffModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add New Staff Member</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="staff-firstname">First Name</label>
+                        <input type="text" id="staff-firstname" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="staff-lastname">Last Name</label>
+                        <input type="text" id="staff-lastname" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="staff-role">Role</label>
+                    <select id="staff-role" class="form-control">
+                        <option>Select Role</option>
+                        <option>Procurement Officer</option>
+                        <option>Department Head</option>
+                        <option>Principal</option>
+                        <option>BOM Member</option>
+                        <option>Teacher</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="staff-department">Department</label>
+                    <select id="staff-department" class="form-control">
+                        <option>Select Department</option>
+                        <option>Science</option>
+                        <option>ICT</option>
+                        <option>Administration</option>
+                        <option>Boarding</option>
+                        <option>Procurement</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="staff-email">Email</label>
+                    <input type="email" id="staff-email" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="staff-phone">Phone</label>
+                    <input type="tel" id="staff-phone" class="form-control">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary close-modal">Cancel</button>
+                <button class="btn btn-primary">Add Staff Member</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tab functionality
+            const tabs = document.querySelectorAll('.tab');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const targetTab = tab.getAttribute('data-tab');
+                    
+                    // Remove active class from all tabs and contents
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tabContents.forEach(c => c.classList.remove('active'));
+                    
+                    // Add active class to current tab and content
+                    tab.classList.add('active');
+                    document.getElementById(targetTab).classList.add('active');
+                });
+            });
+            
+            // Modal functionality
+            const modals = document.querySelectorAll('.modal');
+            const addDepartmentBtn = document.getElementById('addDepartmentBtn');
+            const addStaffBtn = document.getElementById('addStaffBtn');
+            const closeModalBtns = document.querySelectorAll('.close-modal');
+            
+            addDepartmentBtn.addEventListener('click', () => {
+                document.getElementById('addDepartmentModal').style.display = 'flex';
+            });
+            
+            addStaffBtn.addEventListener('click', () => {
+                document.getElementById('addStaffModal').style.display = 'flex';
+            });
+            
+            closeModalBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    modals.forEach(modal => {
+                        modal.style.display = 'none';
+                    });
+                });
+            });
+            
+            // Close modal when clicking outside
+            window.addEventListener('click', (e) => {
+                modals.forEach(modal => {
+                    if (e.target === modal) {
+                        modal.style.display = 'none';
+                    }
+                });
+            });
+            
+            // Save changes button
+            const saveChangesBtn = document.getElementById('saveChangesBtn');
+            saveChangesBtn.addEventListener('click', () => {
+                alert('Changes saved successfully!');
+            });
+            
+            // Delete buttons functionality
+            const deleteButtons = document.querySelectorAll('.delete-btn');
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    if (confirm('Are you sure you want to delete this item?')) {
+                        const row = this.closest('tr');
+                        row.style.opacity = '0';
+                        setTimeout(() => {
+                            row.remove();
+                        }, 300);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
