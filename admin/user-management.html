@@ -1,0 +1,1472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduProcure - User & Role Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-purple: #7e57c2;
+            --light-purple: #b39ddb;
+            --dark-purple: #5e35b1;
+            --accent-purple: #d1c4e9;
+            --accent-teal: #26a69a;
+            --light-teal: #80cbc4;
+            --white: #ffffff;
+            --light-gray: #f5f5f5;
+            --medium-gray: #e0e0e0;
+            --dark-gray: #424242;
+            --text-dark: #212121;
+            --text-light: #757575;
+            --success-green: #4caf50;
+            --warning-orange: #ff9800;
+            --error-red: #f44336;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+            --border-radius: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light-gray);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 280px;
+            background: linear-gradient(180deg, var(--primary-purple), var(--dark-purple));
+            color: var(--white);
+            box-shadow: var(--shadow);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            transition: var(--transition);
+        }
+
+        .logo {
+            padding: 24px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+        }
+
+        .logo h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .logo i {
+            font-size: 1.8rem;
+        }
+
+        .nav-menu {
+            flex: 1;
+            padding: 20px 0;
+        }
+
+        .nav-menu ul {
+            list-style: none;
+        }
+
+        .nav-menu li {
+            margin-bottom: 5px;
+        }
+
+        .nav-menu a {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .nav-menu a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--white);
+        }
+
+        .nav-menu a.active {
+            background-color: rgba(255, 255, 255, 0.15);
+            color: var(--white);
+            font-weight: 500;
+            border-left: 4px solid var(--light-teal);
+        }
+
+        .nav-menu i {
+            margin-right: 12px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .admin-profile {
+            padding: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .admin-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--light-teal);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--dark-purple);
+            font-weight: 600;
+        }
+
+        .admin-info h4 {
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .admin-info p {
+            font-size: 0.7rem;
+            opacity: 0.8;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            background-color: var(--white);
+            box-shadow: var(--shadow);
+        }
+
+        .header-left h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--dark-purple);
+        }
+
+        .header-left p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .search-bar {
+            position: relative;
+        }
+
+        .search-bar input {
+            padding: 10px 15px 10px 40px;
+            border: 1px solid var(--medium-gray);
+            border-radius: 30px;
+            width: 300px;
+            font-size: 0.9rem;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .search-bar input:focus {
+            border-color: var(--primary-purple);
+        }
+
+        .search-bar i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .icon-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--light-gray);
+            color: var(--text-dark);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .icon-btn:hover {
+            background-color: var(--accent-purple);
+            color: var(--dark-purple);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background-color: var(--error-red);
+            color: var(--white);
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* User Management Content */
+        .user-content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .page-header h2 {
+            font-size: 1.8rem;
+            color: var(--dark-purple);
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: var(--border-radius);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-purple);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--dark-purple);
+        }
+
+        .btn-secondary {
+            background-color: var(--medium-gray);
+            color: var(--text-dark);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--dark-gray);
+            color: var(--white);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary-purple);
+            color: var(--primary-purple);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary-purple);
+            color: var(--white);
+        }
+
+        .btn-success {
+            background-color: var(--success-green);
+            color: var(--white);
+        }
+
+        .btn-success:hover {
+            background-color: #388e3c;
+        }
+
+        .btn-warning {
+            background-color: var(--warning-orange);
+            color: var(--white);
+        }
+
+        .btn-warning:hover {
+            background-color: #f57c00;
+        }
+
+        .btn-danger {
+            background-color: var(--error-red);
+            color: var(--white);
+        }
+
+        .btn-danger:hover {
+            background-color: #d32f2f;
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+        }
+
+        /* User Management Header */
+        .user-header {
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+        }
+
+        .user-stats {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 15px;
+            border-radius: var(--border-radius);
+            background-color: var(--light-gray);
+            flex: 1;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .stat-schools .stat-value {
+            color: var(--primary-purple);
+        }
+
+        .stat-suppliers .stat-value {
+            color: var(--accent-teal);
+        }
+
+        .stat-pending .stat-value {
+            color: var(--warning-orange);
+        }
+
+        .stat-banned .stat-value {
+            color: var(--error-red);
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .filters-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-label {
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-bottom: 5px;
+            color: var(--text-dark);
+        }
+
+        .filter-select {
+            padding: 8px 12px;
+            border: 1px solid var(--medium-gray);
+            border-radius: var(--border-radius);
+            background-color: var(--white);
+            font-size: 0.9rem;
+            outline: none;
+        }
+
+        .filter-select:focus {
+            border-color: var(--primary-purple);
+        }
+
+        /* User Management Layout */
+        .user-layout {
+            display: flex;
+            gap: 30px;
+        }
+
+        .user-sidebar {
+            width: 300px;
+            flex-shrink: 0;
+        }
+
+        .user-card {
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+        }
+
+        .user-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: var(--dark-purple);
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--medium-gray);
+        }
+
+        /* User List */
+        .user-list {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .user-item {
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 1px solid var(--medium-gray);
+        }
+
+        .user-item:hover {
+            border-color: var(--primary-purple);
+            background-color: rgba(126, 87, 194, 0.05);
+        }
+
+        .user-item.active {
+            border-color: var(--primary-purple);
+            background-color: var(--accent-purple);
+        }
+
+        .user-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .user-name {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .user-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .badge-school {
+            background-color: rgba(126, 87, 194, 0.1);
+            color: var(--primary-purple);
+        }
+
+        .badge-supplier {
+            background-color: rgba(38, 166, 154, 0.1);
+            color: var(--accent-teal);
+        }
+
+        .badge-admin {
+            background-color: rgba(255, 152, 0, 0.1);
+            color: var(--warning-orange);
+        }
+
+        .badge-pending {
+            background-color: rgba(255, 152, 0, 0.1);
+            color: var(--warning-orange);
+        }
+
+        .badge-banned {
+            background-color: rgba(244, 67, 54, 0.1);
+            color: var(--error-red);
+        }
+
+        .user-details {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .user-detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 3px;
+        }
+
+        /* User Detail View */
+        .user-detail {
+            flex: 1;
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-detail-header {
+            padding: 20px;
+            background: linear-gradient(135deg, var(--primary-purple), var(--light-purple));
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .user-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: var(--light-teal);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--dark-purple);
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+
+        .user-info h2 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .user-info p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .user-detail-body {
+            padding: 20px;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .user-info-section {
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--dark-purple);
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--medium-gray);
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .info-label {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        /* Verification Section */
+        .verification-section {
+            margin-top: 20px;
+            border: 1px solid var(--medium-gray);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+        }
+
+        .verification-header {
+            padding: 12px 15px;
+            background-color: var(--light-gray);
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .verification-content {
+            padding: 15px;
+            background-color: var(--white);
+        }
+
+        .verification-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .verification-item:last-child {
+            border-bottom: none;
+        }
+
+        .verification-info {
+            flex: 1;
+        }
+
+        .verification-name {
+            font-weight: 500;
+            margin-bottom: 3px;
+        }
+
+        .verification-status {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .verification-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Permissions Section */
+        .permissions-section {
+            margin-top: 20px;
+            border: 1px solid var(--medium-gray);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+        }
+
+        .permissions-header {
+            padding: 12px 15px;
+            background-color: var(--light-gray);
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .permissions-content {
+            padding: 15px;
+            background-color: var(--white);
+        }
+
+        .permissions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+        }
+
+        .permission-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px;
+            border-radius: var(--border-radius);
+            background-color: var(--light-gray);
+        }
+
+        .permission-checkbox {
+            width: 18px;
+            height: 18px;
+            border-radius: 3px;
+            border: 2px solid var(--medium-gray);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .permission-checkbox.checked {
+            background-color: var(--primary-purple);
+            border-color: var(--primary-purple);
+            color: var(--white);
+        }
+
+        .permission-label {
+            font-size: 0.9rem;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .user-layout {
+                flex-direction: column;
+            }
+            
+            .user-sidebar {
+                width: 100%;
+            }
+            
+            .info-grid {
+                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+            }
+            
+            .nav-menu ul {
+                display: flex;
+                overflow-x: auto;
+            }
+            
+            .nav-menu li {
+                flex-shrink: 0;
+                margin-bottom: 0;
+            }
+            
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .header-right {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .search-bar input {
+                width: 200px;
+            }
+            
+            .user-header {
+                padding: 15px;
+            }
+            
+            .user-stats {
+                gap: 15px;
+                flex-wrap: wrap;
+            }
+            
+            .filters-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .user-detail-header {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .user-content {
+                padding: 15px;
+            }
+            
+            .header-right {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .search-bar {
+                width: 100%;
+            }
+            
+            .search-bar input {
+                width: 100%;
+            }
+            
+            .permissions-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fas fa-shield-alt"></i>
+                <h2>EduProcure Admin</h2>
+            </div>
+            <nav class="nav-menu">
+                <ul>
+                    <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li><a href="user-management.html" class="active"><i class="fas fa-users"></i> User Management</a></li>
+                    <li><a href="categories.html"><i class="fas fa-tags"></i> Categories</a></li>
+                    <li><a href="financials.html"><i class="fas fa-money-bill-wave"></i> Financials</a></li>
+                    <li><a href="audit.html"><i class="fas fa-clipboard-list"></i> Audit Logs</a></li>
+                    <li><a href="#"><i class="fas fa-envelope"></i> Messaging</a></li>
+                    <li><a href="#"><i class="fas fa-gavel"></i> Dispute Resolution</a></li>
+                    <li><a href="#"><i class="fas fa-cog"></i> System Settings</a></li>
+                </ul>
+            </nav>
+            <div class="admin-profile">
+                <div class="admin-avatar">AD</div>
+                <div class="admin-info">
+                    <h4>Admin User</h4>
+                    <p>System Administrator</p>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <h1>User & Role Management</h1>
+                    <p>Manage schools, suppliers, staff roles and permissions</p>
+                </div>
+                <div class="header-right">
+                    <div class="search-bar">
+                        <input type="text" id="globalSearch" placeholder="Search users...">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <div class="header-actions">
+                        <div class="icon-btn" style="position: relative;">
+                            <i class="fas fa-bell"></i>
+                            <div class="notification-badge">5</div>
+                        </div>
+                        <div class="icon-btn">
+                            <i class="fas fa-cog"></i>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- User Management Content -->
+            <div class="user-content">
+                <div class="page-header">
+                    <h2>Platform Users</h2>
+                    <button class="btn btn-primary" id="addUserBtn">
+                        <i class="fas fa-user-plus"></i> Add User
+                    </button>
+                </div>
+
+                <!-- User Management Header -->
+                <div class="user-header">
+                    <div class="user-stats">
+                        <div class="stat-item stat-schools">
+                            <div class="stat-value">248</div>
+                            <div class="stat-label">Schools</div>
+                        </div>
+                        <div class="stat-item stat-suppliers">
+                            <div class="stat-value">156</div>
+                            <div class="stat-label">Verified Suppliers</div>
+                        </div>
+                        <div class="stat-item stat-pending">
+                            <div class="stat-value">23</div>
+                            <div class="stat-label">Pending Verification</div>
+                        </div>
+                        <div class="stat-item stat-banned">
+                            <div class="stat-value">7</div>
+                            <div class="stat-label">Banned Accounts</div>
+                        </div>
+                    </div>
+                    <div class="filters-container">
+                        <div class="filter-group">
+                            <label class="filter-label">User Type</label>
+                            <select class="filter-select" id="userTypeFilter">
+                                <option>All Users</option>
+                                <option>Schools</option>
+                                <option>Suppliers</option>
+                                <option>Admin Staff</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">Status</label>
+                            <select class="filter-select" id="statusFilter">
+                                <option>All Statuses</option>
+                                <option>Active</option>
+                                <option>Pending</option>
+                                <option>Banned</option>
+                                <option>Suspended</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">Region</label>
+                            <select class="filter-select" id="regionFilter">
+                                <option>All Regions</option>
+                                <option>Nairobi County</option>
+                                <option>Central Region</option>
+                                <option>Coast Region</option>
+                                <option>Rift Valley</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">Registration Date</label>
+                            <select class="filter-select" id="dateFilter">
+                                <option>All Time</option>
+                                <option>Last 7 Days</option>
+                                <option>Last 30 Days</option>
+                                <option>Last 90 Days</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- User Management Layout -->
+                <div class="user-layout">
+                    <!-- User Sidebar -->
+                    <div class="user-sidebar">
+                        <!-- User List -->
+                        <div class="user-card">
+                            <h3>Users</h3>
+                            <div class="user-list">
+                                <!-- User Item 1 -->
+                                <div class="user-item active" data-user="1">
+                                    <div class="user-item-header">
+                                        <h4 class="user-name">Nairobi Science High School</h4>
+                                        <span class="user-badge badge-school">SCHOOL</span>
+                                    </div>
+                                    <div class="user-details">
+                                        <div class="user-detail-row">
+                                            <span>Contact:</span>
+                                            <span>Dr. James Kariuki</span>
+                                        </div>
+                                        <div class="user-detail-row">
+                                            <span>Location:</span>
+                                            <span>Nairobi, Westlands</span>
+                                        </div>
+                                        <div class="user-detail-row">
+                                            <span>Status:</span>
+                                            <span>Active</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- User Item 2 -->
+                                <div class="user-item" data-user="2">
+                                    <div class="user-item-header">
+                                        <h4 class="user-name">Lab Supplies Co.</h4>
+                                        <span class="user-badge badge-supplier">SUPPLIER</span>
+                                    </div>
+                                    <div class="user-details">
+                                        <div class="user-detail-row">
+                                            <span>Contact:</span>
+                                            <span>John Davidson</span>
+                                        </div>
+                                        <div class="user-detail-row">
+                                            <span>Category:</span>
+                                            <span>Lab Equipment</span>
+                                        </div>
+                                        <div class="user-detail-row">
+                                            <span>Status:</span>
+                                            <span>Verified</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- User Item 3 -->
+                                <div class="user-item" data-user="3">
+                                    <div class="user-item-header">
+                                        <h4 class="user-name">Mombasa Primary Academy</h4>
+                                        <span class="user-badge badge-school">SCHOOL</span>
+                                    </div>
+                                    <div class="user-details">
+                                        <div class="user-detail-row">
+                                            <span>Contact:</span>
+                                            <span>Mrs. Amina Hassan</span>
+                                        </div>
+                                        <div class="user-detail-row">
+                                            <span>Location:</span>
+                                            <span>Mombasa, Island</span>
+                                        </div>
+                                        <div class="user-detail-row">
+                                            <span>Status:</span>
+                                            <span>Active</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- User Item 4 -->
+                                <div class="user-item" data-user="4">
+                                    <div class="user-item-header">
+                                        <h4 class="user-name">Tech Solutions Ltd</h4>
+                                        <span class="user-badge badge-pending">PENDING</span>
+                                    </div>
+                                    <div class="user-details">
+                                        <div class="user-detail-row">
+                                            <span>Contact:</span>
+                                            <span>Robert Kimani</span>
+                                        </div>
+                                        <div class="user-detail-row">
+                                            <span>Category:</span>
+                                            <span>ICT Equipment</span>
+                                        </div>
+                                        <div class="user-detail-row">
+                                            <span>Status:</span>
+                                            <span>Verification Required</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- User Item 5 -->
+                                <div class="user-item" data-user="5">
+                                    <div class="user-item-header">
+                                        <h4 class="user-name">Kisumu Technical College</h4>
+                                        <span class="user-badge badge-school">SCHOOL</span>
+                                    </div>
+                                    <div class="user-details">
+                                        <div class="user-detail-row">
+                                            <span>Contact:</span>
+                                            <span>Prof. Samuel Owino</span>
+                                        </div>
+                                        <div class="user-detail-row">
+                                            <span>Location:</span>
+                                            <span>Kisumu Central</span>
+                                        </div>
+                                        <div class="user-detail-row">
+                                            <span>Status:</span>
+                                            <span>Active</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- User Item 6 -->
+                                <div class="user-item" data-user="6">
+                                    <div class="user-item-header">
+                                        <h4 class="user-name">Furniture World Kenya</h4>
+                                        <span class="user-badge badge-banned">BANNED</span>
+                                    </div>
+                                    <div class="user-details">
+                                        <div class="user-detail-row">
+                                            <span>Contact:</span>
+                                            <span>David Mwangi</span>
+                                        </div>
+                                        <div class="user-detail-row">
+                                            <span>Category:</span>
+                                            <span>Furniture</span>
+                                        </div>
+                                        <div class="user-detail-row">
+                                            <span>Status:</span>
+                                            <span>Banned - Policy Violation</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Quick Actions -->
+                        <div class="user-card">
+                            <h3>Quick Actions</h3>
+                            <button class="btn btn-outline btn-sm" style="width: 100%; margin-bottom: 10px;">
+                                <i class="fas fa-user-check"></i> Bulk Verify
+                            </button>
+                            <button class="btn btn-outline btn-sm" style="width: 100%; margin-bottom: 10px;">
+                                <i class="fas fa-envelope"></i> Send Notifications
+                            </button>
+                            <button class="btn btn-outline btn-sm" style="width: 100%;">
+                                <i class="fas fa-download"></i> Export Users
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- User Detail View -->
+                    <div class="user-detail">
+                        <div class="user-detail-header">
+                            <div class="user-avatar">NS</div>
+                            <div class="user-info">
+                                <h2>Nairobi Science High School</h2>
+                                <p>Public Secondary School • Westlands, Nairobi</p>
+                                <div style="margin-top: 10px; display: flex; gap: 10px;">
+                                    <span class="user-badge badge-school">SCHOOL</span>
+                                    <span style="background-color: rgba(76, 175, 80, 0.1); color: #4caf50; padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 600;">ACTIVE</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="user-detail-body">
+                            <!-- User Information -->
+                            <div class="user-info-section">
+                                <h3 class="section-title">School Details</h3>
+                                <div class="info-grid">
+                                    <div class="info-item">
+                                        <span class="info-label">School Type</span>
+                                        <span class="info-value">Public Secondary</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Registration No.</span>
+                                        <span class="info-value">MOE/4567/2018</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Contact Person</span>
+                                        <span class="info-value">Dr. James Kariuki</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Phone Number</span>
+                                        <span class="info-value">+254 700 123 456</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Email Address</span>
+                                        <span class="info-value">info@nairobi-science.sc.ke</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Physical Address</span>
+                                        <span class="info-value">Westlands, Nairobi County</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Student Population</span>
+                                        <span class="info-value">1,200</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Registration Date</span>
+                                        <span class="info-value">15 Mar 2022</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Staff & Roles -->
+                            <div class="user-info-section">
+                                <h3 class="section-title">Staff & Roles</h3>
+                                <div class="info-grid">
+                                    <div class="info-item">
+                                        <span class="info-label">Principal</span>
+                                        <span class="info-value">Dr. James Kariuki</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Procurement Officer</span>
+                                        <span class="info-value">Ms. Grace Wambui</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Bursar</span>
+                                        <span class="info-value">Mr. Peter Njoroge</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Science HOD</span>
+                                        <span class="info-value">Dr. Susan Mwangi</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Verification Section -->
+                            <div class="verification-section">
+                                <div class="verification-header">
+                                    <span>Verification Status</span>
+                                </div>
+                                <div class="verification-content">
+                                    <div class="verification-item">
+                                        <div class="verification-info">
+                                            <div class="verification-name">Business Registration</div>
+                                            <div class="verification-status">Verified • 15 Mar 2022</div>
+                                        </div>
+                                        <div class="verification-actions">
+                                            <button class="btn btn-success btn-sm">
+                                                <i class="fas fa-check"></i> Verified
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="verification-item">
+                                        <div class="verification-info">
+                                            <div class="verification-name">Ministry of Education</div>
+                                            <div class="verification-status">Verified • 20 Mar 2022</div>
+                                        </div>
+                                        <div class="verification-actions">
+                                            <button class="btn btn-success btn-sm">
+                                                <i class="fas fa-check"></i> Verified
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="verification-item">
+                                        <div class="verification-info">
+                                            <div class="verification-name">Tax Compliance</div>
+                                            <div class="verification-status">Expires 15 Dec 2023</div>
+                                        </div>
+                                        <div class="verification-actions">
+                                            <button class="btn btn-warning btn-sm">
+                                                <i class="fas fa-clock"></i> Renewal Due
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Permissions Section -->
+                            <div class="permissions-section">
+                                <div class="permissions-header">
+                                    <span>Platform Permissions</span>
+                                </div>
+                                <div class="permissions-content">
+                                    <div class="permissions-grid">
+                                        <div class="permission-item">
+                                            <div class="permission-checkbox checked">
+                                                <i class="fas fa-check"></i>
+                                            </div>
+                                            <span class="permission-label">Create RFQs</span>
+                                        </div>
+                                        <div class="permission-item">
+                                            <div class="permission-checkbox checked">
+                                                <i class="fas fa-check"></i>
+                                            </div>
+                                            <span class="permission-label">Place Orders</span>
+                                        </div>
+                                        <div class="permission-item">
+                                            <div class="permission-checkbox checked">
+                                                <i class="fas fa-check"></i>
+                                            </div>
+                                            <span class="permission-label">Manage Inventory</span>
+                                        </div>
+                                        <div class="permission-item">
+                                            <div class="permission-checkbox checked">
+                                                <i class="fas fa-check"></i>
+                                            </div>
+                                            <span class="permission-label">Budget Management</span>
+                                        </div>
+                                        <div class="permission-item">
+                                            <div class="permission-checkbox">
+                                                <i class="fas fa-check"></i>
+                                            </div>
+                                            <span class="permission-label">Supplier Registration</span>
+                                        </div>
+                                        <div class="permission-item">
+                                            <div class="permission-checkbox">
+                                                <i class="fas fa-check"></i>
+                                            </div>
+                                            <span class="permission-label">Admin Functions</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="action-buttons">
+                                <button class="btn btn-success">
+                                    <i class="fas fa-check-circle"></i> Approve User
+                                </button>
+                                <button class="btn btn-warning">
+                                    <i class="fas fa-edit"></i> Edit Profile
+                                </button>
+                                <button class="btn btn-outline">
+                                    <i class="fas fa-envelope"></i> Send Message
+                                </button>
+                                <button class="btn btn-outline">
+                                    <i class="fas fa-history"></i> View Activity
+                                </button>
+                                <button class="btn btn-danger">
+                                    <i class="fas fa-ban"></i> Suspend Account
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // JavaScript for interactive elements
+        document.addEventListener('DOMContentLoaded', function() {
+            // User Item Selection
+            const userItems = document.querySelectorAll('.user-item');
+            userItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    userItems.forEach(i => i.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const userId = this.getAttribute('data-user');
+                    loadUserDetails(userId);
+                });
+            });
+
+            function loadUserDetails(userId) {
+                // In a real application, you would fetch user details from an API
+                console.log(`Loading details for User ${userId}`);
+                // For demo purposes, we're just updating the title
+                const names = {
+                    1: "Nairobi Science High School",
+                    2: "Lab Supplies Co.", 
+                    3: "Mombasa Primary Academy",
+                    4: "Tech Solutions Ltd",
+                    5: "Kisumu Technical College",
+                    6: "Furniture World Kenya"
+                };
+                
+                document.querySelector('.user-info h2').textContent = names[userId];
+            }
+
+            // Add User Button
+            const addUserBtn = document.getElementById('addUserBtn');
+            if (addUserBtn) {
+                addUserBtn.addEventListener('click', function() {
+                    alert('Add User form would open here');
+                    // In a real application, you would open a modal or navigate to a form
+                });
+            }
+
+            // Global Search
+            const globalSearch = document.getElementById('globalSearch');
+            if (globalSearch) {
+                globalSearch.addEventListener('input', function(e) {
+                    const searchTerm = e.target.value.toLowerCase();
+                    const userItems = document.querySelectorAll('.user-item');
+                    
+                    userItems.forEach(item => {
+                        const name = item.querySelector('.user-name').textContent.toLowerCase();
+                        
+                        if (name.includes(searchTerm)) {
+                            item.style.display = 'block';
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+                });
+            }
+
+            // Filter Functionality
+            const filters = document.querySelectorAll('.filter-select');
+            filters.forEach(filter => {
+                filter.addEventListener('change', function() {
+                    applyFilters();
+                });
+            });
+
+            function applyFilters() {
+                const userType = document.getElementById('userTypeFilter').value;
+                const status = document.getElementById('statusFilter').value;
+                const userItems = document.querySelectorAll('.user-item');
+                
+                userItems.forEach(item => {
+                    let showItem = true;
+                    
+                    // Filter by user type
+                    if (userType !== 'All Users') {
+                        const badge = item.querySelector('.user-badge').textContent;
+                        if (userType === 'Schools' && !badge.includes('SCHOOL')) {
+                            showItem = false;
+                        } else if (userType === 'Suppliers' && !badge.includes('SUPPLIER') && !badge.includes('PENDING')) {
+                            showItem = false;
+                        } else if (userType === 'Admin Staff' && !badge.includes('ADMIN')) {
+                            showItem = false;
+                        }
+                    }
+                    
+                    // Filter by status
+                    if (status !== 'All Statuses') {
+                        const details = item.querySelector('.user-details').textContent;
+                        if (status === 'Active' && !details.includes('Active')) {
+                            showItem = false;
+                        } else if (status === 'Pending' && !details.includes('Verification Required')) {
+                            showItem = false;
+                        } else if (status === 'Banned' && !details.includes('Banned')) {
+                            showItem = false;
+                        }
+                    }
+                    
+                    item.style.display = showItem ? 'block' : 'none';
+                });
+            }
+
+            // Permission Checkboxes
+            const permissionCheckboxes = document.querySelectorAll('.permission-checkbox');
+            permissionCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('click', function() {
+                    this.classList.toggle('checked');
+                    
+                    const permission = this.nextElementSibling.textContent;
+                    const action = this.classList.contains('checked') ? 'granted' : 'revoked';
+                    
+                    console.log(`Permission ${action}: ${permission}`);
+                });
+            });
+
+            // Action Button Functionality
+            const actionButtons = document.querySelectorAll('.action-buttons .btn');
+            actionButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const action = this.textContent.trim();
+                    const userName = document.querySelector('.user-info h2').textContent;
+                    
+                    if (action.includes('Approve')) {
+                        alert(`User "${userName}" has been approved and activated.`);
+                    } else if (action.includes('Edit')) {
+                        alert(`Opening edit form for "${userName}"...`);
+                    } else if (action.includes('Send Message')) {
+                        alert(`Opening message composer for "${userName}"...`);
+                    } else if (action.includes('View Activity')) {
+                        alert(`Opening activity log for "${userName}"...`);
+                    } else if (action.includes('Suspend')) {
+                        const confirmSuspend = confirm(`Are you sure you want to suspend "${userName}"?`);
+                        if (confirmSuspend) {
+                            alert(`User "${userName}" has been suspended.`);
+                        }
+                    }
+                });
+            });
+
+            // Verification Action Buttons
+            const verificationButtons = document.querySelectorAll('.verification-actions .btn');
+            verificationButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const action = this.textContent.trim();
+                    const verification = this.closest('.verification-item').querySelector('.verification-name').textContent;
+                    
+                    if (action.includes('Verified')) {
+                        alert(`Verification status updated for ${verification}`);
+                    } else if (action.includes('Renewal')) {
+                        alert(`Sending renewal reminder for ${verification}`);
+                    }
+                });
+            });
+
+            // Quick Actions
+            const quickActionButtons = document.querySelectorAll('.user-card .btn');
+            quickActionButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const action = this.textContent.trim();
+                    
+                    if (action.includes('Bulk Verify')) {
+                        alert('Opening bulk verification tool...');
+                    } else if (action.includes('Send Notifications')) {
+                        alert('Opening notification composer...');
+                    } else if (action.includes('Export Users')) {
+                        alert('Exporting user data to CSV...');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

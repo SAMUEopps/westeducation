@@ -1,0 +1,1530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduProcure - Invoices & Payments</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #1976d2;
+            --light-blue: #42a5f5;
+            --dark-blue: #0d47a1;
+            --accent-blue: #90caf9;
+            --accent-orange: #ff9800;
+            --light-orange: #ffb74d;
+            --white: #ffffff;
+            --light-gray: #f5f5f5;
+            --medium-gray: #e0e0e0;
+            --dark-gray: #424242;
+            --text-dark: #212121;
+            --text-light: #757575;
+            --success-green: #4caf50;
+            --warning-orange: #ff9800;
+            --error-red: #f44336;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+            --border-radius: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light-gray);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 260px;
+            background-color: var(--white);
+            box-shadow: var(--shadow);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            transition: var(--transition);
+        }
+
+        .logo {
+            padding: 24px 20px;
+            border-bottom: 1px solid var(--medium-gray);
+            color: var(--primary-blue);
+            display: flex;
+            align-items: center;
+        }
+
+        .logo h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .logo i {
+            font-size: 1.8rem;
+        }
+
+        .nav-menu {
+            flex: 1;
+            padding: 20px 0;
+        }
+
+        .nav-menu ul {
+            list-style: none;
+        }
+
+        .nav-menu li {
+            margin-bottom: 5px;
+        }
+
+        .nav-menu a {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: var(--text-dark);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .nav-menu a:hover {
+            background-color: var(--light-gray);
+            color: var(--primary-blue);
+        }
+
+        .nav-menu a.active {
+            background-color: var(--accent-blue);
+            color: var(--dark-blue);
+            font-weight: 500;
+            border-left: 4px solid var(--primary-blue);
+        }
+
+        .nav-menu i {
+            margin-right: 12px;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            background-color: var(--white);
+            box-shadow: var(--shadow);
+        }
+
+        .header-left h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--dark-blue);
+        }
+
+        .header-left p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .search-bar {
+            position: relative;
+        }
+
+        .search-bar input {
+            padding: 10px 15px 10px 40px;
+            border: 1px solid var(--medium-gray);
+            border-radius: 30px;
+            width: 300px;
+            font-size: 0.9rem;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .search-bar input:focus {
+            border-color: var(--primary-blue);
+        }
+
+        .search-bar i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-profile img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .user-profile span {
+            font-weight: 500;
+        }
+
+        /* Invoice Content */
+        .invoice-content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .page-header h2 {
+            font-size: 1.8rem;
+            color: var(--dark-blue);
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: var(--border-radius);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-blue);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--dark-blue);
+        }
+
+        .btn-secondary {
+            background-color: var(--medium-gray);
+            color: var(--text-dark);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--dark-gray);
+            color: var(--white);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary-blue);
+            color: var(--primary-blue);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary-blue);
+            color: var(--white);
+        }
+
+        .btn-success {
+            background-color: var(--success-green);
+            color: var(--white);
+        }
+
+        .btn-success:hover {
+            background-color: #388e3c;
+        }
+
+        .btn-warning {
+            background-color: var(--warning-orange);
+            color: var(--white);
+        }
+
+        .btn-warning:hover {
+            background-color: #f57c00;
+        }
+
+        .btn-danger {
+            background-color: var(--error-red);
+            color: var(--white);
+        }
+
+        .btn-danger:hover {
+            background-color: #d32f2f;
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+        }
+
+        /* Invoice Header */
+        .invoice-header {
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+        }
+
+        .invoice-stats {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 15px;
+            border-radius: var(--border-radius);
+            background-color: var(--light-gray);
+            flex: 1;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .stat-pending .stat-value {
+            color: var(--warning-orange);
+        }
+
+        .stat-paid .stat-value {
+            color: var(--success-green);
+        }
+
+        .stat-overdue .stat-value {
+            color: var(--error-red);
+        }
+
+        .stat-total .stat-value {
+            color: var(--primary-blue);
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .filters-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-label {
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-bottom: 5px;
+            color: var(--text-dark);
+        }
+
+        .filter-select {
+            padding: 8px 12px;
+            border: 1px solid var(--medium-gray);
+            border-radius: var(--border-radius);
+            background-color: var(--white);
+            font-size: 0.9rem;
+            outline: none;
+        }
+
+        .filter-select:focus {
+            border-color: var(--primary-blue);
+        }
+
+        /* Invoice Layout */
+        .invoice-layout {
+            display: flex;
+            gap: 30px;
+        }
+
+        .invoice-list {
+            width: 400px;
+            flex-shrink: 0;
+        }
+
+        .invoice-list-card {
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .invoice-list-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: var(--dark-blue);
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--medium-gray);
+        }
+
+        .invoice-item {
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 1px solid var(--medium-gray);
+        }
+
+        .invoice-item:hover {
+            border-color: var(--primary-blue);
+            background-color: rgba(25, 118, 210, 0.05);
+        }
+
+        .invoice-item.active {
+            border-color: var(--primary-blue);
+            background-color: var(--accent-blue);
+        }
+
+        .invoice-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .invoice-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .invoice-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .badge-draft {
+            background-color: var(--medium-gray);
+            color: var(--text-dark);
+        }
+
+        .badge-sent {
+            background-color: var(--primary-blue);
+            color: var(--white);
+        }
+
+        .badge-paid {
+            background-color: var(--success-green);
+            color: var(--white);
+        }
+
+        .badge-overdue {
+            background-color: var(--error-red);
+            color: var(--white);
+        }
+
+        .badge-partial {
+            background-color: var(--warning-orange);
+            color: var(--white);
+        }
+
+        .invoice-school {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .school-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: var(--primary-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .school-info h4 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .school-info p {
+            font-size: 0.7rem;
+            color: var(--text-light);
+        }
+
+        .invoice-details {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .invoice-detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 3px;
+        }
+
+        /* Invoice Detail View */
+        .invoice-detail {
+            flex: 1;
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .invoice-detail-header {
+            padding: 20px;
+            background: linear-gradient(135deg, var(--primary-blue), var(--light-blue));
+            color: var(--white);
+        }
+
+        .invoice-detail-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .invoice-detail-subtitle {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .invoice-detail-body {
+            padding: 20px;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .invoice-info-section {
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--dark-blue);
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--medium-gray);
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .info-label {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        /* Invoice Preview */
+        .invoice-preview {
+            border: 1px solid var(--medium-gray);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            background-color: var(--white);
+            margin-bottom: 20px;
+        }
+
+        .invoice-header-preview {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+
+        .invoice-from, .invoice-to {
+            flex: 1;
+        }
+
+        .invoice-from h3, .invoice-to h3 {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            color: var(--text-dark);
+        }
+
+        .invoice-meta {
+            text-align: right;
+        }
+
+        .invoice-number {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-blue);
+            margin-bottom: 5px;
+        }
+
+        .invoice-date {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        /* Items Table */
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        .items-table th, .items-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--medium-gray);
+        }
+
+        .items-table th {
+            background-color: var(--light-gray);
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .items-table tr:hover {
+            background-color: rgba(25, 118, 210, 0.03);
+        }
+
+        .items-table tfoot td {
+            font-weight: 600;
+            padding-top: 15px;
+        }
+
+        /* Payment Timeline */
+        .payment-timeline {
+            margin-top: 20px;
+            border: 1px solid var(--medium-gray);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+        }
+
+        .payment-header {
+            padding: 12px 15px;
+            background-color: var(--light-gray);
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .payment-content {
+            padding: 15px;
+            background-color: var(--white);
+        }
+
+        .payment-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .payment-item:last-child {
+            border-bottom: none;
+        }
+
+        .payment-info {
+            flex: 1;
+        }
+
+        .payment-amount {
+            font-weight: 600;
+            color: var(--primary-blue);
+        }
+
+        .payment-date {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .payment-status {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .status-success {
+            background-color: var(--success-green);
+            color: var(--white);
+        }
+
+        .status-pending {
+            background-color: var(--warning-orange);
+            color: var(--white);
+        }
+
+        .status-failed {
+            background-color: var(--error-red);
+            color: var(--white);
+        }
+
+        /* Credit Notes Section */
+        .credit-notes-section {
+            margin-top: 20px;
+            border: 1px solid var(--medium-gray);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+        }
+
+        .credit-notes-header {
+            padding: 12px 15px;
+            background-color: var(--light-gray);
+            font-weight: 600;
+            color: var(--text-dark);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .credit-notes-content {
+            padding: 15px;
+            background-color: var(--white);
+        }
+
+        .credit-note-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .credit-note-item:last-child {
+            border-bottom: none;
+        }
+
+        .credit-note-info {
+            flex: 1;
+        }
+
+        .credit-note-reason {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-top: 3px;
+        }
+
+        .credit-note-amount {
+            font-weight: 600;
+            color: var(--error-red);
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .invoice-layout {
+                flex-direction: column;
+            }
+            
+            .invoice-list {
+                width: 100%;
+            }
+            
+            .info-grid {
+                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+            }
+            
+            .nav-menu ul {
+                display: flex;
+                overflow-x: auto;
+            }
+            
+            .nav-menu li {
+                flex-shrink: 0;
+                margin-bottom: 0;
+            }
+            
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .header-right {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .search-bar input {
+                width: 200px;
+            }
+            
+            .invoice-header {
+                padding: 15px;
+            }
+            
+            .invoice-stats {
+                gap: 15px;
+                flex-wrap: wrap;
+            }
+            
+            .filters-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .invoice-header-preview {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .invoice-meta {
+                text-align: left;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .invoice-content {
+                padding: 15px;
+            }
+            
+            .header-right {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .search-bar {
+                width: 100%;
+            }
+            
+            .search-bar input {
+                width: 100%;
+            }
+            
+            .items-table {
+                font-size: 0.8rem;
+            }
+            
+            .items-table th, .items-table td {
+                padding: 8px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fas fa-industry"></i>
+                <h2>EduProcure</h2>
+            </div>
+            <nav class="nav-menu">
+                <ul>
+                    <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li><a href="profile.html"><i class="fas fa-building"></i> Profile</a></li>
+                    <li><a href="products.html"><i class="fas fa-boxes"></i> Product Catalog</a></li>
+                    <li><a href="schools.html"><i class="fas fa-school"></i> Schools Directory</a></li>
+                    <li><a href="quotation.html"><i class="fas fa-file-invoice-dollar"></i> RFQ Management</a></li>
+                    <li><a href="orders.html"><i class="fas fa-shipping-fast"></i> Order Fulfillment</a></li>
+                    <li><a href="payments.html" class="active"><i class="fas fa-file-invoice"></i> Invoices & Payments</a></li>
+                    <li><a href="delivery.html"><i class="fas fa-truck"></i> Delivery & Logistics</a></li>
+                    <li><a href="reports.html"><i class="fas fa-chart-bar"></i> Reports & Analytics</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <h1>Invoices & Payments</h1>
+                    <p>Manage invoices, track payments, and handle credit notes</p>
+                </div>
+                <div class="header-right">
+                    <div class="search-bar">
+                        <input type="text" id="globalSearch" placeholder="Search invoices...">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <div class="user-profile">
+                        <img src="https://i.pravatar.cc/40" alt="User Avatar">
+                        <span>Supplier Manager</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Invoice Content -->
+            <div class="invoice-content">
+                <div class="page-header">
+                    <h2>Financial Management</h2>
+                    <button class="btn btn-primary" id="createInvoiceBtn">
+                        <i class="fas fa-plus"></i> Create Invoice
+                    </button>
+                </div>
+
+                <!-- Invoice Header -->
+                <div class="invoice-header">
+                    <div class="invoice-stats">
+                        <div class="stat-item stat-pending">
+                            <div class="stat-value">KES 2.4M</div>
+                            <div class="stat-label">Pending Payments</div>
+                        </div>
+                        <div class="stat-item stat-paid">
+                            <div class="stat-value">KES 8.7M</div>
+                            <div class="stat-label">Paid This Month</div>
+                        </div>
+                        <div class="stat-item stat-overdue">
+                            <div class="stat-value">KES 450K</div>
+                            <div class="stat-label">Overdue</div>
+                        </div>
+                        <div class="stat-item stat-total">
+                            <div class="stat-value">KES 11.5M</div>
+                            <div class="stat-label">Total Revenue</div>
+                        </div>
+                    </div>
+                    <div class="filters-container">
+                        <div class="filter-group">
+                            <label class="filter-label">Status</label>
+                            <select class="filter-select" id="statusFilter">
+                                <option>All Statuses</option>
+                                <option>Draft</option>
+                                <option>Sent</option>
+                                <option>Paid</option>
+                                <option>Overdue</option>
+                                <option>Partial</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">School</label>
+                            <select class="filter-select" id="schoolFilter">
+                                <option>All Schools</option>
+                                <option>Nairobi Science High</option>
+                                <option>Mombasa Primary</option>
+                                <option>Kisumu Technical</option>
+                                <option>Nakuru Girls</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">Date Range</label>
+                            <select class="filter-select" id="dateFilter">
+                                <option>All Dates</option>
+                                <option>Last 7 Days</option>
+                                <option>Last 30 Days</option>
+                                <option>Last 90 Days</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">Amount Range</label>
+                            <select class="filter-select" id="amountFilter">
+                                <option>All Amounts</option>
+                                <option>Under KES 500K</option>
+                                <option>KES 500K - 1M</option>
+                                <option>KES 1M - 2M</option>
+                                <option>Over KES 2M</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Invoice Layout -->
+                <div class="invoice-layout">
+                    <!-- Invoice List -->
+                    <div class="invoice-list">
+                        <div class="invoice-list-card">
+                            <h3>Recent Invoices</h3>
+                            <!-- Invoice Item 1 -->
+                            <div class="invoice-item active" data-invoice="1">
+                                <div class="invoice-item-header">
+                                    <h4 class="invoice-title">Science Lab Equipment</h4>
+                                    <span class="invoice-badge badge-sent">SENT</span>
+                                </div>
+                                <div class="invoice-school">
+                                    <div class="school-avatar">NS</div>
+                                    <div class="school-info">
+                                        <h4>Nairobi Science High School</h4>
+                                        <p>Public • Large</p>
+                                    </div>
+                                </div>
+                                <div class="invoice-details">
+                                    <div class="invoice-detail-row">
+                                        <span>Invoice #:</span>
+                                        <span>INV-NS-2023-045</span>
+                                    </div>
+                                    <div class="invoice-detail-row">
+                                        <span>Amount:</span>
+                                        <span>KES 1,204,870</span>
+                                    </div>
+                                    <div class="invoice-detail-row">
+                                        <span>Due Date:</span>
+                                        <span>15 Dec 2023</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Invoice Item 2 -->
+                            <div class="invoice-item" data-invoice="2">
+                                <div class="invoice-item-header">
+                                    <h4 class="invoice-title">Student Furniture</h4>
+                                    <span class="invoice-badge badge-paid">PAID</span>
+                                </div>
+                                <div class="invoice-school">
+                                    <div class="school-avatar">MP</div>
+                                    <div class="school-info">
+                                        <h4>Mombasa Primary Academy</h4>
+                                        <p>Private • Medium</p>
+                                    </div>
+                                </div>
+                                <div class="invoice-details">
+                                    <div class="invoice-detail-row">
+                                        <span>Invoice #:</span>
+                                        <span>INV-MP-2023-128</span>
+                                    </div>
+                                    <div class="invoice-detail-row">
+                                        <span>Amount:</span>
+                                        <span>KES 850,000</span>
+                                    </div>
+                                    <div class="invoice-detail-row">
+                                        <span>Paid Date:</span>
+                                        <span>10 Nov 2023</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Invoice Item 3 -->
+                            <div class="invoice-item" data-invoice="3">
+                                <div class="invoice-item-header">
+                                    <h4 class="invoice-title">Computer Equipment</h4>
+                                    <span class="invoice-badge badge-overdue">OVERDUE</span>
+                                </div>
+                                <div class="invoice-school">
+                                    <div class="school-avatar">KT</div>
+                                    <div class="school-info">
+                                        <h4>Kisumu Technical College</h4>
+                                        <p>Public • Large</p>
+                                    </div>
+                                </div>
+                                <div class="invoice-details">
+                                    <div class="invoice-detail-row">
+                                        <span>Invoice #:</span>
+                                        <span>INV-KT-2023-089</span>
+                                    </div>
+                                    <div class="invoice-detail-row">
+                                        <span>Amount:</span>
+                                        <span>KES 2,450,000</span>
+                                    </div>
+                                    <div class="invoice-detail-row">
+                                        <span>Due Date:</span>
+                                        <span>5 Nov 2023</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Invoice Item 4 -->
+                            <div class="invoice-item" data-invoice="4">
+                                <div class="invoice-item-header">
+                                    <h4 class="invoice-title">Chemistry Supplies</h4>
+                                    <span class="invoice-badge badge-partial">PARTIAL</span>
+                                </div>
+                                <div class="invoice-school">
+                                    <div class="school-avatar">NG</div>
+                                    <div class="school-info">
+                                        <h4>Nakuru Girls High School</h4>
+                                        <p>Private • Medium</p>
+                                    </div>
+                                </div>
+                                <div class="invoice-details">
+                                    <div class="invoice-detail-row">
+                                        <span>Invoice #:</span>
+                                        <span>INV-NG-2023-156</span>
+                                    </div>
+                                    <div class="invoice-detail-row">
+                                        <span>Amount:</span>
+                                        <span>KES 650,000</span>
+                                    </div>
+                                    <div class="invoice-detail-row">
+                                        <span>Paid:</span>
+                                        <span>KES 325,000</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Invoice Item 5 -->
+                            <div class="invoice-item" data-invoice="5">
+                                <div class="invoice-item-header">
+                                    <h4 class="invoice-title">Workshop Tools</h4>
+                                    <span class="invoice-badge badge-draft">DRAFT</span>
+                                </div>
+                                <div class="invoice-school">
+                                    <div class="school-avatar">EV</div>
+                                    <div class="school-info">
+                                        <h4>Eldoret Vocational Training</h4>
+                                        <p>Public • Small</p>
+                                    </div>
+                                </div>
+                                <div class="invoice-details">
+                                    <div class="invoice-detail-row">
+                                        <span>Invoice #:</span>
+                                        <span>INV-EV-2023-073</span>
+                                    </div>
+                                    <div class="invoice-detail-row">
+                                        <span>Amount:</span>
+                                        <span>KES 1,450,000</span>
+                                    </div>
+                                    <div class="invoice-detail-row">
+                                        <span>Status:</span>
+                                        <span>Draft</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Invoice Detail View -->
+                    <div class="invoice-detail">
+                        <div class="invoice-detail-header">
+                            <h2 class="invoice-detail-title">Science Lab Equipment</h2>
+                            <p class="invoice-detail-subtitle">Invoice #INV-NS-2023-045 • Nairobi Science High School</p>
+                        </div>
+                        <div class="invoice-detail-body">
+                            <!-- Invoice Information -->
+                            <div class="invoice-info-section">
+                                <h3 class="section-title">Invoice Details</h3>
+                                <div class="info-grid">
+                                    <div class="info-item">
+                                        <span class="info-label">Invoice Number</span>
+                                        <span class="info-value">INV-NS-2023-045</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Issue Date</span>
+                                        <span class="info-value">18 Nov 2023</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Due Date</span>
+                                        <span class="info-value">15 Dec 2023</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Total Amount</span>
+                                        <span class="info-value">KES 1,204,870</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Status</span>
+                                        <span class="info-value">Sent</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Payment Terms</span>
+                                        <span class="info-value">Net 30 Days</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Order Reference</span>
+                                        <span class="info-value">ORD-NS-2023-045</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Contact Person</span>
+                                        <span class="info-value">Dr. James Kariuki</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Invoice Preview -->
+                            <div class="invoice-preview">
+                                <div class="invoice-header-preview">
+                                    <div class="invoice-from">
+                                        <h3>Lab Supplies Co.</h3>
+                                        <p>123 Science Park Avenue</p>
+                                        <p>Innovation District, Springfield</p>
+                                        <p>Phone: +1 (555) 123-4567</p>
+                                        <p>Email: billing@labsuppliesco.com</p>
+                                    </div>
+                                    <div class="invoice-meta">
+                                        <div class="invoice-number">INV-NS-2023-045</div>
+                                        <div class="invoice-date">Issue Date: 18 Nov 2023</div>
+                                        <div class="invoice-date">Due Date: 15 Dec 2023</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="invoice-to">
+                                    <h3>Bill To:</h3>
+                                    <p>Nairobi Science High School</p>
+                                    <p>Westlands, Nairobi County</p>
+                                    <p>Contact: Dr. James Kariuki</p>
+                                    <p>Email: procurement@nairobi-science.sc.ke</p>
+                                </div>
+
+                                <table class="items-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Description</th>
+                                            <th>Quantity</th>
+                                            <th>Unit Price (KES)</th>
+                                            <th>Amount (KES)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Student Microscope - 40x-1000x magnification</td>
+                                            <td>25</td>
+                                            <td>29,999</td>
+                                            <td>749,975</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Safety Goggles - Anti-fog, chemical resistant</td>
+                                            <td>50</td>
+                                            <td>499</td>
+                                            <td>24,950</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Lab Coats - Cotton blend, knee-length</td>
+                                            <td>30</td>
+                                            <td>2,499</td>
+                                            <td>74,970</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Digital Scale - 0.001g precision</td>
+                                            <td>10</td>
+                                            <td>12,999</td>
+                                            <td>129,990</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Glassware Set - 24-piece chemistry set</td>
+                                            <td>15</td>
+                                            <td>14,999</td>
+                                            <td>224,985</td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="3" style="text-align: right;">Subtotal:</td>
+                                            <td>1,204,870</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="3" style="text-align: right;">VAT (16%):</td>
+                                            <td>192,779</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="3" style="text-align: right; font-weight: 600;">Total:</td>
+                                            <td style="font-weight: 600;">1,397,649</td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+
+                                <div style="margin-top: 20px; font-size: 0.9rem; color: var(--text-light);">
+                                    <p><strong>Payment Instructions:</strong></p>
+                                    <p>Please make payment to:<br>
+                                    Bank: First National Bank<br>
+                                    Account: Lab Supplies Co.<br>
+                                    Account No: XXXX-XXXX-7894<br>
+                                    Reference: INV-NS-2023-045</p>
+                                </div>
+                            </div>
+
+                            <!-- Payment Timeline -->
+                            <div class="payment-timeline">
+                                <div class="payment-header">
+                                    <span>Payment History</span>
+                                </div>
+                                <div class="payment-content">
+                                    <div class="payment-item">
+                                        <div class="payment-info">
+                                            <div class="payment-amount">KES 500,000</div>
+                                            <div class="payment-date">Partial Payment • 25 Nov 2023</div>
+                                        </div>
+                                        <span class="payment-status status-success">COMPLETED</span>
+                                    </div>
+                                    <div class="payment-item">
+                                        <div class="payment-info">
+                                            <div class="payment-amount">KES 897,649</div>
+                                            <div class="payment-date">Balance Due • 15 Dec 2023</div>
+                                        </div>
+                                        <span class="payment-status status-pending">PENDING</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Credit Notes Section -->
+                            <div class="credit-notes-section">
+                                <div class="credit-notes-header">
+                                    <span>Credit Notes</span>
+                                    <button class="btn btn-outline btn-sm">
+                                        <i class="fas fa-plus"></i> Add Credit Note
+                                    </button>
+                                </div>
+                                <div class="credit-notes-content">
+                                    <div class="credit-note-item">
+                                        <div class="credit-note-info">
+                                            <div class="credit-note-amount">- KES 24,950</div>
+                                            <div class="credit-note-reason">Return of damaged safety goggles (5 units)</div>
+                                        </div>
+                                        <span class="payment-status status-success">APPLIED</span>
+                                    </div>
+                                    <div class="credit-note-item">
+                                        <div class="credit-note-info">
+                                            <div class="credit-note-amount">- KES 12,999</div>
+                                            <div class="credit-note-reason">Discount for early payment</div>
+                                        </div>
+                                        <span class="payment-status status-success">APPLIED</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="action-buttons">
+                                <button class="btn btn-success">
+                                    <i class="fas fa-paper-plane"></i> Send Invoice
+                                </button>
+                                <button class="btn btn-primary">
+                                    <i class="fas fa-print"></i> Print Invoice
+                                </button>
+                                <button class="btn btn-outline">
+                                    <i class="fas fa-download"></i> Download PDF
+                                </button>
+                                <button class="btn btn-warning">
+                                    <i class="fas fa-edit"></i> Edit Invoice
+                                </button>
+                                <button class="btn btn-danger">
+                                    <i class="fas fa-times"></i> Cancel Invoice
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // JavaScript for interactive elements
+        document.addEventListener('DOMContentLoaded', function() {
+            // Invoice Item Selection
+            const invoiceItems = document.querySelectorAll('.invoice-item');
+            invoiceItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    invoiceItems.forEach(i => i.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const invoiceId = this.getAttribute('data-invoice');
+                    loadInvoiceDetails(invoiceId);
+                });
+            });
+
+            function loadInvoiceDetails(invoiceId) {
+                // In a real application, you would fetch invoice details from an API
+                console.log(`Loading details for Invoice ${invoiceId}`);
+                // For demo purposes, we're just updating the title
+                const titles = {
+                    1: "Science Lab Equipment",
+                    2: "Student Furniture", 
+                    3: "Computer Equipment",
+                    4: "Chemistry Supplies",
+                    5: "Workshop Tools"
+                };
+                
+                document.querySelector('.invoice-detail-title').textContent = titles[invoiceId];
+            }
+
+            // Create Invoice Button
+            const createInvoiceBtn = document.getElementById('createInvoiceBtn');
+            if (createInvoiceBtn) {
+                createInvoiceBtn.addEventListener('click', function() {
+                    alert('Create Invoice form would open here');
+                    // In a real application, you would open a modal or navigate to a form
+                });
+            }
+
+            // Global Search
+            const globalSearch = document.getElementById('globalSearch');
+            if (globalSearch) {
+                globalSearch.addEventListener('input', function(e) {
+                    const searchTerm = e.target.value.toLowerCase();
+                    const invoiceItems = document.querySelectorAll('.invoice-item');
+                    
+                    invoiceItems.forEach(item => {
+                        const title = item.querySelector('.invoice-title').textContent.toLowerCase();
+                        const school = item.querySelector('.school-info h4').textContent.toLowerCase();
+                        
+                        if (title.includes(searchTerm) || school.includes(searchTerm)) {
+                            item.style.display = 'block';
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+                });
+            }
+
+            // Filter Functionality
+            const filters = document.querySelectorAll('.filter-select');
+            filters.forEach(filter => {
+                filter.addEventListener('change', function() {
+                    applyFilters();
+                });
+            });
+
+            function applyFilters() {
+                const status = document.getElementById('statusFilter').value;
+                const invoiceItems = document.querySelectorAll('.invoice-item');
+                
+                invoiceItems.forEach(item => {
+                    let showItem = true;
+                    
+                    // Filter by status
+                    if (status !== 'All Statuses') {
+                        const badge = item.querySelector('.invoice-badge').textContent;
+                        if (status === 'Draft' && !badge.includes('DRAFT')) {
+                            showItem = false;
+                        } else if (status === 'Sent' && !badge.includes('SENT')) {
+                            showItem = false;
+                        } else if (status === 'Paid' && !badge.includes('PAID')) {
+                            showItem = false;
+                        } else if (status === 'Overdue' && !badge.includes('OVERDUE')) {
+                            showItem = false;
+                        } else if (status === 'Partial' && !badge.includes('PARTIAL')) {
+                            showItem = false;
+                        }
+                    }
+                    
+                    item.style.display = showItem ? 'block' : 'none';
+                });
+            }
+
+            // Action Button Functionality
+            const actionButtons = document.querySelectorAll('.action-buttons .btn');
+            actionButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const action = this.textContent.trim();
+                    const invoiceTitle = document.querySelector('.invoice-detail-title').textContent;
+                    const invoiceNumber = document.querySelector('.invoice-number').textContent;
+                    
+                    if (action.includes('Send Invoice')) {
+                        alert(`Invoice ${invoiceNumber} for "${invoiceTitle}" has been sent to the school.`);
+                        // Update status in UI
+                        document.querySelector('.invoice-item.active .invoice-badge').className = 'invoice-badge badge-sent';
+                        document.querySelector('.invoice-item.active .invoice-badge').textContent = 'SENT';
+                    } else if (action.includes('Print Invoice')) {
+                        alert(`Printing invoice ${invoiceNumber}...`);
+                        // In a real application, this would trigger the browser's print dialog
+                        window.print();
+                    } else if (action.includes('Download PDF')) {
+                        alert(`Downloading PDF for invoice ${invoiceNumber}...`);
+                        // In a real application, this would download the PDF
+                    } else if (action.includes('Edit Invoice')) {
+                        alert(`Opening edit form for invoice ${invoiceNumber}...`);
+                    } else if (action.includes('Cancel Invoice')) {
+                        const confirmCancel = confirm(`Are you sure you want to cancel invoice ${invoiceNumber}? This action cannot be undone.`);
+                        if (confirmCancel) {
+                            alert(`Invoice ${invoiceNumber} has been cancelled.`);
+                            // Update status in UI
+                            document.querySelector('.invoice-item.active .invoice-badge').className = 'invoice-badge badge-draft';
+                            document.querySelector('.invoice-item.active .invoice-badge').textContent = 'CANCELLED';
+                        }
+                    }
+                });
+            });
+
+            // Add Credit Note Button
+            const addCreditNoteBtn = document.querySelector('.credit-notes-header .btn');
+            if (addCreditNoteBtn) {
+                addCreditNoteBtn.addEventListener('click', function() {
+                    const amount = prompt('Enter credit note amount (KES):');
+                    const reason = prompt('Enter reason for credit note:');
+                    
+                    if (amount && reason) {
+                        const creditNotesContent = document.querySelector('.credit-notes-content');
+                        const creditNoteItem = document.createElement('div');
+                        creditNoteItem.className = 'credit-note-item';
+                        
+                        creditNoteItem.innerHTML = `
+                            <div class="credit-note-info">
+                                <div class="credit-note-amount">- KES ${parseInt(amount).toLocaleString()}</div>
+                                <div class="credit-note-reason">${reason}</div>
+                            </div>
+                            <span class="payment-status status-success">APPLIED</span>
+                        `;
+                        
+                        creditNotesContent.appendChild(creditNoteItem);
+                        alert('Credit note added successfully!');
+                    }
+                });
+            }
+
+            // Simulate payment status updates
+            function simulatePaymentUpdates() {
+                const paymentItems = document.querySelectorAll('.payment-item .payment-status');
+                
+                paymentItems.forEach(item => {
+                    if (item.textContent === 'PENDING') {
+                        // Simulate payment completion after 10 seconds
+                        setTimeout(() => {
+                            item.textContent = 'COMPLETED';
+                            item.className = 'payment-status status-success';
+                            alert('Payment status updated: Payment completed for invoice INV-NS-2023-045');
+                        }, 10000);
+                    }
+                });
+            }
+            
+            // Start payment simulation
+            setTimeout(simulatePaymentUpdates, 3000);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduProcure - Admin Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary-purple: #7e57c2;
+            --light-purple: #b39ddb;
+            --dark-purple: #5e35b1;
+            --accent-purple: #d1c4e9;
+            --accent-teal: #26a69a;
+            --light-teal: #80cbc4;
+            --white: #ffffff;
+            --light-gray: #f5f5f5;
+            --medium-gray: #e0e0e0;
+            --dark-gray: #424242;
+            --text-dark: #212121;
+            --text-light: #757575;
+            --success-green: #4caf50;
+            --warning-orange: #ff9800;
+            --error-red: #f44336;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+            --border-radius: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light-gray);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 280px;
+            background: linear-gradient(180deg, var(--primary-purple), var(--dark-purple));
+            color: var(--white);
+            box-shadow: var(--shadow);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            transition: var(--transition);
+        }
+
+        .logo {
+            padding: 24px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+        }
+
+        .logo h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .logo i {
+            font-size: 1.8rem;
+        }
+
+        .nav-menu {
+            flex: 1;
+            padding: 20px 0;
+        }
+
+        .nav-menu ul {
+            list-style: none;
+        }
+
+        .nav-menu li {
+            margin-bottom: 5px;
+        }
+
+        .nav-menu a {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .nav-menu a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--white);
+        }
+
+        .nav-menu a.active {
+            background-color: rgba(255, 255, 255, 0.15);
+            color: var(--white);
+            font-weight: 500;
+            border-left: 4px solid var(--light-teal);
+        }
+
+        .nav-menu i {
+            margin-right: 12px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .admin-profile {
+            padding: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .admin-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--light-teal);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--dark-purple);
+            font-weight: 600;
+        }
+
+        .admin-info h4 {
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .admin-info p {
+            font-size: 0.7rem;
+            opacity: 0.8;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            background-color: var(--white);
+            box-shadow: var(--shadow);
+        }
+
+        .header-left h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--dark-purple);
+        }
+
+        .header-left p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .search-bar {
+            position: relative;
+        }
+
+        .search-bar input {
+            padding: 10px 15px 10px 40px;
+            border: 1px solid var(--medium-gray);
+            border-radius: 30px;
+            width: 300px;
+            font-size: 0.9rem;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .search-bar input:focus {
+            border-color: var(--primary-purple);
+        }
+
+        .search-bar i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .icon-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--light-gray);
+            color: var(--text-dark);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .icon-btn:hover {
+            background-color: var(--accent-purple);
+            color: var(--dark-purple);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background-color: var(--error-red);
+            color: var(--white);
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Dashboard Content */
+        .dashboard-content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .page-header h2 {
+            font-size: 1.8rem;
+            color: var(--dark-purple);
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: var(--border-radius);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-purple);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--dark-purple);
+        }
+
+        .btn-secondary {
+            background-color: var(--medium-gray);
+            color: var(--text-dark);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--dark-gray);
+            color: var(--white);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary-purple);
+            color: var(--primary-purple);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary-purple);
+            color: var(--white);
+        }
+
+        .btn-success {
+            background-color: var(--success-green);
+            color: var(--white);
+        }
+
+        .btn-success:hover {
+            background-color: #388e3c;
+        }
+
+        .btn-warning {
+            background-color: var(--warning-orange);
+            color: var(--white);
+        }
+
+        .btn-warning:hover {
+            background-color: #f57c00;
+        }
+
+        .btn-danger {
+            background-color: var(--error-red);
+            color: var(--white);
+        }
+
+        .btn-danger:hover {
+            background-color: #d32f2f;
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+        }
+
+        /* Dashboard Stats */
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .stat-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+        }
+
+        .stat-schools .stat-icon {
+            background-color: rgba(126, 87, 194, 0.1);
+            color: var(--primary-purple);
+        }
+
+        .stat-suppliers .stat-icon {
+            background-color: rgba(38, 166, 154, 0.1);
+            color: var(--accent-teal);
+        }
+
+        .stat-transactions .stat-icon {
+            background-color: rgba(76, 175, 80, 0.1);
+            color: var(--success-green);
+        }
+
+        .stat-revenue .stat-icon {
+            background-color: rgba(255, 152, 0, 0.1);
+            color: var(--warning-orange);
+        }
+
+        .stat-info {
+            flex: 1;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 8px;
+        }
+
+        .stat-change {
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .change-positive {
+            color: var(--success-green);
+        }
+
+        .change-negative {
+            color: var(--error-red);
+        }
+
+        /* Dashboard Layout */
+        .dashboard-layout {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 25px;
+        }
+
+        .dashboard-card {
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: var(--shadow);
+        }
+
+        .dashboard-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: var(--dark-purple);
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--medium-gray);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* System Health */
+        .health-metrics {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .health-metric {
+            text-align: center;
+            padding: 15px;
+            border-radius: var(--border-radius);
+            background-color: var(--light-gray);
+        }
+
+        .health-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .health-label {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .health-good {
+            color: var(--success-green);
+        }
+
+        .health-warning {
+            color: var(--warning-orange);
+        }
+
+        .health-critical {
+            color: var(--error-red);
+        }
+
+        /* Chart Containers */
+        .chart-container {
+            height: 250px;
+            position: relative;
+        }
+
+        /* Compliance Alerts */
+        .alerts-list {
+            margin-top: 15px;
+        }
+
+        .alert-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .alert-item:last-child {
+            border-bottom: none;
+        }
+
+        .alert-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .alert-critical .alert-icon {
+            background-color: rgba(244, 67, 54, 0.1);
+            color: var(--error-red);
+        }
+
+        .alert-warning .alert-icon {
+            background-color: rgba(255, 152, 0, 0.1);
+            color: var(--warning-orange);
+        }
+
+        .alert-info .alert-icon {
+            background-color: rgba(33, 150, 243, 0.1);
+            color: #2196f3;
+        }
+
+        .alert-info {
+            flex: 1;
+        }
+
+        .alert-title {
+            font-weight: 500;
+            margin-bottom: 3px;
+        }
+
+        .alert-description {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-bottom: 5px;
+        }
+
+        .alert-time {
+            font-size: 0.7rem;
+            color: var(--text-light);
+        }
+
+        /* Recent Activity */
+        .activity-list {
+            margin-top: 15px;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: var(--accent-purple);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--dark-purple);
+            font-size: 0.8rem;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .activity-info {
+            flex: 1;
+        }
+
+        .activity-text {
+            font-size: 0.9rem;
+            margin-bottom: 3px;
+        }
+
+        .activity-time {
+            font-size: 0.7rem;
+            color: var(--text-light);
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .action-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 15px;
+            border-radius: var(--border-radius);
+            background-color: var(--light-gray);
+            transition: var(--transition);
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .action-btn:hover {
+            background-color: var(--accent-purple);
+            transform: translateY(-3px);
+        }
+
+        .action-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary-purple);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            margin-bottom: 10px;
+        }
+
+        .action-label {
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .dashboard-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+            }
+            
+            .nav-menu ul {
+                display: flex;
+                overflow-x: auto;
+            }
+            
+            .nav-menu li {
+                flex-shrink: 0;
+                margin-bottom: 0;
+            }
+            
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .header-right {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .search-bar input {
+                width: 200px;
+            }
+            
+            .dashboard-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .health-metrics {
+                grid-template-columns: 1fr;
+            }
+            
+            .quick-actions {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .dashboard-content {
+                padding: 15px;
+            }
+            
+            .header-right {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .search-bar {
+                width: 100%;
+            }
+            
+            .search-bar input {
+                width: 100%;
+            }
+            
+            .dashboard-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fas fa-shield-alt"></i>
+                <h2>EduProcure Admin</h2>
+            </div>
+            <nav class="nav-menu">
+                <ul>
+                    <li><a href="dashboard.html" class="active"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li><a href="user-management.html"><i class="fas fa-users"></i> User Management</a></li>
+                    <li><a href="categories.html"><i class="fas fa-tags"></i> Categories</a></li>
+                    <li><a href="financials.html"><i class="fas fa-money-bill-wave"></i> Financials</a></li>
+                    <li><a href="audit.html"><i class="fas fa-clipboard-list"></i> Audit Logs</a></li>
+                    <li><a href="#"><i class="fas fa-envelope"></i> Messaging</a></li>
+                    <li><a href="#"><i class="fas fa-gavel"></i> Dispute Resolution</a></li>
+                    <li><a href="#"><i class="fas fa-cog"></i> System Settings</a></li>
+                </ul>
+            </nav>
+            <div class="admin-profile">
+                <div class="admin-avatar">AD</div>
+                <div class="admin-info">
+                    <h4>Admin User</h4>
+                    <p>System Administrator</p>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <h1>Admin Dashboard</h1>
+                    <p>Platform overview and system management</p>
+                </div>
+                <div class="header-right">
+                    <div class="search-bar">
+                        <input type="text" id="globalSearch" placeholder="Search across platform...">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <div class="header-actions">
+                        <div class="icon-btn" style="position: relative;">
+                            <i class="fas fa-bell"></i>
+                            <div class="notification-badge">3</div>
+                        </div>
+                        <div class="icon-btn">
+                            <i class="fas fa-cog"></i>
+                        </div>
+                        <div class="icon-btn">
+                            <i class="fas fa-question-circle"></i>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dashboard Content -->
+            <div class="dashboard-content">
+                <div class="page-header">
+                    <h2>Platform Overview</h2>
+                    <button class="btn btn-primary" id="refreshDataBtn">
+                        <i class="fas fa-sync"></i> Refresh Data
+                    </button>
+                </div>
+
+                <!-- Dashboard Stats -->
+                <div class="dashboard-stats">
+                    <div class="stat-card stat-schools">
+                        <div class="stat-icon">
+                            <i class="fas fa-school"></i>
+                        </div>
+                        <div class="stat-info">
+                            <div class="stat-value">248</div>
+                            <div class="stat-label">Total Schools</div>
+                            <div class="stat-change change-positive">
+                                <i class="fas fa-arrow-up"></i> 12 new this month
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-card stat-suppliers">
+                        <div class="stat-icon">
+                            <i class="fas fa-industry"></i>
+                        </div>
+                        <div class="stat-info">
+                            <div class="stat-value">156</div>
+                            <div class="stat-label">Verified Suppliers</div>
+                            <div class="stat-change change-positive">
+                                <i class="fas fa-arrow-up"></i> 8 new this month
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-card stat-transactions">
+                        <div class="stat-icon">
+                            <i class="fas fa-exchange-alt"></i>
+                        </div>
+                        <div class="stat-info">
+                            <div class="stat-value">1,842</div>
+                            <div class="stat-label">Transactions</div>
+                            <div class="stat-change change-positive">
+                                <i class="fas fa-arrow-up"></i> 24% increase
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-card stat-revenue">
+                        <div class="stat-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="stat-info">
+                            <div class="stat-value">KES 42.7M</div>
+                            <div class="stat-label">Platform Revenue</div>
+                            <div class="stat-change change-positive">
+                                <i class="fas fa-arrow-up"></i> 18.5% growth
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dashboard Layout -->
+                <div class="dashboard-layout">
+                    <!-- Left Column -->
+                    <div class="left-column">
+                        <!-- Platform Activity -->
+                        <div class="dashboard-card">
+                            <h3>
+                                Platform Activity
+                                <div class="card-actions">
+                                    <button class="btn btn-outline btn-sm">
+                                        <i class="fas fa-filter"></i> Filter
+                                    </button>
+                                </div>
+                            </h3>
+                            <div class="chart-container">
+                                <canvas id="activityChart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- System Health -->
+                        <div class="dashboard-card">
+                            <h3>
+                                System Health
+                                <div class="card-actions">
+                                    <button class="btn btn-outline btn-sm">
+                                        <i class="fas fa-redo"></i> Refresh
+                                    </button>
+                                </div>
+                            </h3>
+                            <div class="health-metrics">
+                                <div class="health-metric">
+                                    <div class="health-value health-good">99.8%</div>
+                                    <div class="health-label">Uptime</div>
+                                </div>
+                                <div class="health-metric">
+                                    <div class="health-value health-good">0.12s</div>
+                                    <div class="health-label">Avg. Response</div>
+                                </div>
+                                <div class="health-metric">
+                                    <div class="health-value health-warning">78%</div>
+                                    <div class="health-label">Storage</div>
+                                </div>
+                                <div class="health-metric">
+                                    <div class="health-value health-good">1.2K</div>
+                                    <div class="health-label">Active Users</div>
+                                </div>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="systemHealthChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column -->
+                    <div class="right-column">
+                        <!-- Compliance Alerts -->
+                        <div class="dashboard-card">
+                            <h3>
+                                Compliance Alerts
+                                <div class="card-actions">
+                                    <button class="btn btn-outline btn-sm">
+                                        <i class="fas fa-eye"></i> View All
+                                    </button>
+                                </div>
+                            </h3>
+                            <div class="alerts-list">
+                                <div class="alert-item alert-critical">
+                                    <div class="alert-icon">
+                                        <i class="fas fa-exclamation-triangle"></i>
+                                    </div>
+                                    <div class="alert-info">
+                                        <div class="alert-title">Supplier Verification Expired</div>
+                                        <div class="alert-description">5 suppliers have expired business licenses</div>
+                                        <div class="alert-time">2 hours ago</div>
+                                    </div>
+                                </div>
+                                <div class="alert-item alert-warning">
+                                    <div class="alert-icon">
+                                        <i class="fas fa-clock"></i>
+                                    </div>
+                                    <div class="alert-info">
+                                        <div class="alert-title">Pending School Approvals</div>
+                                        <div class="alert-description">12 schools awaiting verification</div>
+                                        <div class="alert-time">5 hours ago</div>
+                                    </div>
+                                </div>
+                                <div class="alert-item alert-info">
+                                    <div class="alert-icon">
+                                        <i class="fas fa-info-circle"></i>
+                                    </div>
+                                    <div class="alert-info">
+                                        <div class="alert-title">System Backup Required</div>
+                                        <div class="alert-description">Weekly backup is due tomorrow</div>
+                                        <div class="alert-time">1 day ago</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Recent Activity -->
+                        <div class="dashboard-card">
+                            <h3>
+                                Recent Activity
+                                <div class="card-actions">
+                                    <button class="btn btn-outline btn-sm">
+                                        <i class="fas fa-list"></i> View All
+                                    </button>
+                                </div>
+                            </h3>
+                            <div class="activity-list">
+                                <div class="activity-item">
+                                    <div class="activity-avatar">NS</div>
+                                    <div class="activity-info">
+                                        <div class="activity-text">Nairobi Science High placed a new order</div>
+                                        <div class="activity-time">10 minutes ago</div>
+                                    </div>
+                                </div>
+                                <div class="activity-item">
+                                    <div class="activity-avatar">LS</div>
+                                    <div class="activity-info">
+                                        <div class="activity-text">Lab Supplies Co. updated their catalog</div>
+                                        <div class="activity-time">45 minutes ago</div>
+                                    </div>
+                                </div>
+                                <div class="activity-item">
+                                    <div class="activity-avatar">MP</div>
+                                    <div class="activity-info">
+                                        <div class="activity-text">Mombasa Primary registered on platform</div>
+                                        <div class="activity-time">2 hours ago</div>
+                                    </div>
+                                </div>
+                                <div class="activity-item">
+                                    <div class="activity-avatar">AD</div>
+                                    <div class="activity-info">
+                                        <div class="activity-text">You updated system settings</div>
+                                        <div class="activity-time">5 hours ago</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Quick Actions -->
+                        <div class="dashboard-card">
+                            <h3>Quick Actions</h3>
+                            <div class="quick-actions">
+                                <div class="action-btn">
+                                    <div class="action-icon">
+                                        <i class="fas fa-user-plus"></i>
+                                    </div>
+                                    <div class="action-label">Add User</div>
+                                </div>
+                                <div class="action-btn">
+                                    <div class="action-icon">
+                                        <i class="fas fa-file-invoice"></i>
+                                    </div>
+                                    <div class="action-label">Generate Report</div>
+                                </div>
+                                <div class="action-btn">
+                                    <div class="action-icon">
+                                        <i class="fas fa-cogs"></i>
+                                    </div>
+                                    <div class="action-label">System Settings</div>
+                                </div>
+                                <div class="action-btn">
+                                    <div class="action-icon">
+                                        <i class="fas fa-bell"></i>
+                                    </div>
+                                    <div class="action-label">Send Notification</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Initialize Charts
+        document.addEventListener('DOMContentLoaded', function() {
+            // Platform Activity Chart
+            const activityCtx = document.getElementById('activityChart').getContext('2d');
+            const activityChart = new Chart(activityCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    datasets: [{
+                        label: 'RFQs Created',
+                        data: [24, 32, 18, 29, 36, 12, 8],
+                        backgroundColor: 'rgba(126, 87, 194, 0.7)',
+                        borderColor: '#7e57c2',
+                        borderWidth: 1
+                    }, {
+                        label: 'Orders Placed',
+                        data: [18, 25, 22, 30, 28, 15, 10],
+                        backgroundColor: 'rgba(38, 166, 154, 0.7)',
+                        borderColor: '#26a69a',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Weekly Platform Activity'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Number of Activities'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // System Health Chart
+            const systemHealthCtx = document.getElementById('systemHealthChart').getContext('2d');
+            const systemHealthChart = new Chart(systemHealthCtx, {
+                type: 'line',
+                data: {
+                    labels: ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00'],
+                    datasets: [{
+                        label: 'Response Time (ms)',
+                        data: [105, 98, 112, 125, 110, 102],
+                        borderColor: '#26a69a',
+                        backgroundColor: 'rgba(38, 166, 154, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'System Response Times (Today)'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            title: {
+                                display: true,
+                                text: 'Response Time (ms)'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Refresh Data Button
+            const refreshDataBtn = document.getElementById('refreshDataBtn');
+            if (refreshDataBtn) {
+                refreshDataBtn.addEventListener('click', function() {
+                    this.querySelector('i').classList.add('fa-spin');
+                    setTimeout(() => {
+                        this.querySelector('i').classList.remove('fa-spin');
+                        alert('Dashboard data refreshed successfully!');
+                    }, 1000);
+                });
+            }
+
+            // Global Search
+            const globalSearch = document.getElementById('globalSearch');
+            if (globalSearch) {
+                globalSearch.addEventListener('input', function(e) {
+                    const searchTerm = e.target.value.toLowerCase();
+                    // In a real application, this would search across the platform
+                    console.log('Searching for:', searchTerm);
+                });
+            }
+
+            // Quick Actions
+            const actionButtons = document.querySelectorAll('.action-btn');
+            actionButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const action = this.querySelector('.action-label').textContent;
+                    alert(`Opening ${action} functionality...`);
+                });
+            });
+
+            // Simulate real-time updates
+            function updateStatsWithNewData() {
+                // In a real application, this would fetch new data from the server
+                const statValues = document.querySelectorAll('.stat-value');
+                
+                // Randomly update school count
+                const schoolValue = parseInt(statValues[0].textContent);
+                statValues[0].textContent = schoolValue + Math.floor(Math.random() * 2);
+                
+                // Randomly update supplier count
+                const supplierValue = parseInt(statValues[1].textContent);
+                statValues[1].textContent = supplierValue + Math.floor(Math.random() * 2);
+                
+                // Randomly update transaction count
+                const transactionValue = parseInt(statValues[2].textContent);
+                statValues[2].textContent = transactionValue + Math.floor(Math.random() * 5);
+            }
+
+            // Update stats every 30 seconds for demo
+            setInterval(updateStatsWithNewData, 30000);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduProcure - Reports & Analytics</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary-blue: #1976d2;
+            --light-blue: #42a5f5;
+            --dark-blue: #0d47a1;
+            --accent-blue: #90caf9;
+            --accent-orange: #ff9800;
+            --light-orange: #ffb74d;
+            --white: #ffffff;
+            --light-gray: #f5f5f5;
+            --medium-gray: #e0e0e0;
+            --dark-gray: #424242;
+            --text-dark: #212121;
+            --text-light: #757575;
+            --success-green: #4caf50;
+            --warning-orange: #ff9800;
+            --error-red: #f44336;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+            --border-radius: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light-gray);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 260px;
+            background-color: var(--white);
+            box-shadow: var(--shadow);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            transition: var(--transition);
+        }
+
+        .logo {
+            padding: 24px 20px;
+            border-bottom: 1px solid var(--medium-gray);
+            color: var(--primary-blue);
+            display: flex;
+            align-items: center;
+        }
+
+        .logo h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .logo i {
+            font-size: 1.8rem;
+        }
+
+        .nav-menu {
+            flex: 1;
+            padding: 20px 0;
+        }
+
+        .nav-menu ul {
+            list-style: none;
+        }
+
+        .nav-menu li {
+            margin-bottom: 5px;
+        }
+
+        .nav-menu a {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: var(--text-dark);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .nav-menu a:hover {
+            background-color: var(--light-gray);
+            color: var(--primary-blue);
+        }
+
+        .nav-menu a.active {
+            background-color: var(--accent-blue);
+            color: var(--dark-blue);
+            font-weight: 500;
+            border-left: 4px solid var(--primary-blue);
+        }
+
+        .nav-menu i {
+            margin-right: 12px;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            background-color: var(--white);
+            box-shadow: var(--shadow);
+        }
+
+        .header-left h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--dark-blue);
+        }
+
+        .header-left p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .search-bar {
+            position: relative;
+        }
+
+        .search-bar input {
+            padding: 10px 15px 10px 40px;
+            border: 1px solid var(--medium-gray);
+            border-radius: 30px;
+            width: 300px;
+            font-size: 0.9rem;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .search-bar input:focus {
+            border-color: var(--primary-blue);
+        }
+
+        .search-bar i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-profile img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .user-profile span {
+            font-weight: 500;
+        }
+
+        /* Analytics Content */
+        .analytics-content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .page-header h2 {
+            font-size: 1.8rem;
+            color: var(--dark-blue);
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: var(--border-radius);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-blue);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--dark-blue);
+        }
+
+        .btn-secondary {
+            background-color: var(--medium-gray);
+            color: var(--text-dark);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--dark-gray);
+            color: var(--white);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary-blue);
+            color: var(--primary-blue);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary-blue);
+            color: var(--white);
+        }
+
+        .btn-success {
+            background-color: var(--success-green);
+            color: var(--white);
+        }
+
+        .btn-success:hover {
+            background-color: #388e3c;
+        }
+
+        .btn-warning {
+            background-color: var(--warning-orange);
+            color: var(--white);
+        }
+
+        .btn-warning:hover {
+            background-color: #f57c00;
+        }
+
+        .btn-danger {
+            background-color: var(--error-red);
+            color: var(--white);
+        }
+
+        .btn-danger:hover {
+            background-color: #d32f2f;
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+        }
+
+        /* Analytics Header */
+        .analytics-header {
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+        }
+
+        .analytics-stats {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            background-color: var(--light-gray);
+            flex: 1;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .stat-revenue .stat-value {
+            color: var(--success-green);
+        }
+
+        .stat-orders .stat-value {
+            color: var(--primary-blue);
+        }
+
+        .stat-growth .stat-value {
+            color: var(--warning-orange);
+        }
+
+        .stat-schools .stat-value {
+            color: var(--dark-blue);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .stat-change {
+            font-size: 0.8rem;
+            margin-top: 5px;
+        }
+
+        .change-positive {
+            color: var(--success-green);
+        }
+
+        .change-negative {
+            color: var(--error-red);
+        }
+
+        .filters-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-label {
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-bottom: 5px;
+            color: var(--text-dark);
+        }
+
+        .filter-select {
+            padding: 8px 12px;
+            border: 1px solid var(--medium-gray);
+            border-radius: var(--border-radius);
+            background-color: var(--white);
+            font-size: 0.9rem;
+            outline: none;
+        }
+
+        .filter-select:focus {
+            border-color: var(--primary-blue);
+        }
+
+        /* Analytics Layout */
+        .analytics-layout {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+        }
+
+        .analytics-card {
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: var(--shadow);
+        }
+
+        .analytics-card.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .analytics-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: var(--dark-blue);
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--medium-gray);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Chart Containers */
+        .chart-container {
+            height: 300px;
+            position: relative;
+        }
+
+        .chart-container-sm {
+            height: 250px;
+        }
+
+        /* Performance Metrics */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .metric-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            background-color: var(--light-gray);
+        }
+
+        .metric-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--accent-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--dark-blue);
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+        }
+
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--primary-blue);
+        }
+
+        .metric-label {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        /* Top Products */
+        .products-list {
+            margin-top: 15px;
+        }
+
+        .product-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .product-item:last-child {
+            border-bottom: none;
+        }
+
+        .product-rank {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: var(--primary-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .rank-1 {
+            background-color: #ffd700;
+        }
+
+        .rank-2 {
+            background-color: #c0c0c0;
+        }
+
+        .rank-3 {
+            background-color: #cd7f32;
+        }
+
+        .product-info {
+            flex: 1;
+        }
+
+        .product-name {
+            font-weight: 500;
+            margin-bottom: 3px;
+        }
+
+        .product-stats {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .product-sales {
+            font-weight: 600;
+            color: var(--primary-blue);
+        }
+
+        /* Schools List */
+        .schools-list {
+            margin-top: 15px;
+        }
+
+        .school-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .school-item:last-child {
+            border-bottom: none;
+        }
+
+        .school-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .school-info {
+            flex: 1;
+        }
+
+        .school-name {
+            font-weight: 500;
+            margin-bottom: 3px;
+        }
+
+        .school-location {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .school-orders {
+            font-weight: 600;
+            color: var(--primary-blue);
+        }
+
+        /* Delivery Performance */
+        .delivery-metrics {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .delivery-metric {
+            text-align: center;
+            padding: 15px;
+            border-radius: var(--border-radius);
+            background-color: var(--light-gray);
+        }
+
+        .delivery-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .delivery-label {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .analytics-layout {
+                grid-template-columns: 1fr;
+            }
+            
+            .analytics-card.full-width {
+                grid-column: 1;
+            }
+            
+            .metrics-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+            }
+            
+            .nav-menu ul {
+                display: flex;
+                overflow-x: auto;
+            }
+            
+            .nav-menu li {
+                flex-shrink: 0;
+                margin-bottom: 0;
+            }
+            
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .header-right {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .search-bar input {
+                width: 200px;
+            }
+            
+            .analytics-header {
+                padding: 15px;
+            }
+            
+            .analytics-stats {
+                gap: 15px;
+                flex-wrap: wrap;
+            }
+            
+            .filters-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .delivery-metrics {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .analytics-content {
+                padding: 15px;
+            }
+            
+            .header-right {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .search-bar {
+                width: 100%;
+            }
+            
+            .search-bar input {
+                width: 100%;
+            }
+            
+            .analytics-card {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fas fa-industry"></i>
+                <h2>EduProcure</h2>
+            </div>
+            <nav class="nav-menu">
+                <ul>
+                    <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li><a href="profile.html"><i class="fas fa-building"></i> Profile</a></li>
+                    <li><a href="products.html"><i class="fas fa-boxes"></i> Product Catalog</a></li>
+                    <li><a href="schools.html"><i class="fas fa-school"></i> Schools Directory</a></li>
+                    <li><a href="quotation.html"><i class="fas fa-file-invoice-dollar"></i> RFQ Management</a></li>
+                    <li><a href="orders.html"><i class="fas fa-shipping-fast"></i> Order Fulfillment</a></li>
+                    <li><a href="payments.html"><i class="fas fa-file-invoice"></i> Invoices & Payments</a></li>
+                    <li><a href="delivery.html"><i class="fas fa-truck"></i> Delivery & Logistics</a></li>
+                    <li><a href="reports.html" class="active"><i class="fas fa-chart-bar"></i> Reports & Analytics</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <h1>Reports & Analytics</h1>
+                    <p>Gain insights into your business performance and trends</p>
+                </div>
+                <div class="header-right">
+                    <div class="search-bar">
+                        <input type="text" id="globalSearch" placeholder="Search reports...">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <div class="user-profile">
+                        <img src="https://i.pravatar.cc/40" alt="User Avatar">
+                        <span>Analytics Manager</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Analytics Content -->
+            <div class="analytics-content">
+                <div class="page-header">
+                    <h2>Business Intelligence</h2>
+                    <button class="btn btn-primary" id="exportReportBtn">
+                        <i class="fas fa-download"></i> Export Report
+                    </button>
+                </div>
+
+                <!-- Analytics Header -->
+                <div class="analytics-header">
+                    <div class="analytics-stats">
+                        <div class="stat-item stat-revenue">
+                            <div class="stat-value">KES 24.7M</div>
+                            <div class="stat-label">Total Revenue</div>
+                            <div class="stat-change change-positive">
+                                <i class="fas fa-arrow-up"></i> 18.5% from last term
+                            </div>
+                        </div>
+                        <div class="stat-item stat-orders">
+                            <div class="stat-value">156</div>
+                            <div class="stat-label">Orders This Term</div>
+                            <div class="stat-change change-positive">
+                                <i class="fas fa-arrow-up"></i> 12.3% growth
+                            </div>
+                        </div>
+                        <div class="stat-item stat-growth">
+                            <div class="stat-value">42</div>
+                            <div class="stat-label">Active Schools</div>
+                            <div class="stat-change change-positive">
+                                <i class="fas fa-arrow-up"></i> 5 new schools
+                            </div>
+                        </div>
+                        <div class="stat-item stat-schools">
+                            <div class="stat-value">94.2%</div>
+                            <div class="stat-label">On-Time Delivery</div>
+                            <div class="stat-change change-negative">
+                                <i class="fas fa-arrow-down"></i> 2.1% from last term
+                            </div>
+                        </div>
+                    </div>
+                    <div class="filters-container">
+                        <div class="filter-group">
+                            <label class="filter-label">Time Period</label>
+                            <select class="filter-select" id="periodFilter">
+                                <option>Last 30 Days</option>
+                                <option>Last 90 Days</option>
+                                <option selected>This Term (Jan-Mar 2024)</option>
+                                <option>Last Term (Oct-Dec 2023)</option>
+                                <option>Year to Date</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">School Type</label>
+                            <select class="filter-select" id="schoolTypeFilter">
+                                <option>All Types</option>
+                                <option>Primary Schools</option>
+                                <option>Secondary Schools</option>
+                                <option>Tertiary Institutions</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">Product Category</label>
+                            <select class="filter-select" id="categoryFilter">
+                                <option>All Categories</option>
+                                <option>Laboratory Equipment</option>
+                                <option>Teaching Aids</option>
+                                <option>Furniture</option>
+                                <option>ICT Resources</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">Region</label>
+                            <select class="filter-select" id="regionFilter">
+                                <option>All Regions</option>
+                                <option>Nairobi County</option>
+                                <option>Mombasa County</option>
+                                <option>Central Region</option>
+                                <option>Rift Valley</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Analytics Layout -->
+                <div class="analytics-layout">
+                    <!-- Revenue Trends -->
+                    <div class="analytics-card full-width">
+                        <h3>
+                            Revenue Trends
+                            <div class="card-actions">
+                                <button class="btn btn-outline btn-sm">
+                                    <i class="fas fa-filter"></i> Filter
+                                </button>
+                                <button class="btn btn-outline btn-sm">
+                                    <i class="fas fa-expand"></i> Expand
+                                </button>
+                            </div>
+                        </h3>
+                        <div class="chart-container">
+                            <canvas id="revenueChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Best-Selling Products -->
+                    <div class="analytics-card">
+                        <h3>
+                            Best-Selling Products
+                            <div class="card-actions">
+                                <button class="btn btn-outline btn-sm">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                            </div>
+                        </h3>
+                        <div class="products-list">
+                            <div class="product-item">
+                                <div class="product-rank rank-1">1</div>
+                                <div class="product-info">
+                                    <div class="product-name">Student Microscope</div>
+                                    <div class="product-stats">Laboratory Equipment</div>
+                                </div>
+                                <div class="product-sales">KES 4.2M</div>
+                            </div>
+                            <div class="product-item">
+                                <div class="product-rank rank-2">2</div>
+                                <div class="product-info">
+                                    <div class="product-name">Chemistry Glassware Set</div>
+                                    <div class="product-stats">Lab Consumables</div>
+                                </div>
+                                <div class="product-sales">KES 3.1M</div>
+                            </div>
+                            <div class="product-item">
+                                <div class="product-rank rank-3">3</div>
+                                <div class="product-info">
+                                    <div class="product-name">Student Desks & Chairs</div>
+                                    <div class="product-stats">Furniture</div>
+                                </div>
+                                <div class="product-sales">KES 2.8M</div>
+                            </div>
+                            <div class="product-item">
+                                <div class="product-rank">4</div>
+                                <div class="product-info">
+                                    <div class="product-name">Safety Equipment Kit</div>
+                                    <div class="product-stats">Safety Equipment</div>
+                                </div>
+                                <div class="product-sales">KES 2.3M</div>
+                            </div>
+                            <div class="product-item">
+                                <div class="product-rank">5</div>
+                                <div class="product-info">
+                                    <div class="product-name">Digital Science Scales</div>
+                                    <div class="product-stats">Laboratory Equipment</div>
+                                </div>
+                                <div class="product-sales">KES 1.9M</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Most Active Schools -->
+                    <div class="analytics-card">
+                        <h3>
+                            Most Active Schools
+                            <div class="card-actions">
+                                <button class="btn btn-outline btn-sm">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                            </div>
+                        </h3>
+                        <div class="schools-list">
+                            <div class="school-item">
+                                <div class="school-avatar">NS</div>
+                                <div class="school-info">
+                                    <div class="school-name">Nairobi Science High School</div>
+                                    <div class="school-location">Nairobi County • Public</div>
+                                </div>
+                                <div class="school-orders">24 orders</div>
+                            </div>
+                            <div class="school-item">
+                                <div class="school-avatar">MP</div>
+                                <div class="school-info">
+                                    <div class="school-name">Mombasa Primary Academy</div>
+                                    <div class="school-location">Mombasa County • Private</div>
+                                </div>
+                                <div class="school-orders">18 orders</div>
+                            </div>
+                            <div class="school-item">
+                                <div class="school-avatar">KT</div>
+                                <div class="school-info">
+                                    <div class="school-name">Kisumu Technical College</div>
+                                    <div class="school-location">Kisumu County • Public</div>
+                                </div>
+                                <div class="school-orders">15 orders</div>
+                            </div>
+                            <div class="school-item">
+                                <div class="school-avatar">NG</div>
+                                <div class="school-info">
+                                    <div class="school-name">Nakuru Girls High School</div>
+                                    <div class="school-location">Nakuru County • Private</div>
+                                </div>
+                                <div class="school-orders">12 orders</div>
+                            </div>
+                            <div class="school-item">
+                                <div class="school-avatar">EV</div>
+                                <div class="school-info">
+                                    <div class="school-name">Eldoret Vocational Training</div>
+                                    <div class="school-location">Uasin Gishu • Public</div>
+                                </div>
+                                <div class="school-orders">10 orders</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Order Trends -->
+                    <div class="analytics-card">
+                        <h3>
+                            Order Trends
+                            <div class="card-actions">
+                                <button class="btn btn-outline btn-sm">
+                                    <i class="fas fa-filter"></i>
+                                </button>
+                            </div>
+                        </h3>
+                        <div class="chart-container chart-container-sm">
+                            <canvas id="orderTrendsChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Category Performance -->
+                    <div class="analytics-card">
+                        <h3>
+                            Revenue by Category
+                            <div class="card-actions">
+                                <button class="btn btn-outline btn-sm">
+                                    <i class="fas fa-filter"></i>
+                                </button>
+                            </div>
+                        </h3>
+                        <div class="chart-container chart-container-sm">
+                            <canvas id="categoryChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Delivery Performance -->
+                    <div class="analytics-card">
+                        <h3>
+                            Delivery Performance
+                            <div class="card-actions">
+                                <button class="btn btn-outline btn-sm">
+                                    <i class="fas fa-filter"></i>
+                                </button>
+                            </div>
+                        </h3>
+                        <div class="delivery-metrics">
+                            <div class="delivery-metric">
+                                <div class="delivery-value">94.2%</div>
+                                <div class="delivery-label">On-Time Delivery</div>
+                            </div>
+                            <div class="delivery-metric">
+                                <div class="delivery-value">2.8 hrs</div>
+                                <div class="delivery-label">Avg. Delivery Time</div>
+                            </div>
+                            <div class="delivery-metric">
+                                <div class="delivery-value">98.6%</div>
+                                <div class="delivery-label">Success Rate</div>
+                            </div>
+                        </div>
+                        <div class="chart-container chart-container-sm" style="margin-top: 20px;">
+                            <canvas id="deliveryChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Regional Performance -->
+                    <div class="analytics-card">
+                        <h3>
+                            Regional Performance
+                            <div class="card-actions">
+                                <button class="btn btn-outline btn-sm">
+                                    <i class="fas fa-filter"></i>
+                                </button>
+                            </div>
+                        </h3>
+                        <div class="chart-container chart-container-sm">
+                            <canvas id="regionalChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Performance Metrics -->
+                    <div class="analytics-card full-width">
+                        <h3>
+                            Key Performance Indicators
+                            <div class="card-actions">
+                                <button class="btn btn-outline btn-sm">
+                                    <i class="fas fa-sync"></i> Refresh
+                                </button>
+                            </div>
+                        </h3>
+                        <div class="metrics-grid">
+                            <div class="metric-item">
+                                <div class="metric-icon">
+                                    <i class="fas fa-shopping-cart"></i>
+                                </div>
+                                <div class="metric-value">KES 158K</div>
+                                <div class="metric-label">Average Order Value</div>
+                            </div>
+                            <div class="metric-item">
+                                <div class="metric-icon">
+                                    <i class="fas fa-repeat"></i>
+                                </div>
+                                <div class="metric-value">42%</div>
+                                <div class="metric-label">Repeat Customer Rate</div>
+                            </div>
+                            <div class="metric-item">
+                                <div class="metric-icon">
+                                    <i class="fas fa-truck"></i>
+                                </div>
+                                <div class="metric-value">1.8 days</div>
+                                <div class="metric-label">Avg. Order Fulfillment</div>
+                            </div>
+                            <div class="metric-item">
+                                <div class="metric-icon">
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                                <div class="metric-value">18.5%</div>
+                                <div class="metric-label">Revenue Growth</div>
+                            </div>
+                            <div class="metric-item">
+                                <div class="metric-icon">
+                                    <i class="fas fa-school"></i>
+                                </div>
+                                <div class="metric-value">5</div>
+                                <div class="metric-label">New Schools This Term</div>
+                            </div>
+                            <div class="metric-item">
+                                <div class="metric-icon">
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <div class="metric-value">4.7/5</div>
+                                <div class="metric-label">Customer Satisfaction</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Initialize Charts
+        document.addEventListener('DOMContentLoaded', function() {
+            // Revenue Trends Chart
+            const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+            const revenueChart = new Chart(revenueCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                    datasets: [{
+                        label: '2024 Revenue',
+                        data: [3.2, 4.1, 5.8, 4.5, 5.2, 6.1, 5.8, 6.5, 7.2, 6.8, 7.5, 8.2],
+                        borderColor: '#1976d2',
+                        backgroundColor: 'rgba(25, 118, 210, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4
+                    }, {
+                        label: '2023 Revenue',
+                        data: [2.8, 3.5, 4.2, 3.8, 4.5, 5.1, 4.8, 5.2, 5.8, 5.5, 6.2, 6.8],
+                        borderColor: '#ff9800',
+                        backgroundColor: 'rgba(255, 152, 0, 0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4,
+                        borderDash: [5, 5]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Monthly Revenue (KES Millions)'
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            callbacks: {
+                                label: function(context) {
+                                    return `KES ${context.parsed.y}M`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Revenue (KES Millions)'
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return 'KES ' + value + 'M';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Order Trends Chart
+            const orderTrendsCtx = document.getElementById('orderTrendsChart').getContext('2d');
+            const orderTrendsChart = new Chart(orderTrendsCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Primary', 'Secondary', 'Tertiary', 'Vocational'],
+                    datasets: [{
+                        label: 'Orders This Term',
+                        data: [45, 68, 32, 11],
+                        backgroundColor: [
+                            'rgba(25, 118, 210, 0.8)',
+                            'rgba(255, 152, 0, 0.8)',
+                            'rgba(76, 175, 80, 0.8)',
+                            'rgba(156, 39, 176, 0.8)'
+                        ],
+                        borderColor: [
+                            '#1976d2',
+                            '#ff9800',
+                            '#4caf50',
+                            '#9c27b0'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Orders by School Type'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Number of Orders'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Category Performance Chart
+            const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+            const categoryChart = new Chart(categoryCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Lab Equipment', 'Teaching Aids', 'Furniture', 'ICT Resources', 'Safety Equipment'],
+                    datasets: [{
+                        data: [35, 20, 18, 15, 12],
+                        backgroundColor: [
+                            '#1976d2',
+                            '#ff9800',
+                            '#4caf50',
+                            '#9c27b0',
+                            '#f44336'
+                        ],
+                        borderWidth: 2,
+                        borderColor: '#ffffff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Revenue Distribution by Category'
+                        },
+                        legend: {
+                            position: 'bottom'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.label}: ${context.parsed}%`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Delivery Performance Chart
+            const deliveryCtx = document.getElementById('deliveryChart').getContext('2d');
+            const deliveryChart = new Chart(deliveryCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5', 'Week 6', 'Week 7', 'Week 8', 'Week 9', 'Week 10', 'Week 11', 'Week 12'],
+                    datasets: [{
+                        label: 'On-Time Delivery Rate',
+                        data: [92, 94, 93, 95, 96, 94, 93, 95, 96, 94, 95, 96],
+                        borderColor: '#4caf50',
+                        backgroundColor: 'rgba(76, 175, 80, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'On-Time Delivery Rate (%)'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            min: 90,
+                            max: 100,
+                            title: {
+                                display: true,
+                                text: 'Success Rate (%)'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Regional Performance Chart
+            const regionalCtx = document.getElementById('regionalChart').getContext('2d');
+            const regionalChart = new Chart(regionalCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Nairobi', 'Central', 'Rift Valley', 'Coast', 'Western', 'Nyanza', 'Eastern'],
+                    datasets: [{
+                        label: 'Revenue (KES M)',
+                        data: [8.2, 4.5, 3.8, 3.2, 2.1, 1.8, 1.1],
+                        backgroundColor: 'rgba(25, 118, 210, 0.8)',
+                        borderColor: '#1976d2',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Revenue by Region'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Revenue (KES Millions)'
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return 'KES ' + value + 'M';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Export Report Button
+            const exportReportBtn = document.getElementById('exportReportBtn');
+            if (exportReportBtn) {
+                exportReportBtn.addEventListener('click', function() {
+                    alert('Exporting comprehensive analytics report...');
+                    // In a real application, this would generate and download a PDF/Excel report
+                });
+            }
+
+            // Filter Functionality
+            const filters = document.querySelectorAll('.filter-select');
+            filters.forEach(filter => {
+                filter.addEventListener('change', function() {
+                    // In a real application, this would update the charts with filtered data
+                    console.log('Filter changed:', this.id, this.value);
+                    // For demo purposes, we'll just show a loading state
+                    const loadingToast = document.createElement('div');
+                    loadingToast.style.cssText = `
+                        position: fixed;
+                        top: 20px;
+                        right: 20px;
+                        background: var(--primary-blue);
+                        color: white;
+                        padding: 10px 20px;
+                        border-radius: var(--border-radius);
+                        z-index: 1000;
+                        box-shadow: var(--shadow-lg);
+                    `;
+                    loadingToast.innerHTML = '<i class="fas fa-sync fa-spin"></i> Updating charts...';
+                    document.body.appendChild(loadingToast);
+                    
+                    setTimeout(() => {
+                        loadingToast.remove();
+                        alert('Charts updated with new filter criteria!');
+                    }, 1500);
+                });
+            });
+
+            // Global Search
+            const globalSearch = document.getElementById('globalSearch');
+            if (globalSearch) {
+                globalSearch.addEventListener('input', function(e) {
+                    const searchTerm = e.target.value.toLowerCase();
+                    // In a real application, this would filter the analytics data
+                    console.log('Searching for:', searchTerm);
+                });
+            }
+
+            // Simulate real-time data updates
+            function updateChartsWithNewData() {
+                // Simulate adding new data points
+                const newRevenueData = [...revenueChart.data.datasets[0].data];
+                newRevenueData.push(8.5);
+                newRevenueData.shift();
+                revenueChart.data.datasets[0].data = newRevenueData;
+                revenueChart.update('none');
+
+                // Update delivery performance
+                const newDeliveryData = [...deliveryChart.data.datasets[0].data];
+                const newValue = Math.min(100, newDeliveryData[newDeliveryData.length - 1] + (Math.random() > 0.5 ? 1 : -0.5));
+                newDeliveryData.push(newValue);
+                newDeliveryData.shift();
+                deliveryChart.data.datasets[0].data = newDeliveryData;
+                deliveryChart.update('none');
+            }
+
+            // Update charts every 30 seconds for demo
+            setInterval(updateChartsWithNewData, 30000);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduProcure - Delivery & Logistics</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #1976d2;
+            --light-blue: #42a5f5;
+            --dark-blue: #0d47a1;
+            --accent-blue: #90caf9;
+            --accent-orange: #ff9800;
+            --light-orange: #ffb74d;
+            --white: #ffffff;
+            --light-gray: #f5f5f5;
+            --medium-gray: #e0e0e0;
+            --dark-gray: #424242;
+            --text-dark: #212121;
+            --text-light: #757575;
+            --success-green: #4caf50;
+            --warning-orange: #ff9800;
+            --error-red: #f44336;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+            --border-radius: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light-gray);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 260px;
+            background-color: var(--white);
+            box-shadow: var(--shadow);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            transition: var(--transition);
+        }
+
+        .logo {
+            padding: 24px 20px;
+            border-bottom: 1px solid var(--medium-gray);
+            color: var(--primary-blue);
+            display: flex;
+            align-items: center;
+        }
+
+        .logo h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .logo i {
+            font-size: 1.8rem;
+        }
+
+        .nav-menu {
+            flex: 1;
+            padding: 20px 0;
+        }
+
+        .nav-menu ul {
+            list-style: none;
+        }
+
+        .nav-menu li {
+            margin-bottom: 5px;
+        }
+
+        .nav-menu a {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: var(--text-dark);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .nav-menu a:hover {
+            background-color: var(--light-gray);
+            color: var(--primary-blue);
+        }
+
+        .nav-menu a.active {
+            background-color: var(--accent-blue);
+            color: var(--dark-blue);
+            font-weight: 500;
+            border-left: 4px solid var(--primary-blue);
+        }
+
+        .nav-menu i {
+            margin-right: 12px;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            background-color: var(--white);
+            box-shadow: var(--shadow);
+        }
+
+        .header-left h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--dark-blue);
+        }
+
+        .header-left p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .search-bar {
+            position: relative;
+        }
+
+        .search-bar input {
+            padding: 10px 15px 10px 40px;
+            border: 1px solid var(--medium-gray);
+            border-radius: 30px;
+            width: 300px;
+            font-size: 0.9rem;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .search-bar input:focus {
+            border-color: var(--primary-blue);
+        }
+
+        .search-bar i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-profile img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .user-profile span {
+            font-weight: 500;
+        }
+
+        /* Delivery Content */
+        .delivery-content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .page-header h2 {
+            font-size: 1.8rem;
+            color: var(--dark-blue);
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: var(--border-radius);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-blue);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--dark-blue);
+        }
+
+        .btn-secondary {
+            background-color: var(--medium-gray);
+            color: var(--text-dark);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--dark-gray);
+            color: var(--white);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary-blue);
+            color: var(--primary-blue);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary-blue);
+            color: var(--white);
+        }
+
+        .btn-success {
+            background-color: var(--success-green);
+            color: var(--white);
+        }
+
+        .btn-success:hover {
+            background-color: #388e3c;
+        }
+
+        .btn-warning {
+            background-color: var(--warning-orange);
+            color: var(--white);
+        }
+
+        .btn-warning:hover {
+            background-color: #f57c00;
+        }
+
+        .btn-danger {
+            background-color: var(--error-red);
+            color: var(--white);
+        }
+
+        .btn-danger:hover {
+            background-color: #d32f2f;
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+        }
+
+        /* Delivery Header */
+        .delivery-header {
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+        }
+
+        .delivery-stats {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 15px;
+            border-radius: var(--border-radius);
+            background-color: var(--light-gray);
+            flex: 1;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .stat-active .stat-value {
+            color: var(--primary-blue);
+        }
+
+        .stat-completed .stat-value {
+            color: var(--success-green);
+        }
+
+        .stat-delayed .stat-value {
+            color: var(--warning-orange);
+        }
+
+        .stat-drivers .stat-value {
+            color: var(--dark-blue);
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .filters-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-label {
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-bottom: 5px;
+            color: var(--text-dark);
+        }
+
+        .filter-select {
+            padding: 8px 12px;
+            border: 1px solid var(--medium-gray);
+            border-radius: var(--border-radius);
+            background-color: var(--white);
+            font-size: 0.9rem;
+            outline: none;
+        }
+
+        .filter-select:focus {
+            border-color: var(--primary-blue);
+        }
+
+        /* Delivery Layout */
+        .delivery-layout {
+            display: flex;
+            gap: 30px;
+        }
+
+        .delivery-sidebar {
+            width: 350px;
+            flex-shrink: 0;
+        }
+
+        .delivery-card {
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+        }
+
+        .delivery-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: var(--dark-blue);
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--medium-gray);
+        }
+
+        /* Active Deliveries */
+        .delivery-item {
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 1px solid var(--medium-gray);
+        }
+
+        .delivery-item:hover {
+            border-color: var(--primary-blue);
+            background-color: rgba(25, 118, 210, 0.05);
+        }
+
+        .delivery-item.active {
+            border-color: var(--primary-blue);
+            background-color: var(--accent-blue);
+        }
+
+        .delivery-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .delivery-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .delivery-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .badge-scheduled {
+            background-color: var(--medium-gray);
+            color: var(--text-dark);
+        }
+
+        .badge-in-progress {
+            background-color: var(--primary-blue);
+            color: var(--white);
+        }
+
+        .badge-delivered {
+            background-color: var(--success-green);
+            color: var(--white);
+        }
+
+        .badge-delayed {
+            background-color: var(--warning-orange);
+            color: var(--white);
+        }
+
+        .badge-cancelled {
+            background-color: var(--error-red);
+            color: var(--white);
+        }
+
+        .delivery-school {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .school-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: var(--primary-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .school-info h4 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .school-info p {
+            font-size: 0.7rem;
+            color: var(--text-light);
+        }
+
+        .delivery-details {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .delivery-detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 3px;
+        }
+
+        /* Drivers List */
+        .drivers-list {
+            margin-top: 10px;
+        }
+
+        .driver-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px;
+            border-radius: var(--border-radius);
+            margin-bottom: 8px;
+            transition: var(--transition);
+        }
+
+        .driver-item:hover {
+            background-color: var(--light-gray);
+        }
+
+        .driver-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-weight: 600;
+        }
+
+        .driver-info {
+            flex: 1;
+        }
+
+        .driver-name {
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .driver-status {
+            font-size: 0.7rem;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .status-online {
+            background-color: var(--success-green);
+        }
+
+        .status-offline {
+            background-color: var(--error-red);
+        }
+
+        .status-busy {
+            background-color: var(--warning-orange);
+        }
+
+        /* Delivery Detail View */
+        .delivery-detail {
+            flex: 1;
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .delivery-detail-header {
+            padding: 20px;
+            background: linear-gradient(135deg, var(--primary-blue), var(--light-blue));
+            color: var(--white);
+        }
+
+        .delivery-detail-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .delivery-detail-subtitle {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .delivery-detail-body {
+            padding: 20px;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .delivery-info-section {
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--dark-blue);
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--medium-gray);
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .info-label {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        /* Map Container */
+        .map-container {
+            height: 300px;
+            background-color: var(--light-gray);
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .map-placeholder {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(145deg, #e1f5fe, #b3e5fc);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-blue);
+        }
+
+        .map-placeholder i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .map-placeholder p {
+            font-size: 0.9rem;
+            text-align: center;
+            max-width: 80%;
+        }
+
+        /* Delivery Timeline */
+        .delivery-timeline {
+            margin-top: 20px;
+            border: 1px solid var(--medium-gray);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+        }
+
+        .timeline-header {
+            padding: 12px 15px;
+            background-color: var(--light-gray);
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .timeline-content {
+            padding: 15px;
+            background-color: var(--white);
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background-color: var(--medium-gray);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .timeline-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -23px;
+            top: 5px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: var(--medium-gray);
+            border: 2px solid var(--white);
+        }
+
+        .timeline-item.active::before {
+            background-color: var(--primary-blue);
+        }
+
+        .timeline-item.completed::before {
+            background-color: var(--success-green);
+        }
+
+        .timeline-content-item {
+            background-color: var(--light-gray);
+            padding: 12px 15px;
+            border-radius: var(--border-radius);
+        }
+
+        .timeline-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--text-dark);
+        }
+
+        .timeline-date {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .timeline-description {
+            font-size: 0.9rem;
+            margin-top: 8px;
+        }
+
+        /* Proof of Delivery */
+        .proof-section {
+            margin-top: 20px;
+            border: 1px solid var(--medium-gray);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+        }
+
+        .proof-header {
+            padding: 12px 15px;
+            background-color: var(--light-gray);
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .proof-content {
+            padding: 15px;
+            background-color: var(--white);
+        }
+
+        .proof-images {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .proof-image {
+            height: 120px;
+            background-color: var(--light-gray);
+            border-radius: var(--border-radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: var(--transition);
+            overflow: hidden;
+        }
+
+        .proof-image:hover {
+            background-color: var(--medium-gray);
+        }
+
+        .proof-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .proof-upload {
+            display: flex;
+            gap: 10px;
+        }
+
+        .proof-upload input {
+            flex: 1;
+            padding: 10px;
+            border: 1px dashed var(--medium-gray);
+            border-radius: var(--border-radius);
+            background-color: var(--light-gray);
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .delivery-layout {
+                flex-direction: column;
+            }
+            
+            .delivery-sidebar {
+                width: 100%;
+            }
+            
+            .info-grid {
+                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+            }
+            
+            .nav-menu ul {
+                display: flex;
+                overflow-x: auto;
+            }
+            
+            .nav-menu li {
+                flex-shrink: 0;
+                margin-bottom: 0;
+            }
+            
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .header-right {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .search-bar input {
+                width: 200px;
+            }
+            
+            .delivery-header {
+                padding: 15px;
+            }
+            
+            .delivery-stats {
+                gap: 15px;
+                flex-wrap: wrap;
+            }
+            
+            .filters-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .proof-images {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            }
+        }
+
+        @media (max-width: 576px) {
+            .delivery-content {
+                padding: 15px;
+            }
+            
+            .header-right {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .search-bar {
+                width: 100%;
+            }
+            
+            .search-bar input {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fas fa-industry"></i>
+                <h2>EduProcure</h2>
+            </div>
+            <nav class="nav-menu">
+                <ul>
+                    <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li><a href="profile.html"><i class="fas fa-building"></i> Profile</a></li>
+                    <li><a href="products.html"><i class="fas fa-boxes"></i> Product Catalog</a></li>
+                    <li><a href="schools.html"><i class="fas fa-school"></i> Schools Directory</a></li>
+                    <li><a href="quotation.html"><i class="fas fa-file-invoice-dollar"></i> RFQ Management</a></li>
+                    <li><a href="orders.html"><i class="fas fa-shipping-fast"></i> Order Fulfillment</a></li>
+                    <li><a href="payments.html"><i class="fas fa-file-invoice"></i> Invoices & Payments</a></li>
+                    <li><a href="delivery.html" class="active"><i class="fas fa-truck"></i> Delivery & Logistics</a></li>
+                    <li><a href="reports.html"><i class="fas fa-chart-bar"></i> Reports & Analytics</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <h1>Delivery & Logistics</h1>
+                    <p>Manage drivers, routes, and track deliveries in real-time</p>
+                </div>
+                <div class="header-right">
+                    <div class="search-bar">
+                        <input type="text" id="globalSearch" placeholder="Search deliveries...">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <div class="user-profile">
+                        <img src="https://i.pravatar.cc/40" alt="User Avatar">
+                        <span>Logistics Manager</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Delivery Content -->
+            <div class="delivery-content">
+                <div class="page-header">
+                    <h2>Delivery Management</h2>
+                    <button class="btn btn-primary" id="scheduleDeliveryBtn">
+                        <i class="fas fa-plus"></i> Schedule Delivery
+                    </button>
+                </div>
+
+                <!-- Delivery Header -->
+                <div class="delivery-header">
+                    <div class="delivery-stats">
+                        <div class="stat-item stat-active">
+                            <div class="stat-value">12</div>
+                            <div class="stat-label">Active Deliveries</div>
+                        </div>
+                        <div class="stat-item stat-completed">
+                            <div class="stat-value">28</div>
+                            <div class="stat-label">Completed Today</div>
+                        </div>
+                        <div class="stat-item stat-delayed">
+                            <div class="stat-value">3</div>
+                            <div class="stat-label">Delayed</div>
+                        </div>
+                        <div class="stat-item stat-drivers">
+                            <div class="stat-value">8</div>
+                            <div class="stat-label">Active Drivers</div>
+                        </div>
+                    </div>
+                    <div class="filters-container">
+                        <div class="filter-group">
+                            <label class="filter-label">Status</label>
+                            <select class="filter-select" id="statusFilter">
+                                <option>All Statuses</option>
+                                <option>Scheduled</option>
+                                <option>In Progress</option>
+                                <option>Delivered</option>
+                                <option>Delayed</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">Driver</label>
+                            <select class="filter-select" id="driverFilter">
+                                <option>All Drivers</option>
+                                <option>John Kamau</option>
+                                <option>Sarah Wanjiku</option>
+                                <option>Michael Otieno</option>
+                                <option>Grace Achieng</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">Date Range</label>
+                            <select class="filter-select" id="dateFilter">
+                                <option>Today</option>
+                                <option>Tomorrow</option>
+                                <option>This Week</option>
+                                <option>This Month</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">Vehicle Type</label>
+                            <select class="filter-select" id="vehicleFilter">
+                                <option>All Vehicles</option>
+                                <option>Small Van</option>
+                                <option>Medium Truck</option>
+                                <option>Large Truck</option>
+                                <option>Refrigerated</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Delivery Layout -->
+                <div class="delivery-layout">
+                    <!-- Delivery Sidebar -->
+                    <div class="delivery-sidebar">
+                        <!-- Active Deliveries -->
+                        <div class="delivery-card">
+                            <h3>Active Deliveries</h3>
+                            <!-- Delivery Item 1 -->
+                            <div class="delivery-item active" data-delivery="1">
+                                <div class="delivery-item-header">
+                                    <h4 class="delivery-title">Science Lab Equipment</h4>
+                                    <span class="delivery-badge badge-in-progress">IN PROGRESS</span>
+                                </div>
+                                <div class="delivery-school">
+                                    <div class="school-avatar">NS</div>
+                                    <div class="school-info">
+                                        <h4>Nairobi Science High School</h4>
+                                        <p>Westlands, Nairobi</p>
+                                    </div>
+                                </div>
+                                <div class="delivery-details">
+                                    <div class="delivery-detail-row">
+                                        <span>Driver:</span>
+                                        <span>John Kamau</span>
+                                    </div>
+                                    <div class="delivery-detail-row">
+                                        <span>Vehicle:</span>
+                                        <span>KBR 234X • Medium Truck</span>
+                                    </div>
+                                    <div class="delivery-detail-row">
+                                        <span>ETA:</span>
+                                        <span>14:30 (45 min)</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Delivery Item 2 -->
+                            <div class="delivery-item" data-delivery="2">
+                                <div class="delivery-item-header">
+                                    <h4 class="delivery-title">Student Furniture</h4>
+                                    <span class="delivery-badge badge-scheduled">SCHEDULED</span>
+                                </div>
+                                <div class="delivery-school">
+                                    <div class="school-avatar">MP</div>
+                                    <div class="school-info">
+                                        <h4>Mombasa Primary Academy</h4>
+                                        <p>Island, Mombasa</p>
+                                    </div>
+                                </div>
+                                <div class="delivery-details">
+                                    <div class="delivery-detail-row">
+                                        <span>Driver:</span>
+                                        <span>Sarah Wanjiku</span>
+                                    </div>
+                                    <div class="delivery-detail-row">
+                                        <span>Vehicle:</span>
+                                        <span>KCD 567Y • Large Truck</span>
+                                    </div>
+                                    <div class="delivery-detail-row">
+                                        <span>Schedule:</span>
+                                        <span>Tomorrow, 09:00</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Delivery Item 3 -->
+                            <div class="delivery-item" data-delivery="3">
+                                <div class="delivery-item-header">
+                                    <h4 class="delivery-title">Computer Equipment</h4>
+                                    <span class="delivery-badge badge-delayed">DELAYED</span>
+                                </div>
+                                <div class="delivery-school">
+                                    <div class="school-avatar">KT</div>
+                                    <div class="school-info">
+                                        <h4>Kisumu Technical College</h4>
+                                        <p>Kisumu Central</p>
+                                    </div>
+                                </div>
+                                <div class="delivery-details">
+                                    <div class="delivery-detail-row">
+                                        <span>Driver:</span>
+                                        <span>Michael Otieno</span>
+                                    </div>
+                                    <div class="delivery-detail-row">
+                                        <span>Vehicle:</span>
+                                        <span>KEF 890Z • Medium Truck</span>
+                                    </div>
+                                    <div class="delivery-detail-row">
+                                        <span>Delay:</span>
+                                        <span>Traffic • 2 hours</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Delivery Item 4 -->
+                            <div class="delivery-item" data-delivery="4">
+                                <div class="delivery-item-header">
+                                    <h4 class="delivery-title">Chemistry Supplies</h4>
+                                    <span class="delivery-badge badge-delivered">DELIVERED</span>
+                                </div>
+                                <div class="delivery-school">
+                                    <div class="school-avatar">NG</div>
+                                    <div class="school-info">
+                                        <h4>Nakuru Girls High School</h4>
+                                        <p>Nakuru Town</p>
+                                    </div>
+                                </div>
+                                <div class="delivery-details">
+                                    <div class="delivery-detail-row">
+                                        <span>Driver:</span>
+                                        <span>Grace Achieng</span>
+                                    </div>
+                                    <div class="delivery-detail-row">
+                                        <span>Vehicle:</span>
+                                        <span>KGH 123A • Small Van</span>
+                                    </div>
+                                    <div class="delivery-detail-row">
+                                        <span>Delivered:</span>
+                                        <span>Today, 11:20</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Active Drivers -->
+                        <div class="delivery-card">
+                            <h3>Active Drivers</h3>
+                            <div class="drivers-list">
+                                <div class="driver-item">
+                                    <div class="driver-avatar">JK</div>
+                                    <div class="driver-info">
+                                        <div class="driver-name">John Kamau</div>
+                                        <div class="driver-status">
+                                            <span class="status-indicator status-busy"></span>
+                                            <span>On Delivery • KBR 234X</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="driver-item">
+                                    <div class="driver-avatar">SW</div>
+                                    <div class="driver-info">
+                                        <div class="driver-name">Sarah Wanjiku</div>
+                                        <div class="driver-status">
+                                            <span class="status-indicator status-online"></span>
+                                            <span>Available • KCD 567Y</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="driver-item">
+                                    <div class="driver-avatar">MO</div>
+                                    <div class="driver-info">
+                                        <div class="driver-name">Michael Otieno</div>
+                                        <div class="driver-status">
+                                            <span class="status-indicator status-busy"></span>
+                                            <span>Delayed • KEF 890Z</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="driver-item">
+                                    <div class="driver-avatar">GA</div>
+                                    <div class="driver-info">
+                                        <div class="driver-name">Grace Achieng</div>
+                                        <div class="driver-status">
+                                            <span class="status-indicator status-online"></span>
+                                            <span>Returning to Base • KGH 123A</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Delivery Detail View -->
+                    <div class="delivery-detail">
+                        <div class="delivery-detail-header">
+                            <h2 class="delivery-detail-title">Science Lab Equipment</h2>
+                            <p class="delivery-detail-subtitle">Delivery #DEL-NS-2023-045 • Nairobi Science High School</p>
+                        </div>
+                        <div class="delivery-detail-body">
+                            <!-- Delivery Information -->
+                            <div class="delivery-info-section">
+                                <h3 class="section-title">Delivery Details</h3>
+                                <div class="info-grid">
+                                    <div class="info-item">
+                                        <span class="info-label">Delivery Number</span>
+                                        <span class="info-value">DEL-NS-2023-045</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Driver</span>
+                                        <span class="info-value">John Kamau</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Vehicle</span>
+                                        <span class="info-value">KBR 234X • Medium Truck</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Current Location</span>
+                                        <span class="info-value">Waiyaki Way, Near ABC Place</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Status</span>
+                                        <span class="info-value">In Progress</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">ETA</span>
+                                        <span class="info-value">14:30 (45 minutes)</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Route Distance</span>
+                                        <span class="info-value">18.5 km</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Contact Person</span>
+                                        <span class="info-value">Dr. James Kariuki</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Map Container -->
+                            <div class="map-container">
+                                <div class="map-placeholder">
+                                    <i class="fas fa-map-marked-alt"></i>
+                                    <h3>Live Vehicle Tracking</h3>
+                                    <p>Real-time GPS tracking showing vehicle KBR 234X en route to Nairobi Science High School</p>
+                                    <button class="btn btn-outline btn-sm" style="margin-top: 10px;">
+                                        <i class="fas fa-satellite"></i> Enable Live Tracking
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Delivery Timeline -->
+                            <div class="delivery-timeline">
+                                <div class="timeline-header">
+                                    <span>Delivery Timeline</span>
+                                </div>
+                                <div class="timeline-content">
+                                    <div class="timeline">
+                                        <div class="timeline-item completed">
+                                            <div class="timeline-content-item">
+                                                <div class="timeline-title">Order Processed</div>
+                                                <div class="timeline-date">Today, 08:00 AM</div>
+                                                <div class="timeline-description">Order verified and assigned to driver John Kamau.</div>
+                                            </div>
+                                        </div>
+                                        <div class="timeline-item completed">
+                                            <div class="timeline-content-item">
+                                                <div class="timeline-title">Vehicle Loaded</div>
+                                                <div class="timeline-date">Today, 09:30 AM</div>
+                                                <div class="timeline-description">All items loaded onto vehicle KBR 234X at warehouse.</div>
+                                            </div>
+                                        </div>
+                                        <div class="timeline-item completed">
+                                            <div class="timeline-content-item">
+                                                <div class="timeline-title">Departed Warehouse</div>
+                                                <div class="timeline-date">Today, 10:15 AM</div>
+                                                <div class="timeline-description">Vehicle departed for Nairobi Science High School.</div>
+                                            </div>
+                                        </div>
+                                        <div class="timeline-item active">
+                                            <div class="timeline-content-item">
+                                                <div class="timeline-title">In Transit</div>
+                                                <div class="timeline-date">Current Location: Waiyaki Way</div>
+                                                <div class="timeline-description">Vehicle is 12km from destination. Moderate traffic reported.</div>
+                                            </div>
+                                        </div>
+                                        <div class="timeline-item">
+                                            <div class="timeline-content-item">
+                                                <div class="timeline-title">Delivery</div>
+                                                <div class="timeline-date">ETA: 14:30 PM</div>
+                                                <div class="timeline-description">Scheduled arrival at school premises.</div>
+                                            </div>
+                                        </div>
+                                        <div class="timeline-item">
+                                            <div class="timeline-content-item">
+                                                <div class="timeline-title">Completed</div>
+                                                <div class="timeline-date">After Delivery</div>
+                                                <div class="timeline-description">Delivery confirmation and proof of delivery upload.</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Proof of Delivery -->
+                            <div class="proof-section">
+                                <div class="proof-header">
+                                    <span>Proof of Delivery</span>
+                                </div>
+                                <div class="proof-content">
+                                    <div class="proof-images">
+                                        <div class="proof-image">
+                                            <i class="fas fa-camera"></i>
+                                            <span>No images yet</span>
+                                        </div>
+                                        <div class="proof-image">
+                                            <i class="fas fa-camera"></i>
+                                            <span>No images yet</span>
+                                        </div>
+                                        <div class="proof-image">
+                                            <i class="fas fa-camera"></i>
+                                            <span>No images yet</span>
+                                        </div>
+                                    </div>
+                                    <div class="proof-upload">
+                                        <input type="text" placeholder="Add delivery notes...">
+                                        <button class="btn btn-primary btn-sm">
+                                            <i class="fas fa-upload"></i> Upload Proof
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="action-buttons">
+                                <button class="btn btn-success">
+                                    <i class="fas fa-check"></i> Mark Delivered
+                                </button>
+                                <button class="btn btn-warning">
+                                    <i class="fas fa-clock"></i> Update ETA
+                                </button>
+                                <button class="btn btn-outline">
+                                    <i class="fas fa-phone"></i> Contact Driver
+                                </button>
+                                <button class="btn btn-outline">
+                                    <i class="fas fa-route"></i> Optimize Route
+                                </button>
+                                <button class="btn btn-danger">
+                                    <i class="fas fa-exclamation-triangle"></i> Report Issue
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // JavaScript for interactive elements
+        document.addEventListener('DOMContentLoaded', function() {
+            // Delivery Item Selection
+            const deliveryItems = document.querySelectorAll('.delivery-item');
+            deliveryItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    deliveryItems.forEach(i => i.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const deliveryId = this.getAttribute('data-delivery');
+                    loadDeliveryDetails(deliveryId);
+                });
+            });
+
+            function loadDeliveryDetails(deliveryId) {
+                // In a real application, you would fetch delivery details from an API
+                console.log(`Loading details for Delivery ${deliveryId}`);
+                // For demo purposes, we're just updating the title
+                const titles = {
+                    1: "Science Lab Equipment",
+                    2: "Student Furniture", 
+                    3: "Computer Equipment",
+                    4: "Chemistry Supplies"
+                };
+                
+                document.querySelector('.delivery-detail-title').textContent = titles[deliveryId];
+            }
+
+            // Schedule Delivery Button
+            const scheduleDeliveryBtn = document.getElementById('scheduleDeliveryBtn');
+            if (scheduleDeliveryBtn) {
+                scheduleDeliveryBtn.addEventListener('click', function() {
+                    alert('Schedule Delivery form would open here');
+                    // In a real application, you would open a modal or navigate to a form
+                });
+            }
+
+            // Global Search
+            const globalSearch = document.getElementById('globalSearch');
+            if (globalSearch) {
+                globalSearch.addEventListener('input', function(e) {
+                    const searchTerm = e.target.value.toLowerCase();
+                    const deliveryItems = document.querySelectorAll('.delivery-item');
+                    
+                    deliveryItems.forEach(item => {
+                        const title = item.querySelector('.delivery-title').textContent.toLowerCase();
+                        const school = item.querySelector('.school-info h4').textContent.toLowerCase();
+                        
+                        if (title.includes(searchTerm) || school.includes(searchTerm)) {
+                            item.style.display = 'block';
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+                });
+            }
+
+            // Filter Functionality
+            const filters = document.querySelectorAll('.filter-select');
+            filters.forEach(filter => {
+                filter.addEventListener('change', function() {
+                    applyFilters();
+                });
+            });
+
+            function applyFilters() {
+                const status = document.getElementById('statusFilter').value;
+                const deliveryItems = document.querySelectorAll('.delivery-item');
+                
+                deliveryItems.forEach(item => {
+                    let showItem = true;
+                    
+                    // Filter by status
+                    if (status !== 'All Statuses') {
+                        const badge = item.querySelector('.delivery-badge').textContent;
+                        if (status === 'Scheduled' && !badge.includes('SCHEDULED')) {
+                            showItem = false;
+                        } else if (status === 'In Progress' && !badge.includes('IN PROGRESS')) {
+                            showItem = false;
+                        } else if (status === 'Delivered' && !badge.includes('DELIVERED')) {
+                            showItem = false;
+                        } else if (status === 'Delayed' && !badge.includes('DELAYED')) {
+                            showItem = false;
+                        }
+                    }
+                    
+                    item.style.display = showItem ? 'block' : 'none';
+                });
+            }
+
+            // Action Button Functionality
+            const actionButtons = document.querySelectorAll('.action-buttons .btn');
+            actionButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const action = this.textContent.trim();
+                    const deliveryTitle = document.querySelector('.delivery-detail-title').textContent;
+                    
+                    if (action.includes('Mark Delivered')) {
+                        const confirmDelivery = confirm(`Mark delivery "${deliveryTitle}" as completed?`);
+                        if (confirmDelivery) {
+                            alert(`Delivery "${deliveryTitle}" marked as completed.`);
+                            // Update status in UI
+                            document.querySelector('.delivery-item.active .delivery-badge').className = 'delivery-badge badge-delivered';
+                            document.querySelector('.delivery-item.active .delivery-badge').textContent = 'DELIVERED';
+                        }
+                    } else if (action.includes('Update ETA')) {
+                        const newETA = prompt('Enter new ETA (HH:MM):', '15:30');
+                        if (newETA) {
+                            alert(`ETA updated to ${newETA} for "${deliveryTitle}"`);
+                        }
+                    } else if (action.includes('Contact Driver')) {
+                        alert('Opening driver contact information...');
+                    } else if (action.includes('Optimize Route')) {
+                        alert('Route optimization in progress...');
+                    } else if (action.includes('Report Issue')) {
+                        const issue = prompt('Please describe the issue:');
+                        if (issue) {
+                            alert(`Issue reported: ${issue}`);
+                        }
+                    }
+                });
+            });
+
+            // Upload Proof Button
+            const uploadProofBtn = document.querySelector('.proof-upload .btn');
+            if (uploadProofBtn) {
+                uploadProofBtn.addEventListener('click', function() {
+                    // In a real application, this would open a file picker
+                    const proofImages = document.querySelector('.proof-images');
+                    const newImage = document.createElement('div');
+                    newImage.className = 'proof-image';
+                    newImage.innerHTML = '<i class="fas fa-check" style="color: var(--success-green);"></i><span>Uploaded</span>';
+                    
+                    proofImages.appendChild(newImage);
+                    alert('Proof of delivery uploaded successfully!');
+                });
+            }
+
+            // Simulate live tracking updates
+            function simulateTrackingUpdates() {
+                const timelineItems = document.querySelectorAll('.timeline-item');
+                let currentIndex = 3; // Start from "In Transit"
+                
+                const trackingInterval = setInterval(() => {
+                    if (currentIndex < timelineItems.length) {
+                        timelineItems[currentIndex].classList.add('active');
+                        timelineItems[currentIndex - 1].classList.remove('active');
+                        timelineItems[currentIndex - 1].classList.add('completed');
+                        currentIndex++;
+                    } else {
+                        clearInterval(trackingInterval);
+                    }
+                }, 10000); // Update every 10 seconds for demo
+            }
+            
+            // Start tracking simulation after 3 seconds
+            setTimeout(simulateTrackingUpdates, 3000);
+
+            // Driver status simulation
+            function simulateDriverStatus() {
+                const driverStatuses = document.querySelectorAll('.driver-status');
+                
+                driverStatuses.forEach(status => {
+                    const text = status.textContent;
+                    if (text.includes('Available')) {
+                        // Randomly change status to busy
+                        if (Math.random() > 0.7) {
+                            status.innerHTML = '<span class="status-indicator status-busy"></span><span>On Delivery • KBR 234X</span>';
+                        }
+                    } else if (text.includes('On Delivery')) {
+                        // Randomly change status to available
+                        if (Math.random() > 0.8) {
+                            status.innerHTML = '<span class="status-indicator status-online"></span><span>Available • KCD 567Y</span>';
+                        }
+                    }
+                });
+            }
+            
+            // Update driver status every 15 seconds
+            setInterval(simulateDriverStatus, 15000);
+        });
+    </script>
+</body>
+</html>

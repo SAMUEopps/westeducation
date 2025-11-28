@@ -1,0 +1,1361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduProcure - Category Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-purple: #7e57c2;
+            --light-purple: #b39ddb;
+            --dark-purple: #5e35b1;
+            --accent-purple: #d1c4e9;
+            --accent-teal: #26a69a;
+            --light-teal: #80cbc4;
+            --accent-amber: #ffb300;
+            --light-amber: #ffd54f;
+            --white: #ffffff;
+            --light-gray: #f5f5f5;
+            --medium-gray: #e0e0e0;
+            --dark-gray: #424242;
+            --text-dark: #212121;
+            --text-light: #757575;
+            --success-green: #4caf50;
+            --warning-orange: #ff9800;
+            --error-red: #f44336;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+            --border-radius: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light-gray);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 280px;
+            background: linear-gradient(180deg, var(--primary-purple), var(--dark-purple));
+            color: var(--white);
+            box-shadow: var(--shadow);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            transition: var(--transition);
+        }
+
+        .logo {
+            padding: 24px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+        }
+
+        .logo h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .logo i {
+            font-size: 1.8rem;
+        }
+
+        .nav-menu {
+            flex: 1;
+            padding: 20px 0;
+        }
+
+        .nav-menu ul {
+            list-style: none;
+        }
+
+        .nav-menu li {
+            margin-bottom: 5px;
+        }
+
+        .nav-menu a {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .nav-menu a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--white);
+        }
+
+        .nav-menu a.active {
+            background-color: rgba(255, 255, 255, 0.15);
+            color: var(--white);
+            font-weight: 500;
+            border-left: 4px solid var(--light-teal);
+        }
+
+        .nav-menu i {
+            margin-right: 12px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .admin-profile {
+            padding: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .admin-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--light-teal);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--dark-purple);
+            font-weight: 600;
+        }
+
+        .admin-info h4 {
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .admin-info p {
+            font-size: 0.7rem;
+            opacity: 0.8;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            background-color: var(--white);
+            box-shadow: var(--shadow);
+        }
+
+        .header-left h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--dark-purple);
+        }
+
+        .header-left p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .search-bar {
+            position: relative;
+        }
+
+        .search-bar input {
+            padding: 10px 15px 10px 40px;
+            border: 1px solid var(--medium-gray);
+            border-radius: 30px;
+            width: 300px;
+            font-size: 0.9rem;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .search-bar input:focus {
+            border-color: var(--primary-purple);
+        }
+
+        .search-bar i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .icon-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--light-gray);
+            color: var(--text-dark);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .icon-btn:hover {
+            background-color: var(--accent-purple);
+            color: var(--dark-purple);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background-color: var(--error-red);
+            color: var(--white);
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Category Content */
+        .category-content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .page-header h2 {
+            font-size: 1.8rem;
+            color: var(--dark-purple);
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: var(--border-radius);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-purple);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--dark-purple);
+        }
+
+        .btn-secondary {
+            background-color: var(--medium-gray);
+            color: var(--text-dark);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--dark-gray);
+            color: var(--white);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary-purple);
+            color: var(--primary-purple);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary-purple);
+            color: var(--white);
+        }
+
+        .btn-success {
+            background-color: var(--success-green);
+            color: var(--white);
+        }
+
+        .btn-success:hover {
+            background-color: #388e3c;
+        }
+
+        .btn-warning {
+            background-color: var(--warning-orange);
+            color: var(--white);
+        }
+
+        .btn-warning:hover {
+            background-color: #f57c00;
+        }
+
+        .btn-danger {
+            background-color: var(--error-red);
+            color: var(--white);
+        }
+
+        .btn-danger:hover {
+            background-color: #d32f2f;
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+        }
+
+        /* Category Header */
+        .category-header {
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+        }
+
+        .category-stats {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            flex: 1;
+        }
+
+        .stat-products {
+            background: linear-gradient(135deg, var(--primary-purple), var(--light-purple));
+            color: var(--white);
+        }
+
+        .stat-services {
+            background: linear-gradient(135deg, var(--accent-teal), var(--light-teal));
+            color: var(--white);
+        }
+
+        .stat-schools {
+            background: linear-gradient(135deg, var(--accent-amber), var(--light-amber));
+            color: var(--white);
+        }
+
+        .stat-regions {
+            background: linear-gradient(135deg, #ab47bc, #ce93d8);
+            color: var(--white);
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* Category Layout */
+        .category-layout {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .category-card {
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .category-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: var(--dark-purple);
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--medium-gray);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Category List */
+        .category-list {
+            margin-top: 15px;
+        }
+
+        .category-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 15px;
+            border-radius: var(--border-radius);
+            margin-bottom: 8px;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .category-item:hover {
+            background-color: var(--light-gray);
+        }
+
+        .category-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .category-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 0.9rem;
+        }
+
+        .category-details {
+            flex: 1;
+        }
+
+        .category-name {
+            font-weight: 500;
+            margin-bottom: 3px;
+        }
+
+        .category-count {
+            font-size: 0.7rem;
+            color: var(--text-light);
+        }
+
+        .category-actions {
+            display: flex;
+            gap: 8px;
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .category-item:hover .category-actions {
+            opacity: 1;
+        }
+
+        /* Color Variants for Categories */
+        .color-1 { background-color: #7e57c2; }
+        .color-2 { background-color: #26a69a; }
+        .color-3 { background-color: #ffb300; }
+        .color-4 { background-color: #ab47bc; }
+        .color-5 { background-color: #42a5f5; }
+        .color-6 { background-color: #ef5350; }
+        .color-7 { background-color: #66bb6a; }
+        .color-8 { background-color: #ffa726; }
+
+        /* Add Category Form */
+        .add-category-form {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            background-color: var(--light-gray);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-bottom: 5px;
+            color: var(--text-dark);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--medium-gray);
+            border-radius: var(--border-radius);
+            font-size: 0.9rem;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-purple);
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        .color-picker {
+            display: flex;
+            gap: 8px;
+            margin-top: 5px;
+        }
+
+        .color-option {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: var(--transition);
+        }
+
+        .color-option.selected {
+            border-color: var(--dark-purple);
+            transform: scale(1.1);
+        }
+
+        /* Recent Activity */
+        .activity-list {
+            margin-top: 15px;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: var(--accent-purple);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--dark-purple);
+            font-size: 0.8rem;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .activity-info {
+            flex: 1;
+        }
+
+        .activity-text {
+            font-size: 0.9rem;
+            margin-bottom: 3px;
+        }
+
+        .activity-time {
+            font-size: 0.7rem;
+            color: var(--text-light);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .category-layout {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+            }
+            
+            .nav-menu ul {
+                display: flex;
+                overflow-x: auto;
+            }
+            
+            .nav-menu li {
+                flex-shrink: 0;
+                margin-bottom: 0;
+            }
+            
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .header-right {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .search-bar input {
+                width: 200px;
+            }
+            
+            .category-header {
+                padding: 15px;
+            }
+            
+            .category-stats {
+                gap: 15px;
+                flex-wrap: wrap;
+            }
+            
+            .category-layout {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .category-content {
+                padding: 15px;
+            }
+            
+            .header-right {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .search-bar {
+                width: 100%;
+            }
+            
+            .search-bar input {
+                width: 100%;
+            }
+            
+            .category-actions {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fas fa-shield-alt"></i>
+                <h2>EduProcure Admin</h2>
+            </div>
+            <nav class="nav-menu">
+                <ul>
+                    <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li><a href="user-management.html"><i class="fas fa-users"></i> User Management</a></li>
+                    <li><a href="categories.html" class="active"><i class="fas fa-tags"></i> Categories</a></li>
+                    <li><a href="financials.html"><i class="fas fa-money-bill-wave"></i> Financials</a></li>
+                    <li><a href="audit.html"><i class="fas fa-clipboard-list"></i> Audit Logs</a></li>
+                    <li><a href="#"><i class="fas fa-envelope"></i> Messaging</a></li>
+                    <li><a href="#"><i class="fas fa-gavel"></i> Dispute Resolution</a></li>
+                    <li><a href="#"><i class="fas fa-cog"></i> System Settings</a></li>
+                </ul>
+            </nav>
+            <div class="admin-profile">
+                <div class="admin-avatar">AD</div>
+                <div class="admin-info">
+                    <h4>Admin User</h4>
+                    <p>System Administrator</p>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <h1>Category Management</h1>
+                    <p>Organize products, services, schools, and regions</p>
+                </div>
+                <div class="header-right">
+                    <div class="search-bar">
+                        <input type="text" id="globalSearch" placeholder="Search categories...">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <div class="header-actions">
+                        <div class="icon-btn" style="position: relative;">
+                            <i class="fas fa-bell"></i>
+                            <div class="notification-badge">2</div>
+                        </div>
+                        <div class="icon-btn">
+                            <i class="fas fa-cog"></i>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Category Content -->
+            <div class="category-content">
+                <div class="page-header">
+                    <h2>Platform Categories</h2>
+                    <button class="btn btn-primary" id="bulkActionsBtn">
+                        <i class="fas fa-tasks"></i> Bulk Actions
+                    </button>
+                </div>
+
+                <!-- Category Header -->
+                <div class="category-header">
+                    <div class="category-stats">
+                        <div class="stat-item stat-products">
+                            <div class="stat-value">24</div>
+                            <div class="stat-label">Product Categories</div>
+                        </div>
+                        <div class="stat-item stat-services">
+                            <div class="stat-value">18</div>
+                            <div class="stat-label">Service Categories</div>
+                        </div>
+                        <div class="stat-item stat-schools">
+                            <div class="stat-value">6</div>
+                            <div class="stat-label">School Types</div>
+                        </div>
+                        <div class="stat-item stat-regions">
+                            <div class="stat-value">47</div>
+                            <div class="stat-label">Regions/Counties</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Category Layout -->
+                <div class="category-layout">
+                    <!-- Product Categories -->
+                    <div class="category-card">
+                        <h3>
+                            Product Categories
+                            <div class="card-actions">
+                                <button class="btn btn-outline btn-sm" id="addProductCategoryBtn">
+                                    <i class="fas fa-plus"></i> Add
+                                </button>
+                            </div>
+                        </h3>
+                        <div class="category-list">
+                            <div class="category-item">
+                                <div class="category-info">
+                                    <div class="category-icon color-1">
+                                        <i class="fas fa-flask"></i>
+                                    </div>
+                                    <div class="category-details">
+                                        <div class="category-name">Laboratory Equipment</div>
+                                        <div class="category-count">156 products • 42 suppliers</div>
+                                    </div>
+                                </div>
+                                <div class="category-actions">
+                                    <button class="btn btn-outline btn-sm">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn btn-outline btn-sm">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="category-item">
+                                <div class="category-info">
+                                    <div class="category-icon color-2">
+                                        <i class="fas fa-laptop"></i>
+                                    </div>
+                                    <div class="category-details">
+                                        <div class="category-name">ICT Equipment</div>
+                                        <div class="category-count">89 products • 28 suppliers</div>
+                                    </div>
+                                </div>
+                                <div class="category-actions">
+                                    <button class="btn btn-outline btn-sm">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn btn-outline btn-sm">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="category-item">
+                                <div class="category-info">
+                                    <div class="category-icon color-3">
+                                        <i class="fas fa-chair"></i>
+                                    </div>
+                                    <div class="category-details">
+                                        <div class="category-name">Furniture</div>
+                                        <div class="category-count">203 products • 35 suppliers</div>
+                                    </div>
+                                </div>
+                                <div class="category-actions">
+                                    <button class="btn btn-outline btn-sm">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn btn-outline btn-sm">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="category-item">
+                                <div class="category-info">
+                                    <div class="category-icon color-4">
+                                        <i class="fas fa-book"></i>
+                                    </div>
+                                    <div class="category-details">
+                                        <div class="category-name">Books & Stationery</div>
+                                        <div class="category-count">312 products • 51 suppliers</div>
+                                    </div>
+                                </div>
+                                <div class="category-actions">
+                                    <button class="btn btn-outline btn-sm">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn btn-outline btn-sm">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Add Product Category Form (Hidden by default) -->
+                        <div class="add-category-form" id="productCategoryForm" style="display: none;">
+                            <h4 style="margin-bottom: 15px;">Add New Product Category</h4>
+                            <div class="form-group">
+                                <label class="form-label">Category Name</label>
+                                <input type="text" class="form-control" placeholder="Enter category name">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Description</label>
+                                <textarea class="form-control" rows="2" placeholder="Enter category description"></textarea>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Parent Category</label>
+                                    <select class="form-control">
+                                        <option>None (Top Level)</option>
+                                        <option>Laboratory Equipment</option>
+                                        <option>ICT Equipment</option>
+                                        <option>Furniture</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Color</label>
+                                    <div class="color-picker">
+                                        <div class="color-option color-1 selected"></div>
+                                        <div class="color-option color-2"></div>
+                                        <div class="color-option color-3"></div>
+                                        <div class="color-option color-4"></div>
+                                        <div class="color-option color-5"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <button class="btn btn-success btn-sm">
+                                    <i class="fas fa-save"></i> Save Category
+                                </button>
+                                <button class="btn btn-outline btn-sm" id="cancelProductCategoryBtn">
+                                    Cancel
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Service Categories -->
+                    <div class="category-card">
+                        <h3>
+                            Service Categories
+                            <div class="card-actions">
+                                <button class="btn btn-outline btn-sm" id="addServiceCategoryBtn">
+                                    <i class="fas fa-plus"></i> Add
+                                </button>
+                            </div>
+                        </h3>
+                        <div class="category-list">
+                            <div class="category-item">
+                                <div class="category-info">
+                                    <div class="category-icon color-5">
+                                        <i class="fas fa-tools"></i>
+                                    </div>
+                                    <div class="category-details">
+                                        <div class="category-name">Equipment Maintenance</div>
+                                        <div class="category-count">23 service providers</div>
+                                    </div>
+                                </div>
+                                <div class="category-actions">
+                                    <button class="btn btn-outline btn-sm">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn btn-outline btn-sm">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="category-item">
+                                <div class="category-info">
+                                    <div class="category-icon color-6">
+                                        <i class="fas fa-utensils"></i>
+                                    </div>
+                                    <div class="category-details">
+                                        <div class="category-name">Catering Services</div>
+                                        <div class="category-count">18 service providers</div>
+                                    </div>
+                                </div>
+                                <div class="category-actions">
+                                    <button class="btn btn-outline btn-sm">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn btn-outline btn-sm">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="category-item">
+                                <div class="category-info">
+                                    <div class="category-icon color-7">
+                                        <i class="fas fa-bus"></i>
+                                    </div>
+                                    <div class="category-details">
+                                        <div class="category-name">Transport Services</div>
+                                        <div class="category-count">15 service providers</div>
+                                    </div>
+                                </div>
+                                <div class="category-actions">
+                                    <button class="btn btn-outline btn-sm">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn btn-outline btn-sm">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="category-item">
+                                <div class="category-info">
+                                    <div class="category-icon color-8">
+                                        <i class="fas fa-hammer"></i>
+                                    </div>
+                                    <div class="category-details">
+                                        <div class="category-name">Construction & Repair</div>
+                                        <div class="category-count">32 service providers</div>
+                                    </div>
+                                </div>
+                                <div class="category-actions">
+                                    <button class="btn btn-outline btn-sm">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn btn-outline btn-sm">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- School Types -->
+                    <div class="category-card">
+                        <h3>
+                            School Types
+                            <div class="card-actions">
+                                <button class="btn btn-outline btn-sm">
+                                    <i class="fas fa-plus"></i> Add
+                                </button>
+                            </div>
+                        </h3>
+                        <div class="category-list">
+                            <div class="category-item">
+                                <div class="category-info">
+                                    <div class="category-icon color-1">
+                                        <i class="fas fa-school"></i>
+                                    </div>
+                                    <div class="category-details">
+                                        <div class="category-name">Public Primary</div>
+                                        <div class="category-count">1,245 schools</div>
+                                    </div>
+                                </div>
+                                <div class="category-actions">
+                                    <button class="btn btn-outline btn-sm">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="category-item">
+                                <div class="category-info">
+                                    <div class="category-icon color-2">
+                                        <i class="fas fa-graduation-cap"></i>
+                                    </div>
+                                    <div class="category-details">
+                                        <div class="category-name">Public Secondary</div>
+                                        <div class="category-count">892 schools</div>
+                                    </div>
+                                </div>
+                                <div class="category-actions">
+                                    <button class="btn btn-outline btn-sm">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="category-item">
+                                <div class="category-info">
+                                    <div class="category-icon color-3">
+                                        <i class="fas fa-university"></i>
+                                    </div>
+                                    <div class="category-details">
+                                        <div class="category-name">Private Primary</div>
+                                        <div class="category-count">567 schools</div>
+                                    </div>
+                                </div>
+                                <div class="category-actions">
+                                    <button class="btn btn-outline btn-sm">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="category-item">
+                                <div class="category-info">
+                                    <div class="category-icon color-4">
+                                        <i class="fas fa-user-graduate"></i>
+                                    </div>
+                                    <div class="category-details">
+                                        <div class="category-name">Private Secondary</div>
+                                        <div class="category-count">423 schools</div>
+                                    </div>
+                                </div>
+                                <div class="category-actions">
+                                    <button class="btn btn-outline btn-sm">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Regions & Counties -->
+                    <div class="category-card">
+                        <h3>
+                            Regions & Counties
+                            <div class="card-actions">
+                                <button class="btn btn-outline btn-sm">
+                                    <i class="fas fa-plus"></i> Add
+                                </button>
+                            </div>
+                        </h3>
+                        <div class="category-list">
+                            <div class="category-item">
+                                <div class="category-info">
+                                    <div class="category-icon color-5">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                    </div>
+                                    <div class="category-details">
+                                        <div class="category-name">Nairobi County</div>
+                                        <div class="category-count">248 schools • 89 suppliers</div>
+                                    </div>
+                                </div>
+                                <div class="category-actions">
+                                    <button class="btn btn-outline btn-sm">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="category-item">
+                                <div class="category-info">
+                                    <div class="category-icon color-6">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                    </div>
+                                    <div class="category-details">
+                                        <div class="category-name">Mombasa County</div>
+                                        <div class="category-count">156 schools • 45 suppliers</div>
+                                    </div>
+                                </div>
+                                <div class="category-actions">
+                                    <button class="btn btn-outline btn-sm">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="category-item">
+                                <div class="category-info">
+                                    <div class="category-icon color-7">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                    </div>
+                                    <div class="category-details">
+                                        <div class="category-name">Kisumu County</div>
+                                        <div class="category-count">134 schools • 38 suppliers</div>
+                                    </div>
+                                </div>
+                                <div class="category-actions">
+                                    <button class="btn btn-outline btn-sm">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="category-item">
+                                <div class="category-info">
+                                    <div class="category-icon color-8">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                    </div>
+                                    <div class="category-details">
+                                        <div class="category-name">Nakuru County</div>
+                                        <div class="category-count">187 schools • 52 suppliers</div>
+                                    </div>
+                                </div>
+                                <div class="category-actions">
+                                    <button class="btn btn-outline btn-sm">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activity -->
+                    <div class="category-card">
+                        <h3>Recent Category Activity</h3>
+                        <div class="activity-list">
+                            <div class="activity-item">
+                                <div class="activity-avatar">AD</div>
+                                <div class="activity-info">
+                                    <div class="activity-text">You added "Sports Equipment" category</div>
+                                    <div class="activity-time">2 hours ago</div>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-avatar">SY</div>
+                                <div class="activity-info">
+                                    <div class="activity-text">System updated supplier counts for Nairobi County</div>
+                                    <div class="activity-time">5 hours ago</div>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-avatar">AD</div>
+                                <div class="activity-info">
+                                    <div class="activity-text">You modified                                    <div class="activity-text">You modified "ICT Equipment" category</div>
+                                    <div class="activity-time">Yesterday, 3:45 PM</div>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-avatar">JM</div>
+                                <div class="activity-info">
+                                    <div class="activity-text">John M. added 3 new service providers to "Transport Services"</div>
+                                    <div class="activity-time">2 days ago</div>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-avatar">SY</div>
+                                <div class="activity-info">
+                                    <div class="activity-text">System archived inactive categories</div>
+                                    <div class="activity-time">3 days ago</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bulk Actions Panel -->
+                    <div class="category-card">
+                        <h3>Bulk Category Actions</h3>
+                        <div class="form-group" style="margin-top: 15px;">
+                            <label class="form-label">Select Action</label>
+                            <select class="form-control">
+                                <option>-- Choose bulk action --</option>
+                                <option>Export selected categories</option>
+                                <option>Archive selected categories</option>
+                                <option>Update parent category</option>
+                                <option>Merge categories</option>
+                                <option>Update supplier counts</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Categories to Process</label>
+                            <div style="border: 1px solid var(--medium-gray); border-radius: var(--border-radius); padding: 15px; max-height: 200px; overflow-y: auto;">
+                                <div style="margin-bottom: 8px;">
+                                    <input type="checkbox" id="cat1" style="margin-right: 8px;">
+                                    <label for="cat1">Laboratory Equipment</label>
+                                </div>
+                                <div style="margin-bottom: 8px;">
+                                    <input type="checkbox" id="cat2" style="margin-right: 8px;">
+                                    <label for="cat2">ICT Equipment</label>
+                                </div>
+                                <div style="margin-bottom: 8px;">
+                                    <input type="checkbox" id="cat3" style="margin-right: 8px;">
+                                    <label for="cat3">Furniture</label>
+                                </div>
+                                <div style="margin-bottom: 8px;">
+                                    <input type="checkbox" id="cat4" style="margin-right: 8px;">
+                                    <label for="cat4">Books & Stationery</label>
+                                </div>
+                                <div style="margin-bottom: 8px;">
+                                    <input type="checkbox" id="cat5" style="margin-right: 8px;">
+                                    <label for="cat5">Equipment Maintenance</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-primary">
+                                <i class="fas fa-play"></i> Execute Action
+                            </button>
+                            <button class="btn btn-outline">
+                                <i class="fas fa-times"></i> Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // JavaScript for interactive functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Toggle add category form for product categories
+            const addProductCategoryBtn = document.getElementById('addProductCategoryBtn');
+            const productCategoryForm = document.getElementById('productCategoryForm');
+            const cancelProductCategoryBtn = document.getElementById('cancelProductCategoryBtn');
+            
+            if (addProductCategoryBtn && productCategoryForm) {
+                addProductCategoryBtn.addEventListener('click', function() {
+                    productCategoryForm.style.display = productCategoryForm.style.display === 'none' ? 'block' : 'none';
+                });
+                
+                cancelProductCategoryBtn.addEventListener('click', function() {
+                    productCategoryForm.style.display = 'none';
+                });
+            }
+            
+            // Toggle add category form for service categories
+            const addServiceCategoryBtn = document.getElementById('addServiceCategoryBtn');
+            
+            if (addServiceCategoryBtn) {
+                addServiceCategoryBtn.addEventListener('click', function() {
+                    // In a real implementation, this would show the service category form
+                    alert('Service category form would appear here. This is a demo.');
+                });
+            }
+            
+            // Color picker functionality
+            const colorOptions = document.querySelectorAll('.color-option');
+            colorOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    // Remove selected class from all options
+                    colorOptions.forEach(opt => opt.classList.remove('selected'));
+                    // Add selected class to clicked option
+                    this.classList.add('selected');
+                });
+            });
+            
+            // Global search functionality
+            const globalSearch = document.getElementById('globalSearch');
+            if (globalSearch) {
+                globalSearch.addEventListener('input', function() {
+                    const searchTerm = this.value.toLowerCase();
+                    const categoryItems = document.querySelectorAll('.category-item');
+                    
+                    categoryItems.forEach(item => {
+                        const categoryName = item.querySelector('.category-name').textContent.toLowerCase();
+                        if (categoryName.includes(searchTerm)) {
+                            item.style.display = 'flex';
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+                });
+            }
+            
+            // Bulk actions button
+            const bulkActionsBtn = document.getElementById('bulkActionsBtn');
+            if (bulkActionsBtn) {
+                bulkActionsBtn.addEventListener('click', function() {
+                    // Scroll to bulk actions panel
+                    document.querySelector('.category-layout').lastElementChild.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            }
+            
+            // Category item click handlers
+            const categoryItems = document.querySelectorAll('.category-item');
+            categoryItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    // Don't trigger if edit/delete buttons were clicked
+                    if (!e.target.closest('.category-actions')) {
+                        console.log('Category selected:', this.querySelector('.category-name').textContent);
+                        // In a real implementation, this would navigate to category details
+                    }
+                });
+            });
+            
+            // Edit and delete button handlers
+            const editButtons = document.querySelectorAll('.category-actions .btn-outline:first-child');
+            const deleteButtons = document.querySelectorAll('.category-actions .btn-outline:last-child');
+            
+            editButtons.forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const categoryName = this.closest('.category-item').querySelector('.category-name').textContent;
+                    alert(`Edit category: ${categoryName}`);
+                });
+            });
+            
+            deleteButtons.forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const categoryName = this.closest('.category-item').querySelector('.category-name').textContent;
+                    if (confirm(`Are you sure you want to delete "${categoryName}"?`)) {
+                        // In a real implementation, this would delete the category
+                        alert(`Category "${categoryName}" would be deleted. This is a demo.`);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

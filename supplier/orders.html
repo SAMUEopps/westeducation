@@ -1,0 +1,1579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduProcure - Order Fulfillment</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #1976d2;
+            --light-blue: #42a5f5;
+            --dark-blue: #0d47a1;
+            --accent-blue: #90caf9;
+            --accent-orange: #ff9800;
+            --light-orange: #ffb74d;
+            --white: #ffffff;
+            --light-gray: #f5f5f5;
+            --medium-gray: #e0e0e0;
+            --dark-gray: #424242;
+            --text-dark: #212121;
+            --text-light: #757575;
+            --success-green: #4caf50;
+            --warning-orange: #ff9800;
+            --error-red: #f44336;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+            --border-radius: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light-gray);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 260px;
+            background-color: var(--white);
+            box-shadow: var(--shadow);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            transition: var(--transition);
+        }
+
+        .logo {
+            padding: 24px 20px;
+            border-bottom: 1px solid var(--medium-gray);
+            color: var(--primary-blue);
+            display: flex;
+            align-items: center;
+        }
+
+        .logo h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .logo i {
+            font-size: 1.8rem;
+        }
+
+        .nav-menu {
+            flex: 1;
+            padding: 20px 0;
+        }
+
+        .nav-menu ul {
+            list-style: none;
+        }
+
+        .nav-menu li {
+            margin-bottom: 5px;
+        }
+
+        .nav-menu a {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: var(--text-dark);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .nav-menu a:hover {
+            background-color: var(--light-gray);
+            color: var(--primary-blue);
+        }
+
+        .nav-menu a.active {
+            background-color: var(--accent-blue);
+            color: var(--dark-blue);
+            font-weight: 500;
+            border-left: 4px solid var(--primary-blue);
+        }
+
+        .nav-menu i {
+            margin-right: 12px;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            background-color: var(--white);
+            box-shadow: var(--shadow);
+        }
+
+        .header-left h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--dark-blue);
+        }
+
+        .header-left p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .search-bar {
+            position: relative;
+        }
+
+        .search-bar input {
+            padding: 10px 15px 10px 40px;
+            border: 1px solid var(--medium-gray);
+            border-radius: 30px;
+            width: 300px;
+            font-size: 0.9rem;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .search-bar input:focus {
+            border-color: var(--primary-blue);
+        }
+
+        .search-bar i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-profile img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .user-profile span {
+            font-weight: 500;
+        }
+
+        /* Order Content */
+        .order-content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .page-header h2 {
+            font-size: 1.8rem;
+            color: var(--dark-blue);
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: var(--border-radius);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-blue);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--dark-blue);
+        }
+
+        .btn-secondary {
+            background-color: var(--medium-gray);
+            color: var(--text-dark);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--dark-gray);
+            color: var(--white);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary-blue);
+            color: var(--primary-blue);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary-blue);
+            color: var(--white);
+        }
+
+        .btn-success {
+            background-color: var(--success-green);
+            color: var(--white);
+        }
+
+        .btn-success:hover {
+            background-color: #388e3c;
+        }
+
+        .btn-warning {
+            background-color: var(--warning-orange);
+            color: var(--white);
+        }
+
+        .btn-warning:hover {
+            background-color: #f57c00;
+        }
+
+        .btn-danger {
+            background-color: var(--error-red);
+            color: var(--white);
+        }
+
+        .btn-danger:hover {
+            background-color: #d32f2f;
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+        }
+
+        /* Order Header */
+        .order-header {
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+        }
+
+        .order-stats {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary-blue);
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .filters-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-label {
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-bottom: 5px;
+            color: var(--text-dark);
+        }
+
+        .filter-select {
+            padding: 8px 12px;
+            border: 1px solid var(--medium-gray);
+            border-radius: var(--border-radius);
+            background-color: var(--white);
+            font-size: 0.9rem;
+            outline: none;
+        }
+
+        .filter-select:focus {
+            border-color: var(--primary-blue);
+        }
+
+        /* Order Layout */
+        .order-layout {
+            display: flex;
+            gap: 30px;
+        }
+
+        .order-list {
+            width: 400px;
+            flex-shrink: 0;
+        }
+
+        .order-list-card {
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .order-list-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: var(--dark-blue);
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--medium-gray);
+        }
+
+        .order-item {
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 1px solid var(--medium-gray);
+        }
+
+        .order-item:hover {
+            border-color: var(--primary-blue);
+            background-color: rgba(25, 118, 210, 0.05);
+        }
+
+        .order-item.active {
+            border-color: var(--primary-blue);
+            background-color: var(--accent-blue);
+        }
+
+        .order-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .order-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .order-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .badge-new {
+            background-color: var(--success-green);
+            color: var(--white);
+        }
+
+        .badge-processing {
+            background-color: var(--warning-orange);
+            color: var(--white);
+        }
+
+        .badge-shipped {
+            background-color: var(--primary-blue);
+            color: var(--white);
+        }
+
+        .badge-delivered {
+            background-color: var(--success-green);
+            color: var(--white);
+        }
+
+        .badge-returned {
+            background-color: var(--error-red);
+            color: var(--white);
+        }
+
+        .order-school {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .school-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: var(--primary-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .school-info h4 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .school-info p {
+            font-size: 0.7rem;
+            color: var(--text-light);
+        }
+
+        .order-details {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .order-detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 3px;
+        }
+
+        /* Order Detail View */
+        .order-detail {
+            flex: 1;
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .order-detail-header {
+            padding: 20px;
+            background: linear-gradient(135deg, var(--primary-blue), var(--light-blue));
+            color: var(--white);
+        }
+
+        .order-detail-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .order-detail-subtitle {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .order-detail-body {
+            padding: 20px;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .order-info-section {
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--dark-blue);
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--medium-gray);
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .info-label {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        /* Items Table */
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        .items-table th, .items-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--medium-gray);
+        }
+
+        .items-table th {
+            background-color: var(--light-gray);
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .items-table tr:hover {
+            background-color: rgba(25, 118, 210, 0.03);
+        }
+
+        /* Delivery Timeline */
+        .timeline-section {
+            margin-top: 20px;
+            border: 1px solid var(--medium-gray);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+        }
+
+        .timeline-header {
+            padding: 12px 15px;
+            background-color: var(--light-gray);
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .timeline-content {
+            padding: 15px;
+            background-color: var(--white);
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background-color: var(--medium-gray);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .timeline-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -23px;
+            top: 5px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: var(--medium-gray);
+            border: 2px solid var(--white);
+        }
+
+        .timeline-item.active::before {
+            background-color: var(--primary-blue);
+        }
+
+        .timeline-item.completed::before {
+            background-color: var(--success-green);
+        }
+
+        .timeline-content-item {
+            background-color: var(--light-gray);
+            padding: 12px 15px;
+            border-radius: var(--border-radius);
+        }
+
+        .timeline-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--text-dark);
+        }
+
+        .timeline-date {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .timeline-description {
+            font-size: 0.9rem;
+            margin-top: 8px;
+        }
+
+        /* Delivery Notes */
+        .notes-section {
+            margin-top: 20px;
+            border: 1px solid var(--medium-gray);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+        }
+
+        .notes-header {
+            padding: 12px 15px;
+            background-color: var(--light-gray);
+            font-weight: 600;
+            color: var(--text-dark);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .notes-content {
+            padding: 15px;
+            background-color: var(--white);
+        }
+
+        .notes-list {
+            margin-bottom: 15px;
+        }
+
+        .note-item {
+            padding: 10px;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .note-item:last-child {
+            border-bottom: none;
+        }
+
+        .note-text {
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .note-meta {
+            font-size: 0.7rem;
+            color: var(--text-light);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .notes-input {
+            display: flex;
+            gap: 10px;
+        }
+
+        .notes-input textarea {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid var(--medium-gray);
+            border-radius: var(--border-radius);
+            resize: vertical;
+            min-height: 80px;
+            font-family: inherit;
+        }
+
+        /* Returns Section */
+        .returns-section {
+            margin-top: 20px;
+            border: 1px solid var(--medium-gray);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+        }
+
+        .returns-header {
+            padding: 12px 15px;
+            background-color: var(--light-gray);
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .returns-content {
+            padding: 15px;
+            background-color: var(--white);
+        }
+
+        .return-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .return-item:last-child {
+            border-bottom: none;
+        }
+
+        .return-info {
+            flex: 1;
+        }
+
+        .return-product {
+            font-weight: 500;
+            margin-bottom: 3px;
+        }
+
+        .return-reason {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .return-status {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .status-pending {
+            background-color: var(--warning-orange);
+            color: var(--white);
+        }
+
+        .status-approved {
+            background-color: var(--success-green);
+            color: var(--white);
+        }
+
+        .status-rejected {
+            background-color: var(--error-red);
+            color: var(--white);
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .order-layout {
+                flex-direction: column;
+            }
+            
+            .order-list {
+                width: 100%;
+            }
+            
+            .info-grid {
+                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+            }
+            
+            .nav-menu ul {
+                display: flex;
+                overflow-x: auto;
+            }
+            
+            .nav-menu li {
+                flex-shrink: 0;
+                margin-bottom: 0;
+            }
+            
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .header-right {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .search-bar input {
+                width: 200px;
+            }
+            
+            .order-header {
+                padding: 15px;
+            }
+            
+            .order-stats {
+                gap: 15px;
+                flex-wrap: wrap;
+            }
+            
+            .filters-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .order-content {
+                padding: 15px;
+            }
+            
+            .header-right {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .search-bar {
+                width: 100%;
+            }
+            
+            .search-bar input {
+                width: 100%;
+            }
+            
+            .items-table {
+                font-size: 0.8rem;
+            }
+            
+            .items-table th, .items-table td {
+                padding: 8px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fas fa-industry"></i>
+                <h2>EduProcure</h2>
+            </div>
+            <nav class="nav-menu">
+                <ul>
+                    <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li><a href="profile.html"><i class="fas fa-building"></i> Profile</a></li>
+                    <li><a href="products.html"><i class="fas fa-boxes"></i> Product Catalog</a></li>
+                    <li><a href="schools.html"><i class="fas fa-school"></i> Schools Directory</a></li>
+                    <li><a href="quotation.html"><i class="fas fa-file-invoice-dollar"></i> RFQ Management</a></li>
+                    <li><a href="orders.html" class="active"><i class="fas fa-shipping-fast"></i> Order Fulfillment</a></li>
+                    <li><a href="payments.html"><i class="fas fa-file-invoice"></i> Invoices & Payments</a></li>
+                    <li><a href="delivery.html"><i class="fas fa-truck"></i> Delivery & Logistics</a></li>
+                    <li><a href="reports.html"><i class="fas fa-chart-bar"></i> Reports & Analytics</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <h1>Order Fulfillment</h1>
+                    <p>Manage orders, track deliveries, and handle returns</p>
+                </div>
+                <div class="header-right">
+                    <div class="search-bar">
+                        <input type="text" id="globalSearch" placeholder="Search orders...">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <div class="user-profile">
+                        <img src="https://i.pravatar.cc/40" alt="User Avatar">
+                        <span>Supplier Manager</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Order Content -->
+            <div class="order-content">
+                <div class="page-header">
+                    <h2>Order Management</h2>
+                    <button class="btn btn-primary" id="refreshBtn">
+                        <i class="fas fa-sync"></i> Refresh
+                    </button>
+                </div>
+
+                <!-- Order Header -->
+                <div class="order-header">
+                    <div class="order-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">15</div>
+                            <div class="stat-label">New Orders</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">28</div>
+                            <div class="stat-label">Processing</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">42</div>
+                            <div class="stat-label">Shipped</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">67</div>
+                            <div class="stat-label">Delivered</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">3</div>
+                            <div class="stat-label">Returns</div>
+                        </div>
+                    </div>
+                    <div class="filters-container">
+                        <div class="filter-group">
+                            <label class="filter-label">Status</label>
+                            <select class="filter-select" id="statusFilter">
+                                <option>All Statuses</option>
+                                <option>New</option>
+                                <option>Processing</option>
+                                <option>Shipped</option>
+                                <option>Delivered</option>
+                                <option>Returned</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">Priority</label>
+                            <select class="filter-select" id="priorityFilter">
+                                <option>All Priorities</option>
+                                <option>High</option>
+                                <option>Medium</option>
+                                <option>Low</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">School Type</label>
+                            <select class="filter-select" id="schoolFilter">
+                                <option>All Schools</option>
+                                <option>Primary</option>
+                                <option>Secondary</option>
+                                <option>Tertiary</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">Date Range</label>
+                            <select class="filter-select" id="dateFilter">
+                                <option>All Dates</option>
+                                <option>Last 7 Days</option>
+                                <option>Last 30 Days</option>
+                                <option>Last 90 Days</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Order Layout -->
+                <div class="order-layout">
+                    <!-- Order List -->
+                    <div class="order-list">
+                        <div class="order-list-card">
+                            <h3>Active Orders</h3>
+                            <!-- Order Item 1 -->
+                            <div class="order-item active" data-order="1">
+                                <div class="order-item-header">
+                                    <h4 class="order-title">Science Lab Equipment</h4>
+                                    <span class="order-badge badge-processing">PROCESSING</span>
+                                </div>
+                                <div class="order-school">
+                                    <div class="school-avatar">NS</div>
+                                    <div class="school-info">
+                                        <h4>Nairobi Science High School</h4>
+                                        <p>Public • Large</p>
+                                    </div>
+                                </div>
+                                <div class="order-details">
+                                    <div class="order-detail-row">
+                                        <span>Order #:</span>
+                                        <span>ORD-NS-2023-045</span>
+                                    </div>
+                                    <div class="order-detail-row">
+                                        <span>Amount:</span>
+                                        <span>KES 1,204,870</span>
+                                    </div>
+                                    <div class="order-detail-row">
+                                        <span>Items:</span>
+                                        <span>5</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Order Item 2 -->
+                            <div class="order-item" data-order="2">
+                                <div class="order-item-header">
+                                    <h4 class="order-title">Student Desks & Chairs</h4>
+                                    <span class="order-badge badge-shipped">SHIPPED</span>
+                                </div>
+                                <div class="order-school">
+                                    <div class="school-avatar">MP</div>
+                                    <div class="school-info">
+                                        <h4>Mombasa Primary Academy</h4>
+                                        <p>Private • Medium</p>
+                                    </div>
+                                </div>
+                                <div class="order-details">
+                                    <div class="order-detail-row">
+                                        <span>Order #:</span>
+                                        <span>ORD-MP-2023-128</span>
+                                    </div>
+                                    <div class="order-detail-row">
+                                        <span>Amount:</span>
+                                        <span>KES 850,000</span>
+                                    </div>
+                                    <div class="order-detail-row">
+                                        <span>Items:</span>
+                                        <span>2</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Order Item 3 -->
+                            <div class="order-item" data-order="3">
+                                <div class="order-item-header">
+                                    <h4 class="order-title">Computer Equipment</h4>
+                                    <span class="order-badge badge-new">NEW</span>
+                                </div>
+                                <div class="order-school">
+                                    <div class="school-avatar">KT</div>
+                                    <div class="school-info">
+                                        <h4>Kisumu Technical College</h4>
+                                        <p>Public • Large</p>
+                                    </div>
+                                </div>
+                                <div class="order-details">
+                                    <div class="order-detail-row">
+                                        <span>Order #:</span>
+                                        <span>ORD-KT-2023-089</span>
+                                    </div>
+                                    <div class="order-detail-row">
+                                        <span>Amount:</span>
+                                        <span>KES 3,250,000</span>
+                                    </div>
+                                    <div class="order-detail-row">
+                                        <span>Items:</span>
+                                        <span>8</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Order Item 4 -->
+                            <div class="order-item" data-order="4">
+                                <div class="order-item-header">
+                                    <h4 class="order-title">Chemistry Supplies</h4>
+                                    <span class="order-badge badge-delivered">DELIVERED</span>
+                                </div>
+                                <div class="order-school">
+                                    <div class="school-avatar">NG</div>
+                                    <div class="school-info">
+                                        <h4>Nakuru Girls High School</h4>
+                                        <p>Private • Medium</p>
+                                    </div>
+                                </div>
+                                <div class="order-details">
+                                    <div class="order-detail-row">
+                                        <span>Order #:</span>
+                                        <span>ORD-NG-2023-156</span>
+                                    </div>
+                                    <div class="order-detail-row">
+                                        <span>Amount:</span>
+                                        <span>KES 650,000</span>
+                                    </div>
+                                    <div class="order-detail-row">
+                                        <span>Items:</span>
+                                        <span>12</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Order Item 5 -->
+                            <div class="order-item" data-order="5">
+                                <div class="order-item-header">
+                                    <h4 class="order-title">Workshop Tools</h4>
+                                    <span class="order-badge badge-returned">RETURNED</span>
+                                </div>
+                                <div class="order-school">
+                                    <div class="school-avatar">EV</div>
+                                    <div class="school-info">
+                                        <h4>Eldoret Vocational Training</h4>
+                                        <p>Public • Small</p>
+                                    </div>
+                                </div>
+                                <div class="order-details">
+                                    <div class="order-detail-row">
+                                        <span>Order #:</span>
+                                        <span>ORD-EV-2023-073</span>
+                                    </div>
+                                    <div class="order-detail-row">
+                                        <span>Amount:</span>
+                                        <span>KES 1,450,000</span>
+                                    </div>
+                                    <div class="order-detail-row">
+                                        <span>Items:</span>
+                                        <span>15</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Order Detail View -->
+                    <div class="order-detail">
+                        <div class="order-detail-header">
+                            <h2 class="order-detail-title">Science Lab Equipment</h2>
+                            <p class="order-detail-subtitle">Order #ORD-NS-2023-045 • Nairobi Science High School</p>
+                        </div>
+                        <div class="order-detail-body">
+                            <!-- Order Information -->
+                            <div class="order-info-section">
+                                <h3 class="section-title">Order Details</h3>
+                                <div class="info-grid">
+                                    <div class="info-item">
+                                        <span class="info-label">Order Number</span>
+                                        <span class="info-value">ORD-NS-2023-045</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Order Date</span>
+                                        <span class="info-value">18 Nov 2023</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Delivery Date</span>
+                                        <span class="info-value">25 Nov 2023</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Total Amount</span>
+                                        <span class="info-value">KES 1,204,870</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Priority</span>
+                                        <span class="info-value">High</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Status</span>
+                                        <span class="info-value">Processing</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Delivery Location</span>
+                                        <span class="info-value">Nairobi Science High School, Westlands</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Contact Person</span>
+                                        <span class="info-value">Dr. James Kariuki</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Items Table -->
+                            <div class="order-info-section">
+                                <h3 class="section-title">Order Items</h3>
+                                <table class="items-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Item</th>
+                                            <th>Description</th>
+                                            <th>Quantity</th>
+                                            <th>Unit Price (KES)</th>
+                                            <th>Total (KES)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Student Microscope</td>
+                                            <td>40x-1000x magnification, LED illumination</td>
+                                            <td>25</td>
+                                            <td>29,999</td>
+                                            <td>749,975</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Safety Goggles</td>
+                                            <td>Anti-fog, chemical resistant</td>
+                                            <td>50</td>
+                                            <td>499</td>
+                                            <td>24,950</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Lab Coats</td>
+                                            <td>Cotton blend, knee-length</td>
+                                            <td>30</td>
+                                            <td>2,499</td>
+                                            <td>74,970</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Digital Scale</td>
+                                            <td>0.001g precision, 500g capacity</td>
+                                            <td>10</td>
+                                            <td>12,999</td>
+                                            <td>129,990</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Glassware Set</td>
+                                            <td>24-piece chemistry set</td>
+                                            <td>15</td>
+                                            <td>14,999</td>
+                                            <td>224,985</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4" style="text-align: right; font-weight: 600;">Total</td>
+                                            <td style="font-weight: 600;">1,204,870</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- Delivery Timeline -->
+                            <div class="timeline-section">
+                                <div class="timeline-header">
+                                    <span>Delivery Timeline</span>
+                                </div>
+                                <div class="timeline-content">
+                                    <div class="timeline">
+                                        <div class="timeline-item completed">
+                                            <div class="timeline-content-item">
+                                                <div class="timeline-title">Order Received</div>
+                                                <div class="timeline-date">18 Nov 2023, 10:30 AM</div>
+                                                <div class="timeline-description">Order confirmed and payment processed successfully.</div>
+                                            </div>
+                                        </div>
+                                        <div class="timeline-item completed">
+                                            <div class="timeline-content-item">
+                                                <div class="timeline-title">Order Processing</div>
+                                                <div class="timeline-date">19 Nov 2023, 09:15 AM</div>
+                                                <div class="timeline-description">Items gathered from warehouse and quality checked.</div>
+                                            </div>
+                                        </div>
+                                        <div class="timeline-item active">
+                                            <div class="timeline-content-item">
+                                                <div class="timeline-title">Ready for Shipping</div>
+                                                <div class="timeline-date">20 Nov 2023, 02:45 PM</div>
+                                                <div class="timeline-description">Order packaged and awaiting pickup by delivery service.</div>
+                                            </div>
+                                        </div>
+                                        <div class="timeline-item">
+                                            <div class="timeline-content-item">
+                                                <div class="timeline-title">In Transit</div>
+                                                <div class="timeline-date">Expected: 22 Nov 2023</div>
+                                                <div class="timeline-description">Order will be picked up by delivery partner.</div>
+                                            </div>
+                                        </div>
+                                        <div class="timeline-item">
+                                            <div class="timeline-content-item">
+                                                <div class="timeline-title">Delivered</div>
+                                                <div class="timeline-date">Expected: 25 Nov 2023</div>
+                                                <div class="timeline-description">Order will be delivered to school premises.</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Delivery Notes -->
+                            <div class="notes-section">
+                                <div class="notes-header">
+                                    <span>Delivery Notes</span>
+                                </div>
+                                <div class="notes-content">
+                                    <div class="notes-list">
+                                        <div class="note-item">
+                                            <div class="note-text">Special handling required for microscopes - fragile equipment.</div>
+                                            <div class="note-meta">
+                                                <span>Added by: Warehouse Manager</span>
+                                                <span>19 Nov 2023, 11:20 AM</span>
+                                            </div>
+                                        </div>
+                                        <div class="note-item">
+                                            <div class="note-text">School requested delivery between 9 AM - 2 PM on weekdays only.</div>
+                                            <div class="note-meta">
+                                                <span>Added by: Customer Service</span>
+                                                <span>18 Nov 2023, 03:45 PM</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="notes-input">
+                                        <textarea placeholder="Add a new delivery note..."></textarea>
+                                        <button class="btn btn-primary btn-sm">
+                                            <i class="fas fa-plus"></i> Add
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Returns Section -->
+                            <div class="returns-section">
+                                <div class="returns-header">
+                                    <span>Returned Items</span>
+                                </div>
+                                <div class="returns-content">
+                                    <div class="return-item">
+                                        <div class="return-info">
+                                            <div class="return-product">Digital Scale (2 units)</div>
+                                            <div class="return-reason">Damaged during transit - screen cracked</div>
+                                        </div>
+                                        <span class="return-status status-approved">APPROVED</span>
+                                    </div>
+                                    <div class="return-item">
+                                        <div class="return-info">
+                                            <div class="return-product">Safety Goggles (5 units)</div>
+                                            <div class="return-reason">Wrong model delivered - requested anti-fog but received standard</div>
+                                        </div>
+                                        <span class="return-status status-pending">PENDING</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="action-buttons">
+                                <button class="btn btn-success">
+                                    <i class="fas fa-check"></i> Accept Order
+                                </button>
+                                <button class="btn btn-primary">
+                                    <i class="fas fa-shipping-fast"></i> Update Shipping
+                                </button>
+                                <button class="btn btn-warning">
+                                    <i class="fas fa-edit"></i> Add Note
+                                </button>
+                                <button class="btn btn-outline">
+                                    <i class="fas fa-phone"></i> Contact School
+                                </button>
+                                <button class="btn btn-danger">
+                                    <i class="fas fa-times"></i> Flag Issue
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // JavaScript for interactive elements
+        document.addEventListener('DOMContentLoaded', function() {
+            // Order Item Selection
+            const orderItems = document.querySelectorAll('.order-item');
+            orderItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    orderItems.forEach(i => i.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const orderId = this.getAttribute('data-order');
+                    loadOrderDetails(orderId);
+                });
+            });
+
+            function loadOrderDetails(orderId) {
+                // In a real application, you would fetch order details from an API
+                console.log(`Loading details for Order ${orderId}`);
+                // For demo purposes, we're just updating the title
+                const titles = {
+                    1: "Science Lab Equipment",
+                    2: "Student Desks & Chairs", 
+                    3: "Computer Equipment",
+                    4: "Chemistry Supplies",
+                    5: "Workshop Tools"
+                };
+                
+                document.querySelector('.order-detail-title').textContent = titles[orderId];
+            }
+
+            // Refresh Button
+            const refreshBtn = document.getElementById('refreshBtn');
+            if (refreshBtn) {
+                refreshBtn.addEventListener('click', function() {
+                    this.querySelector('i').classList.add('fa-spin');
+                    setTimeout(() => {
+                        this.querySelector('i').classList.remove('fa-spin');
+                        alert('Order list refreshed successfully!');
+                    }, 1000);
+                });
+            }
+
+            // Global Search
+            const globalSearch = document.getElementById('globalSearch');
+            if (globalSearch) {
+                globalSearch.addEventListener('input', function(e) {
+                    const searchTerm = e.target.value.toLowerCase();
+                    const orderItems = document.querySelectorAll('.order-item');
+                    
+                    orderItems.forEach(item => {
+                        const title = item.querySelector('.order-title').textContent.toLowerCase();
+                        const school = item.querySelector('.school-info h4').textContent.toLowerCase();
+                        
+                        if (title.includes(searchTerm) || school.includes(searchTerm)) {
+                            item.style.display = 'block';
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+                });
+            }
+
+            // Filter Functionality
+            const filters = document.querySelectorAll('.filter-select');
+            filters.forEach(filter => {
+                filter.addEventListener('change', function() {
+                    applyFilters();
+                });
+            });
+
+            function applyFilters() {
+                const status = document.getElementById('statusFilter').value;
+                const orderItems = document.querySelectorAll('.order-item');
+                
+                orderItems.forEach(item => {
+                    let showItem = true;
+                    
+                    // Filter by status
+                    if (status !== 'All Statuses') {
+                        const badge = item.querySelector('.order-badge').textContent;
+                        if (status === 'New' && !badge.includes('NEW')) {
+                            showItem = false;
+                        } else if (status === 'Processing' && !badge.includes('PROCESSING')) {
+                            showItem = false;
+                        } else if (status === 'Shipped' && !badge.includes('SHIPPED')) {
+                            showItem = false;
+                        } else if (status === 'Delivered' && !badge.includes('DELIVERED')) {
+                            showItem = false;
+                        } else if (status === 'Returned' && !badge.includes('RETURNED')) {
+                            showItem = false;
+                        }
+                    }
+                    
+                    item.style.display = showItem ? 'block' : 'none';
+                });
+            }
+
+            // Add Note Functionality
+            const noteTextarea = document.querySelector('.notes-input textarea');
+            const addNoteButton = document.querySelector('.notes-input .btn');
+            
+            if (noteTextarea && addNoteButton) {
+                addNoteButton.addEventListener('click', addNote);
+            }
+
+            function addNote() {
+                const note = noteTextarea.value.trim();
+                if (note) {
+                    const notesList = document.querySelector('.notes-list');
+                    const noteItem = document.createElement('div');
+                    noteItem.className = 'note-item';
+                    
+                    const now = new Date();
+                    const dateString = `${now.getDate()} ${now.toLocaleString('default', { month: 'short' })} ${now.getFullYear()}, ${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}`;
+                    
+                    noteItem.innerHTML = `
+                        <div class="note-text">${note}</div>
+                        <div class="note-meta">
+                            <span>Added by: You</span>
+                            <span>${dateString}</span>
+                        </div>
+                    `;
+                    
+                    notesList.appendChild(noteItem);
+                    noteTextarea.value = '';
+                    
+                    alert('Delivery note added successfully!');
+                }
+            }
+
+            // Action Button Functionality
+            const actionButtons = document.querySelectorAll('.action-buttons .btn');
+            actionButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const action = this.textContent.trim();
+                    const orderTitle = document.querySelector('.order-detail-title').textContent;
+                    
+                    if (action.includes('Accept')) {
+                        alert(`Order "${orderTitle}" has been accepted and moved to processing.`);
+                        // Update status in UI
+                        document.querySelector('.order-item.active .order-badge').className = 'order-badge badge-processing';
+                        document.querySelector('.order-item.active .order-badge').textContent = 'PROCESSING';
+                    } else if (action.includes('Update Shipping')) {
+                        alert(`Shipping status updated for "${orderTitle}".`);
+                        // Update status in UI
+                        document.querySelector('.order-item.active .order-badge').className = 'order-badge badge-shipped';
+                        document.querySelector('.order-item.active .order-badge').textContent = 'SHIPPED';
+                    } else if (action.includes('Add Note')) {
+                        noteTextarea.focus();
+                    } else if (action.includes('Contact School')) {
+                        alert('Opening school contact information...');
+                    } else if (action.includes('Flag Issue')) {
+                        const issue = prompt('Please describe the issue:');
+                        if (issue) {
+                            alert(`Issue flagged: ${issue}`);
+                        }
+                    }
+                });
+            });
+
+            // Timeline Progress Simulation
+            function simulateProgress() {
+                const timelineItems = document.querySelectorAll('.timeline-item');
+                let currentIndex = 2; // Start from "Ready for Shipping"
+                
+                const progressInterval = setInterval(() => {
+                    if (currentIndex < timelineItems.length) {
+                        timelineItems[currentIndex].classList.add('active');
+                        timelineItems[currentIndex - 1].classList.remove('active');
+                        timelineItems[currentIndex - 1].classList.add('completed');
+                        currentIndex++;
+                    } else {
+                        clearInterval(progressInterval);
+                    }
+                }, 5000); // Update every 5 seconds for demo
+            }
+            
+            // Start progress simulation after 3 seconds
+            setTimeout(simulateProgress, 3000);
+        });
+    </script>
+</body>
+</html>
