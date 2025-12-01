@@ -1,0 +1,1565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduProcure - Messaging & Notices</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary-purple: #7e57c2;
+            --light-purple: #b39ddb;
+            --dark-purple: #5e35b1;
+            --accent-purple: #d1c4e9;
+            --accent-teal: #26a69a;
+            --light-teal: #80cbc4;
+            --accent-amber: #ffb300;
+            --light-amber: #ffd54f;
+            --accent-blue: #42a5f5;
+            --light-blue: #90caf9;
+            --accent-green: #66bb6a;
+            --light-green: #a5d6a7;
+            --accent-orange: #ff9800;
+            --light-orange: #ffcc80;
+            --accent-red: #ef5350;
+            --light-red: #ffcdd2;
+            --accent-pink: #ec407a;
+            --light-pink: #f8bbd9;
+            --white: #ffffff;
+            --light-gray: #f5f5f5;
+            --medium-gray: #e0e0e0;
+            --dark-gray: #424242;
+            --text-dark: #212121;
+            --text-light: #757575;
+            --success-green: #4caf50;
+            --warning-orange: #ff9800;
+            --error-red: #f44336;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+            --transition: all 0.3s ease;
+            --border-radius: 8px;
+            --card-radius: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light-gray);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 280px;
+            background: linear-gradient(180deg, var(--primary-purple), var(--dark-purple));
+            color: var(--white);
+            box-shadow: var(--shadow);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            transition: var(--transition);
+        }
+
+        .logo {
+            padding: 24px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+        }
+
+        .logo h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .logo i {
+            font-size: 1.8rem;
+        }
+
+        .nav-menu {
+            flex: 1;
+            padding: 20px 0;
+        }
+
+        .nav-menu ul {
+            list-style: none;
+        }
+
+        .nav-menu li {
+            margin-bottom: 5px;
+        }
+
+        .nav-menu a {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .nav-menu a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--white);
+        }
+
+        .nav-menu a.active {
+            background-color: rgba(255, 255, 255, 0.15);
+            color: var(--white);
+            font-weight: 500;
+            border-left: 4px solid var(--light-teal);
+        }
+
+        .nav-menu i {
+            margin-right: 12px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .admin-profile {
+            padding: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .admin-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--light-teal);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--dark-purple);
+            font-weight: 600;
+        }
+
+        .admin-info h4 {
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .admin-info p {
+            font-size: 0.7rem;
+            opacity: 0.8;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            background-color: var(--white);
+            box-shadow: var(--shadow);
+        }
+
+        .header-left h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--dark-purple);
+        }
+
+        .header-left p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .search-bar {
+            position: relative;
+        }
+
+        .search-bar input {
+            padding: 10px 15px 10px 40px;
+            border: 1px solid var(--medium-gray);
+            border-radius: 30px;
+            width: 300px;
+            font-size: 0.9rem;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .search-bar input:focus {
+            border-color: var(--primary-purple);
+        }
+
+        .search-bar i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .icon-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--light-gray);
+            color: var(--text-dark);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .icon-btn:hover {
+            background-color: var(--accent-purple);
+            color: var(--dark-purple);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background-color: var(--error-red);
+            color: var(--white);
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Messaging Content */
+        .messaging-content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0;
+        }
+
+        .page-header h2 {
+            font-size: 1.8rem;
+            color: var(--dark-purple);
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: var(--border-radius);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-purple);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--dark-purple);
+        }
+
+        .btn-secondary {
+            background-color: var(--medium-gray);
+            color: var(--text-dark);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--dark-gray);
+            color: var(--white);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary-purple);
+            color: var(--primary-purple);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary-purple);
+            color: var(--white);
+        }
+
+        .btn-success {
+            background-color: var(--success-green);
+            color: var(--white);
+        }
+
+        .btn-success:hover {
+            background-color: #388e3c;
+        }
+
+        .btn-warning {
+            background-color: var(--warning-orange);
+            color: var(--white);
+        }
+
+        .btn-warning:hover {
+            background-color: #f57c00;
+        }
+
+        .btn-danger {
+            background-color: var(--error-red);
+            color: var(--white);
+        }
+
+        .btn-danger:hover {
+            background-color: #d32f2f;
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+        }
+
+        /* Message Stats */
+        .message-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 25px;
+        }
+
+        .stat-card {
+            background-color: var(--white);
+            border-radius: var(--card-radius);
+            padding: 25px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+        }
+
+        .stat-card.policy::before {
+            background: linear-gradient(90deg, var(--primary-purple), var(--light-purple));
+        }
+
+        .stat-card.guidelines::before {
+            background: linear-gradient(90deg, var(--accent-teal), var(--light-teal));
+        }
+
+        .stat-card.safety::before {
+            background: linear-gradient(90deg, var(--accent-red), var(--light-red));
+        }
+
+        .stat-card.promotions::before {
+            background: linear-gradient(90deg, var(--accent-amber), var(--light-amber));
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .stat-card.policy .stat-icon {
+            background-color: rgba(126, 87, 194, 0.1);
+            color: var(--primary-purple);
+        }
+
+        .stat-card.guidelines .stat-icon {
+            background-color: rgba(38, 166, 154, 0.1);
+            color: var(--accent-teal);
+        }
+
+        .stat-card.safety .stat-icon {
+            background-color: rgba(239, 83, 80, 0.1);
+            color: var(--accent-red);
+        }
+
+        .stat-card.promotions .stat-icon {
+            background-color: rgba(255, 179, 0, 0.1);
+            color: var(--accent-amber);
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 10px;
+        }
+
+        .stat-change {
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .change-positive {
+            color: var(--success-green);
+        }
+
+        .change-negative {
+            color: var(--error-red);
+        }
+
+        /* Messaging Layout */
+        .messaging-layout {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 25px;
+            flex: 1;
+        }
+
+        .message-card {
+            background-color: var(--white);
+            border-radius: var(--card-radius);
+            padding: 25px;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .card-header h3 {
+            font-size: 1.2rem;
+            color: var(--dark-purple);
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Message List */
+        .message-list {
+            flex: 1;
+            overflow-y: auto;
+            max-height: 500px;
+        }
+
+        .message-item {
+            padding: 20px;
+            border-radius: var(--border-radius);
+            margin-bottom: 15px;
+            border-left: 4px solid transparent;
+            background-color: var(--light-gray);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .message-item:hover {
+            background-color: var(--accent-purple);
+            transform: translateX(5px);
+        }
+
+        .message-item.active {
+            background-color: var(--accent-purple);
+            border-left-color: var(--primary-purple);
+        }
+
+        .message-item.policy {
+            border-left-color: var(--primary-purple);
+        }
+
+        .message-item.guideline {
+            border-left-color: var(--accent-teal);
+        }
+
+        .message-item.safety {
+            border-left-color: var(--accent-red);
+        }
+
+        .message-item.promotion {
+            border-left-color: var(--accent-amber);
+        }
+
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .message-category {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .category-policy {
+            background-color: rgba(126, 87, 194, 0.1);
+            color: var(--primary-purple);
+        }
+
+        .category-guideline {
+            background-color: rgba(38, 166, 154, 0.1);
+            color: var(--accent-teal);
+        }
+
+        .category-safety {
+            background-color: rgba(239, 83, 80, 0.1);
+            color: var(--accent-red);
+        }
+
+        .category-promotion {
+            background-color: rgba(255, 179, 0, 0.1);
+            color: var(--accent-amber);
+        }
+
+        .message-time {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .message-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+
+        .message-preview {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 12px;
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .message-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+        }
+
+        .message-author {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .author-avatar {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: var(--primary-purple);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .message-stats {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: var(--text-light);
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Message Compose */
+        .compose-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .message-toolbar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .toolbar-btn {
+            padding: 8px 15px;
+            border-radius: var(--border-radius);
+            background-color: var(--light-gray);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .toolbar-btn:hover {
+            background-color: var(--accent-purple);
+            color: var(--primary-purple);
+        }
+
+        .message-form {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-label {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        .form-control {
+            padding: 10px 12px;
+            border: 1px solid var(--medium-gray);
+            border-radius: var(--border-radius);
+            font-size: 0.9rem;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-purple);
+        }
+
+        .form-select {
+            padding: 10px 12px;
+            border: 1px solid var(--medium-gray);
+            border-radius: var(--border-radius);
+            font-size: 0.9rem;
+            outline: none;
+            background-color: var(--white);
+            cursor: pointer;
+        }
+
+        .form-textarea {
+            flex: 1;
+            resize: vertical;
+            min-height: 150px;
+            font-family: inherit;
+        }
+
+        .recipient-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 5px;
+        }
+
+        .recipient-tag {
+            background-color: var(--accent-purple);
+            color: var(--primary-purple);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .remove-tag {
+            cursor: pointer;
+            font-size: 0.7rem;
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .action-card {
+            background-color: var(--light-gray);
+            border-radius: var(--border-radius);
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .action-card:hover {
+            background-color: var(--accent-purple);
+            transform: translateY(-3px);
+        }
+
+        .action-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary-purple);
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+
+        .action-title {
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .action-desc {
+            font-size: 0.7rem;
+            color: var(--text-light);
+        }
+
+        /* Recent Activity */
+        .activity-list {
+            margin-top: 20px;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 0.8rem;
+        }
+
+        .activity-info {
+            flex: 1;
+        }
+
+        .activity-text {
+            font-size: 0.85rem;
+            margin-bottom: 3px;
+        }
+
+        .activity-time {
+            font-size: 0.7rem;
+            color: var(--text-light);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .message-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .messaging-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+            }
+            
+            .nav-menu ul {
+                display: flex;
+                overflow-x: auto;
+            }
+            
+            .nav-menu li {
+                flex-shrink: 0;
+                margin-bottom: 0;
+            }
+            
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .header-right {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .search-bar input {
+                width: 200px;
+            }
+            
+            .message-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .messaging-content {
+                padding: 15px;
+            }
+            
+            .header-right {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .search-bar {
+                width: 100%;
+            }
+            
+            .search-bar input {
+                width: 100%;
+            }
+            
+            .quick-actions {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fas fa-shield-alt"></i>
+                <h2>EduProcure Admin</h2>
+            </div>
+            <nav class="nav-menu">
+                <ul>
+                    <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li><a href="user-management.html"><i class="fas fa-users"></i> User Management</a></li>
+                    <li><a href="categories.html"><i class="fas fa-tags"></i> Categories</a></li>
+                    <li><a href="financials.html"><i class="fas fa-money-bill-wave"></i> Financials</a></li>
+                    <li><a href="audit.html"><i class="fas fa-clipboard-list"></i> Audit Logs</a></li>
+                    <li><a href="messaging.html" class="active"><i class="fas fa-envelope"></i> Messaging</a></li>
+                    <li><a href="#"><i class="fas fa-gavel"></i> Dispute Resolution</a></li>
+                    <li><a href="#"><i class="fas fa-cog"></i> System Settings</a></li>
+                </ul>
+            </nav>
+            <div class="admin-profile">
+                <div class="admin-avatar">AD</div>
+                <div class="admin-info">
+                    <h4>Admin User</h4>
+                    <p>System Administrator</p>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <h1>Messaging & Notices</h1>
+                    <p>Send policy updates, guidelines, safety notices, and promotions</p>
+                </div>
+                <div class="header-right">
+                    <div class="search-bar">
+                        <input type="text" id="globalSearch" placeholder="Search messages...">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <div class="header-actions">
+                        <div class="icon-btn" style="position: relative;">
+                            <i class="fas fa-bell"></i>
+                            <div class="notification-badge">8</div>
+                        </div>
+                        <div class="icon-btn">
+                            <i class="fas fa-cog"></i>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Messaging Content -->
+            <div class="messaging-content">
+                <div class="page-header">
+                    <h2>Communication Center</h2>
+                    <button class="btn btn-primary" id="newMessageBtn">
+                        <i class="fas fa-plus"></i> New Message
+                    </button>
+                </div>
+
+                <!-- Message Stats -->
+                <div class="message-stats">
+                    <div class="stat-card policy">
+                        <div class="stat-icon">
+                            <i class="fas fa-file-contract"></i>
+                        </div>
+                        <div class="stat-value">24</div>
+                        <div class="stat-label">Policy Updates</div>
+                        <div class="stat-change change-positive">
+                            <i class="fas fa-arrow-up"></i> 3 new this week
+                        </div>
+                    </div>
+                    <div class="stat-card guidelines">
+                        <div class="stat-icon">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <div class="stat-value">18</div>
+                        <div class="stat-label">Procurement Guidelines</div>
+                        <div class="stat-change change-positive">
+                            <i class="fas fa-arrow-up"></i> 2 new this week
+                        </div>
+                    </div>
+                    <div class="stat-card safety">
+                        <div class="stat-icon">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="stat-value">9</div>
+                        <div class="stat-label">Safety Notices</div>
+                        <div class="stat-change change-negative">
+                            <i class="fas fa-arrow-down"></i> 1 resolved
+                        </div>
+                    </div>
+                    <div class="stat-card promotions">
+                        <div class="stat-icon">
+                            <i class="fas fa-bullhorn"></i>
+                        </div>
+                        <div class="stat-value">15</div>
+                        <div class="stat-label">Supplier Promotions</div>
+                        <div class="stat-change change-positive">
+                            <i class="fas fa-arrow-up"></i> 4 active
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Messaging Layout -->
+                <div class="messaging-layout">
+                    <!-- Left Column -->
+                    <div class="message-card">
+                        <div class="card-header">
+                            <h3>Recent Messages</h3>
+                            <div class="card-actions">
+                                <button class="btn btn-outline btn-sm" id="filterMessagesBtn">
+                                    <i class="fas fa-filter"></i> Filter
+                                </button>
+                            </div>
+                        </div>
+                        <div class="message-list">
+                            <!-- Policy Update -->
+                            <div class="message-item policy active" id="message1">
+                                <div class="message-header">
+                                    <span class="message-category category-policy">
+                                        <i class="fas fa-file-contract"></i> Policy Update
+                                    </span>
+                                    <span class="message-time">2 hours ago</span>
+                                </div>
+                                <div class="message-title">Q4 Procurement Policy Changes</div>
+                                <div class="message-preview">
+                                    Important updates to the procurement policy for the fourth quarter. All schools must review the new bidding process requirements and compliance guidelines before December 1st...
+                                </div>
+                                <div class="message-footer">
+                                    <div class="message-author">
+                                        <div class="author-avatar">AD</div>
+                                        <span>Admin User</span>
+                                    </div>
+                                    <div class="message-stats">
+                                        <div class="stat">
+                                            <i class="fas fa-eye"></i> 1,245
+                                        </div>
+                                        <div class="stat">
+                                            <i class="fas fa-user-check"></i> 342
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Safety Notice -->
+                            <div class="message-item safety" id="message2">
+                                <div class="message-header">
+                                    <span class="message-category category-safety">
+                                        <i class="fas fa-exclamation-triangle"></i> Safety Notice
+                                    </span>
+                                    <span class="message-time">Yesterday, 3:45 PM</span>
+                                </div>
+                                <div class="message-title">Laboratory Safety Protocol Update</div>
+                                <div class="message-preview">
+                                    Urgent safety notice regarding chemical handling procedures. All science laboratories must implement new safety protocols effective immediately. Failure to comply may result...
+                                </div>
+                                <div class="message-footer">
+                                    <div class="message-author">
+                                        <div class="author-avatar">SM</div>
+                                        <span>Safety Manager</span>
+                                    </div>
+                                    <div class="message-stats">
+                                        <div class="stat">
+                                            <i class="fas fa-eye"></i> 892
+                                        </div>
+                                        <div class="stat">
+                                            <i class="fas fa-user-check"></i> 187
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Promotion -->
+                            <div class="message-item promotion" id="message3">
+                                <div class="message-header">
+                                    <span class="message-category category-promotion">
+                                        <i class="fas fa-bullhorn"></i> Promotion
+                                    </span>
+                                    <span class="message-time">Nov 14, 2023</span>
+                                </div>
+                                <div class="message-title">Back-to-School Discounts from EduTech Supplies</div>
+                                <div class="message-preview">
+                                    Special promotion alert! EduTech Supplies is offering 15% discount on all ICT equipment for the month of November. Limited time offer available to all registered schools...
+                                </div>
+                                <div class="message-footer">
+                                    <div class="message-author">
+                                        <div class="author-avatar">MR</div>
+                                        <span>Marketing Team</span>
+                                    </div>
+                                    <div class="message-stats">
+                                        <div class="stat">
+                                            <i class="fas fa-eye"></i> 1,567
+                                        </div>
+                                        <div class="stat">
+                                            <i class="fas fa-shopping-cart"></i> 89
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Guideline -->
+                            <div class="message-item guideline" id="message4">
+                                <div class="message-header">
+                                    <span class="message-category category-guideline">
+                                        <i class="fas fa-book"></i> Procurement Guideline
+                                    </span>
+                                    <span class="message-time">Nov 12, 2023</span>
+                                </div>
+                                <div class="message-title">New Furniture Procurement Standards</div>
+                                <div class="message-preview">
+                                    Updated guidelines for school furniture procurement. All furniture purchases must now meet new ergonomic and safety standards as outlined in the attached document...
+                                </div>
+                                <div class="message-footer">
+                                    <div class="message-author">
+                                        <div class="author-avatar">AD</div>
+                                        <span>Admin User</span>
+                                    </div>
+                                    <div class="message-stats">
+                                        <div class="stat">
+                                            <i class="fas fa-eye"></i> 1,023
+                                        </div>
+                                        <div class="stat">
+                                            <i class="fas fa-download"></i> 456
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Policy Update -->
+                            <div class="message-item policy" id="message5">
+                                <div class="message-header">
+                                    <span class="message-category category-policy">
+                                        <i class="fas fa-file-contract"></i> Policy Update
+                                    </span>
+                                    <span class="message-time">Nov 10, 2023</span>
+                                </div>
+                                <div class="message-title">Supplier Verification Requirements</div>
+                                <div class="message-preview">
+                                    New policy implemented regarding supplier verification. All suppliers must complete updated verification process by December 15th to remain active on the platform...
+                                </div>
+                                <div class="message-footer">
+                                    <div class="message-author">
+                                        <div class="author-avatar">AD</div>
+                                        <span>Admin User</span>
+                                    </div>
+                                    <div class="message-stats">
+                                        <div class="stat">
+                                            <i class="fas fa-eye"></i> 876
+                                        </div>
+                                        <div class="stat">
+                                            <i class="fas fa-user-check"></i> 231
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column -->
+                    <div>
+                        <!-- Compose Message -->
+                        <div class="message-card">
+                            <div class="card-header">
+                                <h3>Compose Message</h3>
+                            </div>
+                            <div class="compose-area">
+                                <div class="message-toolbar">
+                                    <button class="toolbar-btn" id="saveDraftBtn">
+                                        <i class="fas fa-save"></i> Save Draft
+                                    </button>
+                                    <button class="toolbar-btn" id="addAttachmentBtn">
+                                        <i class="fas fa-paperclip"></i> Attach
+                                    </button>
+                                    <button class="toolbar-btn" id="scheduleBtn">
+                                        <i class="fas fa-clock"></i> Schedule
+                                    </button>
+                                </div>
+                                <div class="message-form">
+                                    <div class="form-group">
+                                        <label class="form-label">Message Type</label>
+                                        <select class="form-select" id="messageType">
+                                            <option value="policy">Policy Update</option>
+                                            <option value="guideline">Procurement Guideline</option>
+                                            <option value="safety">Safety Notice</option>
+                                            <option value="promotion">Supplier Promotion</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Recipients</label>
+                                        <select class="form-select" id="recipientGroup">
+                                            <option>All Schools</option>
+                                            <option>All Suppliers</option>
+                                            <option>Primary Schools Only</option>
+                                            <option>Secondary Schools Only</option>
+                                            <option>Specific Schools</option>
+                                            <option>Specific Suppliers</option>
+                                        </select>
+                                        <div class="recipient-tags">
+                                            <div class="recipient-tag">
+                                                All Schools
+                                                <span class="remove-tag">×</span>
+                                            </div>
+                                            <div class="recipient-tag">
+                                                Registered Suppliers
+                                                <span class="remove-tag">×</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Subject</label>
+                                        <input type="text" class="form-control" id="messageSubject" placeholder="Enter message subject">
+                                    </div>
+                                    <div class="form-group" style="flex: 1;">
+                                        <label class="form-label">Message Content</label>
+                                        <textarea class="form-control form-textarea" id="messageContent" placeholder="Type your message here...">Q4 Procurement Policy Changes
+
+Dear Schools and Suppliers,
+
+This message is to inform you about important updates to our procurement policies for the fourth quarter. 
+
+Key Changes:
+1. New bidding process requirements
+2. Updated compliance guidelines
+3. Revised supplier evaluation criteria
+4. Enhanced transparency measures
+
+All schools must review the attached document and implement these changes before December 1st, 2023.
+
+Thank you for your cooperation.
+
+Best regards,
+EduProcure Administration</textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <button class="btn btn-primary" id="sendMessageBtn">
+                                            <i class="fas fa-paper-plane"></i> Send Message
+                                        </button>
+                                        <button class="btn btn-outline" id="previewMessageBtn">
+                                            <i class="fas fa-eye"></i> Preview
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Quick Actions -->
+                        <div class="message-card">
+                            <div class="card-header">
+                                <h3>Quick Actions</h3>
+                            </div>
+                            <div class="quick-actions">
+                                <div class="action-card" id="quickPolicy">
+                                    <div class="action-icon">
+                                        <i class="fas fa-file-contract"></i>
+                                    </div>
+                                    <div class="action-title">Policy Template</div>
+                                    <div class="action-desc">Use template for policy updates</div>
+                                </div>
+                                <div class="action-card" id="quickSafety">
+                                    <div class="action-icon">
+                                        <i class="fas fa-exclamation-triangle"></i>
+                                    </div>
+                                    <div class="action-title">Safety Alert</div>
+                                    <div class="action-desc">Send urgent safety notice</div>
+                                </div>
+                                <div class="action-card" id="quickPromotion">
+                                    <div class="action-icon">
+                                        <i class="fas fa-bullhorn"></i>
+                                    </div>
+                                    <div class="action-title">Promotion</div>
+                                    <div class="action-desc">Create supplier promotion</div>
+                                </div>
+                                <div class="action-card" id="quickBroadcast">
+                                    <div class="action-icon">
+                                        <i class="fas fa-broadcast-tower"></i>
+                                    </div>
+                                    <div class="action-title">Broadcast</div>
+                                    <div class="action-desc">Send to all users</div>
+                                </div>
+                            </div>
+
+                            <!-- Recent Activity -->
+                            <div class="activity-list">
+                                <div class="activity-item">
+                                    <div class="activity-icon" style="background-color: var(--primary-purple);">
+                                        <i class="fas fa-paper-plane"></i>
+                                    </div>
+                                    <div class="activity-info">
+                                        <div class="activity-text">Policy update sent to 1,245 schools</div>
+                                        <div class="activity-time">2 hours ago</div>
+                                    </div>
+                                </div>
+                                <div class="activity-item">
+                                    <div class="activity-icon" style="background-color: var(--accent-red);">
+                                        <i class="fas fa-exclamation-triangle"></i>
+                                    </div>
+                                    <div class="activity-info">
+                                        <div class="activity-text">Safety notice marked as urgent</div>
+                                        <div class="activity-time">Yesterday, 3:45 PM</div>
+                                    </div>
+                                </div>
+                                <div class="activity-item">
+                                    <div class="activity-icon" style="background-color: var(--accent-amber);">
+                                        <i class="fas fa-bullhorn"></i>
+                                    </div>
+                                    <div class="activity-info">
+                                        <div class="activity-text">Promotion created for EduTech Supplies</div>
+                                        <div class="activity-time">Nov 14, 2023</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Interactive functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Message selection
+            const messageItems = document.querySelectorAll('.message-item');
+            messageItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    // Remove active class from all items
+                    messageItems.forEach(msg => msg.classList.remove('active'));
+                    // Add active class to clicked item
+                    this.classList.add('active');
+                    
+                    // Update compose form with selected message
+                    const title = this.querySelector('.message-title').textContent;
+                    const preview = this.querySelector('.message-preview').textContent;
+                    const category = this.classList.contains('policy') ? 'policy' :
+                                   this.classList.contains('guideline') ? 'guideline' :
+                                   this.classList.contains('safety') ? 'safety' : 'promotion';
+                    
+                    document.getElementById('messageSubject').value = title;
+                    document.getElementById('messageContent').value = preview + '\n\n[Full message content would load here...]';
+                    document.getElementById('messageType').value = category;
+                    
+                    // Show success message
+                    showNotification('Message loaded into compose area');
+                });
+            });
+
+            // Send message
+            const sendMessageBtn = document.getElementById('sendMessageBtn');
+            if (sendMessageBtn) {
+                sendMessageBtn.addEventListener('click', function() {
+                    const subject = document.getElementById('messageSubject').value;
+                    const type = document.getElementById('messageType').value;
+                    
+                    if (!subject.trim()) {
+                        alert('Please enter a message subject');
+                        return;
+                    }
+                    
+                    const typeNames = {
+                        'policy': 'Policy Update',
+                        'guideline': 'Procurement Guideline',
+                        'safety': 'Safety Notice',
+                        'promotion': 'Supplier Promotion'
+                    };
+                    
+                    // Simulate sending
+                    this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+                    this.disabled = true;
+                    
+                    setTimeout(() => {
+                        this.innerHTML = '<i class="fas fa-paper-plane"></i> Send Message';
+                        this.disabled = false;
+                        
+                        // Add to message list
+                        const newMessage = document.createElement('div');
+                        newMessage.className = `message-item ${type}`;
+                        newMessage.innerHTML = `
+                            <div class="message-header">
+                                <span class="message-category category-${type}">
+                                    <i class="fas fa-${type === 'policy' ? 'file-contract' : type === 'guideline' ? 'book' : type === 'safety' ? 'exclamation-triangle' : 'bullhorn'}"></i> ${typeNames[type]}
+                                </span>
+                                <span class="message-time">Just now</span>
+                            </div>
+                            <div class="message-title">${subject}</div>
+                            <div class="message-preview">
+                                ${document.getElementById('messageContent').value.substring(0, 150)}...
+                            </div>
+                            <div class="message-footer">
+                                <div class="message-author">
+                                    <div class="author-avatar">AD</div>
+                                    <span>Admin User</span>
+                                </div>
+                                <div class="message-stats">
+                                    <div class="stat">
+                                        <i class="fas fa-eye"></i> 0
+                                    </div>
+                                    <div class="stat">
+                                        <i class="fas fa-user-check"></i> 0
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        
+                        // Insert at top of message list
+                        const messageList = document.querySelector('.message-list');
+                        messageList.insertBefore(newMessage, messageList.firstChild);
+                        
+                        // Clear form
+                        document.getElementById('messageSubject').value = '';
+                        document.getElementById('messageContent').value = '';
+                        
+                        showNotification(`Message sent successfully! It will be delivered to recipients shortly.`, 'success');
+                    }, 1500);
+                });
+            }
+
+            // Quick action buttons
+            const quickActions = document.querySelectorAll('.action-card');
+            quickActions.forEach(action => {
+                action.addEventListener('click', function() {
+                    const actionType = this.id;
+                    const templates = {
+                        'quickPolicy': {
+                            subject: 'New Policy Update',
+                            content: 'Important policy update for all users...',
+                            type: 'policy'
+                        },
+                        'quickSafety': {
+                            subject: 'URGENT: Safety Notice',
+                            content: 'This is an urgent safety notice...',
+                            type: 'safety'
+                        },
+                        'quickPromotion': {
+                            subject: 'Special Promotion Alert',
+                            content: 'Exciting promotion available now...',
+                            type: 'promotion'
+                        },
+                        'quickBroadcast': {
+                            subject: 'Important Announcement',
+                            content: 'Important announcement for all users...',
+                            type: 'policy'
+                        }
+                    };
+                    
+                    if (templates[actionType]) {
+                        const template = templates[actionType];
+                        document.getElementById('messageSubject').value = template.subject;
+                        document.getElementById('messageContent').value = template.content;
+                        document.getElementById('messageType').value = template.type;
+                        
+                        showNotification(`Template loaded for ${this.querySelector('.action-title').textContent}`);
+                    }
+                });
+            });
+
+            // Filter messages
+            const filterMessagesBtn = document.getElementById('filterMessagesBtn');
+            if (filterMessagesBtn) {
+                filterMessagesBtn.addEventListener('click', function() {
+                    const type = prompt('Filter messages by type:\n1. All\n2. Policy\n3. Guideline\n4. Safety\n5. Promotion');
+                    
+                    if (type) {
+                        const filterMap = {
+                            '1': 'all',
+                            '2': 'policy',
+                            '3': 'guideline',
+                            '4': 'safety',
+                            '5': 'promotion'
+                        };
+                        
+                        const selectedFilter = filterMap[type];
+                        if (selectedFilter) {
+                            messageItems.forEach(item => {
+                                if (selectedFilter === 'all') {
+                                    item.style.display = 'block';
+                                } else {
+                                    item.style.display = item.classList.contains(selectedFilter) ? 'block' : 'none';
+                                }
+                            });
+                            
+                            showNotification(`Filtered messages to show: ${selectedFilter}`);
+                        }
+                    }
+                });
+            }
+
+            // Save draft
+            const saveDraftBtn = document.getElementById('saveDraftBtn');
+            if (saveDraftBtn) {
+                saveDraftBtn.addEventListener('click', function() {
+                    showNotification('Draft saved successfully!', 'success');
+                });
+            }
+
+            // Helper function for notifications
+            function showNotification(message, type = 'info') {
+                // Create notification element
+                const notification = document.createElement('div');
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 100px;
+                    right: 30px;
+                    background-color: ${type === 'success' ? 'var(--success-green)' : 'var(--primary-purple)'};
+                    color: white;
+                    padding: 15px 20px;
+                    border-radius: var(--border-radius);
+                    box-shadow: var(--shadow-lg);
+                    z-index: 1000;
+                    animation: slideIn 0.3s ease;
+                `;
+                
+                notification.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <i class="fas fa-${type === 'success' ? 'check-circle' : 'info-circle'}"></i>
+                        <span>${message}</span>
+                    </div>
+                `;
+                
+                document.body.appendChild(notification);
+                
+                // Remove after 3 seconds
+                setTimeout(() => {
+                    notification.style.animation = 'slideOut 0.3s ease';
+                    setTimeout(() => {
+                        document.body.removeChild(notification);
+                    }, 300);
+                }, 3000);
+                
+                // Add CSS animations
+                const style = document.createElement('style');
+                style.textContent = `
+                    @keyframes slideIn {
+                        from { transform: translateX(100%); opacity: 0; }
+                        to { transform: translateX(0); opacity: 1; }
+                    }
+                    @keyframes slideOut {
+                        from { transform: translateX(0); opacity: 1; }
+                        to { transform: translateX(100%); opacity: 0; }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+        });
+    </script>
+</body>
+</html>
